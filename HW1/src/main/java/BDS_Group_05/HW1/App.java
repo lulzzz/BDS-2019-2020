@@ -49,29 +49,22 @@ public class App {
     	JavaPairRDD<Integer, Integer> Tag = input_2.mapToPair(str -> parser_id_1(str)); 
     	JavaPairRDD<Integer, Integer> Like = input_3.mapToPair(str -> parser_id_2(str));
     	// get all (photo, user) pairs that satisfy (1) user is tagged in the photo, and (2) user likes the photo
-    	Tag = Tag.intersection(Like);
+    	JavaPairRDD<Integer, Integer> new_Tag = Tag.intersection(Like).distinct();
     	
     	// get the date when the photo is posted
     	JavaPairRDD<Integer, String> Photo_Time = input_1.mapToPair(str -> parser_photo_time(str));
     	// get the date when the photos in "Tag" are posted
     	// <photo_id, <user_id, date>>
-    	JavaPairRDD<Integer, Tuple2<Integer, String>> join_on_photo = Tag.join(Photo_Time);
+    	JavaPairRDD<Integer, Tuple2<Integer, String>> join_on_photo = new_Tag.join(Photo_Time);
+    	// <<user_id, date>, photo_id>
+    	JavaPairRDD<Tuple2<Integer, String>, Integer> user_time_photo = JavaPairRDD.fromJavaRDD(join_on_photo.map(pair -> pair.swap()));
     	
     	// get the date when the user posted photo
-    	// distinct: one user may post many photos on a day
-    	JavaPairRDD<Integer, String> User_Time = input_1.mapToPair(str -> parser_user_time(str)).distinct();
-    	// get the pair <user_id, date> from "join_on_photo"
-    	JavaPairRDD<Integer, String> photo_user_time = JavaPairRDD.fromJavaRDD(join_on_photo.map(a -> a._2));
+    	JavaPairRDD<Tuple2<Integer, String>, String> User_Time = input_1.mapToPair(str -> new Tuple2(parser_user_time(str), "tmp"));
+    	// <<user_id, date>, <photo_id, "tmp">>
+    	JavaPairRDD<Tuple2<Integer, String>, Tuple2<Integer, String>> join_on_user = user_time_photo.join(User_Time);
     	
-    	// get the user who posted any photo on the specific date 
-    	photo_user_time = photo_user_time.intersection(User_Time);
-    	
-    	// get the final (photo, user) pair that satisfy all conditions
-    	Tag = JavaPairRDD.fromJavaRDD(Tag.map(pair -> pair.swap()));
-    	JavaPairRDD<Integer, Tuple2<Integer, String>> tmp = Tag.join(photo_user_time);
-    	JavaPairRDD<Object, Object> final_result = JavaPairRDD.fromJavaRDD(tmp.map(a -> new Tuple2(a._2._1, a._1)));
-    	
-    	final_result = final_result.sortByKey(); // this step is not neccessary
+    	JavaRDD<Tuple2> final_result = join_on_user.map(a -> new Tuple2(a._2._1, a._1._1)).distinct();
     	
     	// output
     	final_result.saveAsTextFile("hdfs://localhost:9000/user/krimmity/HW1/task3");
