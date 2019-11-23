@@ -57,7 +57,7 @@ public class App {
     	// <photo_id, <user_id, date>>
     	JavaPairRDD<Integer, Tuple2<Integer, String>> join_on_photo = new_Tag.join(Photo_Time);
     	// <<user_id, date>, photo_id>
-    	JavaPairRDD<Tuple2<Integer, String>, Integer> user_time_photo = JavaPairRDD.fromJavaRDD(join_on_photo.map(pair -> pair.swap()));
+    	JavaPairRDD<Tuple2<Integer, String>, Integer> user_time_photo = join_on_photo.mapToPair(pair -> pair.swap());
     	
     	// get the date when the user posted photo
     	JavaPairRDD<Tuple2<Integer, String>, String> User_Time = input_1.mapToPair(str -> new Tuple2(parser_user_time(str), "tmp"));
