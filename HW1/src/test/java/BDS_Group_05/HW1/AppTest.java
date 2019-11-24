@@ -1,14 +1,12 @@
 package BDS_Group_05.HW1;
 
-import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaPairRDD;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
-
+import java.util.*;
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import scala.Tuple2;
-import java.util.*;
+
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 
 public class AppTest extends TestCase
 {
@@ -35,8 +33,8 @@ public class AppTest extends TestCase
         JavaRDD<String> expect_output_3 = sc.textFile("hdfs://localhost:9000/user/krimmity/HW1/Task_3_test_result");
         
         validate_task1(output_1, expect_output_1);
-        validate_task2(output_2, expect_output_2);
-        validate_task3(output_3, expect_output_3);
+        validate(output_2, expect_output_2);  // validate task 2
+        validate(output_3, expect_output_3);  // validate task 1
     }
     
     public static void validate_task1(JavaRDD<String> actual, JavaRDD<String> expected)
@@ -46,17 +44,9 @@ public class AppTest extends TestCase
     	Assert.assertEquals(expected.take(count_expected), actual.take(count_actual));
     }
 
-	public static void validate_task2(JavaRDD<String> actual, JavaRDD<String> expected)
+	public static void validate(JavaRDD<String> actual, JavaRDD<String> expected)
     {
 		Assert.assertEquals(expected.count(), actual.count());
-		List<String> actual_str = actual.take((int)actual.count());
-		List<String> expected_str = expected.take((int)expected.count());
-		Assert.assertTrue(actual_str.containsAll(expected_str));
-    }
-    
-    public static void validate_task3(JavaRDD<String> actual, JavaRDD<String> expected)
-    {
-    	Assert.assertEquals(expected.count(), actual.count());
 		List<String> actual_str = actual.take((int)actual.count());
 		List<String> expected_str = expected.take((int)expected.count());
 		Assert.assertTrue(actual_str.containsAll(expected_str));
