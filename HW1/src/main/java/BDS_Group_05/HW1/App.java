@@ -12,38 +12,38 @@ import org.apache.spark.api.java.JavaSparkContext;
 
 public class App {
     public static void main(String[] args) {
-        SparkConf conf = new SparkConf().setAppName("my-try").setMaster("local");
+        SparkConf conf = new SparkConf().setAppName("BDS-HW1").setMaster("local");
         JavaSparkContext sc = new JavaSparkContext(conf);
         
         JavaRDD<String> input_1 = sc.textFile("hdfs://localhost:9000/user/krimmity/HW1/Photo");
         JavaRDD<String> input_2 = sc.textFile("hdfs://localhost:9000/user/krimmity/HW1/Tag");
         JavaRDD<String> input_3 = sc.textFile("hdfs://localhost:9000/user/krimmity/HW1/Like");
         
-        //task_1(input_1);
-        //task_2(input_2);
-        task_3(input_1, input_2, input_3);
+        task_1(input_1, "task1");
+        task_2(input_2, "task2");
+        task_3(input_1, input_2, input_3, "task3");
     }
     
-    public static void task_1(JavaRDD<String> input)
+    public static void task_1(JavaRDD<String> input, String name)
     {
     	// 1st String: time, 2nd String: original str
         JavaPairRDD<String, String> Photo = input.mapToPair(str -> new Tuple2(parser_time(str), str));
         Photo = Photo.sortByKey();
         JavaRDD<String> output = Photo.map(pair -> pair._2);
         
-        output.saveAsTextFile("hdfs://localhost:9000/user/krimmity/HW1/task1");
+        output.saveAsTextFile("hdfs://localhost:9000/user/krimmity/HW1/" + name);
     }
     
-    public static void task_2(JavaRDD<String> input)
+    public static void task_2(JavaRDD<String> input, String name)
     {
     	// 1st String: photo_id, 2nd Integer: 1 (used to count)
         JavaPairRDD<Integer, Integer> Tag = input.mapToPair(str -> parser_int(str));
         Tag = Tag.reduceByKey((a, b) -> a + b);
         
-        Tag.saveAsTextFile("hdfs://localhost:9000/user/krimmity/HW1/task2");
+        Tag.saveAsTextFile("hdfs://localhost:9000/user/krimmity/HW1/" + name);
     }
     
-    public static void task_3(JavaRDD<String> input_1, JavaRDD<String> input_2, JavaRDD<String> input_3)
+    public static void task_3(JavaRDD<String> input_1, JavaRDD<String> input_2, JavaRDD<String> input_3, String name)
     {
     	// 1st Integer: Photo_id, 2nd Integer: User_id
     	JavaPairRDD<Integer, Integer> Tag = input_2.mapToPair(str -> parser_id_1(str)); 
@@ -67,7 +67,7 @@ public class App {
     	JavaRDD<Tuple2> final_result = join_on_user.map(a -> new Tuple2(a._2._1, a._1._1)).distinct();
     	
     	// output
-    	final_result.saveAsTextFile("hdfs://localhost:9000/user/krimmity/HW1/task3");
+    	final_result.saveAsTextFile("hdfs://localhost:9000/user/krimmity/HW1/" + name);
     }
     
     public static String parser_time(String str)
