@@ -30,24 +30,25 @@ public class AppTest extends TestCase
         
         try {
 			App.task_1(input_1, "task1_test");
+	        App.task_2(input_2, "task2_test");
+	        App.task_3(input_1, input_2, input_3, "task3_test");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-  //      App.task_2(input_2, "task2_test");
-  //      App.task_3(input_1, input_2, input_3, "task3_test");
+
         
         JavaRDD<String> output_1 = sc.textFile(hdfspath + userpath + outputpath + "task1_test/part-00000");
-    //    JavaRDD<String> output_2 = sc.textFile(App.outputhome + "task2_test/part-00000");
-      //  JavaRDD<String> output_3 = sc.textFile(App.outputhome + "task3_test/part-00000");
+        JavaRDD<String> output_2 = sc.textFile(hdfspath + userpath + outputpath + "task2_test/part-00000");
+        JavaRDD<String> output_3 = sc.textFile(hdfspath + userpath + outputpath + "task3_test/part-00000");
         
         JavaRDD<String> expect_output_1 = sc.textFile(hdfspath + userpath + inputpath + "Task_1_test_result");
-    //    JavaRDD<String> expect_output_2 = sc.textFile(App.inputhome + "Task_2_test_result");
-      //  JavaRDD<String> expect_output_3 = sc.textFile(App.inputhome + "Task_3_test_result");
+        JavaRDD<String> expect_output_2 = sc.textFile(hdfspath + userpath + inputpath + "Task_2_test_result");
+        JavaRDD<String> expect_output_3 = sc.textFile(hdfspath + userpath + inputpath + "Task_3_test_result");
         
         validate_task1(output_1, expect_output_1); 
-    //    validate(output_2, expect_output_2);  // validate task 2
-      //  validate(output_3, expect_output_3);  // validate task 3
+        validate(output_2, expect_output_2);  // validate task 2
+        validate(output_3, expect_output_3);  // validate task 3
     }
     
     public static void validate_task1(JavaRDD<String> actual, JavaRDD<String> expected)
