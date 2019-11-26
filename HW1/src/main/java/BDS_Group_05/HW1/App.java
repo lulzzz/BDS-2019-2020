@@ -3,6 +3,7 @@ package BDS_Group_05.HW1;
 import java.util.*;
 import scala.Tuple2;
 import java.time.Instant;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import org.apache.spark.SparkConf;
@@ -10,42 +11,68 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
+import org.apache.hadoop.fs.*;
+import org.apache.hadoop.conf.Configuration;
+
 public class App 
 {
+	public static final String hdfspath = "hdfs://localhost:9000";
+	public static final String userpath = "/user/lfc746";
+	public static final String inputpath = "/input/";
+	public static final String outputpath = "/output/";
+
     public static void main(String[] args) 
     {
         SparkConf conf = new SparkConf().setAppName("BDS-HW1").setMaster("local");
         JavaSparkContext sc = new JavaSparkContext(conf);
         
-        JavaRDD<String> input_1 = sc.textFile("hdfs://localhost:9000/user/krimmity/HW1/Photo");
-        JavaRDD<String> input_2 = sc.textFile("hdfs://localhost:9000/user/krimmity/HW1/Tag");
-        JavaRDD<String> input_3 = sc.textFile("hdfs://localhost:9000/user/krimmity/HW1/Like");
+        JavaRDD<String> input_1 = sc.textFile(hdfspath + userpath + inputpath + "Photo");
+        JavaRDD<String> input_2 = sc.textFile(hdfspath + userpath + inputpath  + "Tag");
+        JavaRDD<String> input_3 = sc.textFile(hdfspath + userpath + inputpath  + "Like");
         
-        task_1(input_1, "task1");
-        task_2(input_2, "task2");
-        task_3(input_1, input_2, input_3, "task3");
+
+		try {
+			task_1(input_1, "task1");
+	        task_2(input_2, "task2");
+	        task_3(input_1, input_2, input_3, "task3");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
     }
     
-    public static void task_1(JavaRDD<String> input, String name)
+    public static void delete_if_exists(String name) throws IOException
+    {
+        Configuration hadoopconf =new Configuration();
+        hadoopconf.set("fs.default.name",hdfspath);
+        FileSystem fs = FileSystem.get(hadoopconf);
+        Path path = new Path(userpath+outputpath + name);
+        if(fs.exists(path))
+        	fs.delete(path, true);
+    	
+    }
+    
+    public static void task_1(JavaRDD<String> input, String name) throws IOException
     {
     	// 1st String: time, 2nd String: original str
         JavaPairRDD<String, String> Photo = input.mapToPair(str -> new Tuple2(parser_time(str), str));
         Photo = Photo.sortByKey();
         JavaRDD<String> output = Photo.map(pair -> pair._2);
-        
-        output.saveAsTextFile("hdfs://localhost:9000/user/krimmity/HW1/" + name);
+		delete_if_exists(name);
+        output.saveAsTextFile(hdfspath + userpath + outputpath + name);
+
     }
     
-    public static void task_2(JavaRDD<String> input, String name)
+    public static void task_2(JavaRDD<String> input, String name) throws IOException
     {
     	// 1st String: photo_id, 2nd Integer: 1 (used to count)
         JavaPairRDD<Integer, Integer> Tag = input.mapToPair(str -> parser_int(str));
-        Tag = Tag.reduceByKey((a, b) -> a + b);
-        
-        Tag.saveAsTextFile("hdfs://localhost:9000/user/krimmity/HW1/" + name);
+        Tag = Tag.reduceByKey((a, b) -> a + b);      
+		delete_if_exists(name);       
+        Tag.saveAsTextFile(hdfspath + userpath + outputpath + name);
     }
     
-    public static void task_3(JavaRDD<String> input_1, JavaRDD<String> input_2, JavaRDD<String> input_3, String name)
+    public static void task_3(JavaRDD<String> input_1, JavaRDD<String> input_2, JavaRDD<String> input_3, String name) throws IOException
     {
     	// 1st Integer: Photo_id, 2nd Integer: User_id
     	JavaPairRDD<Integer, Integer> Tag = input_2.mapToPair(str -> parser_id_1(str)); 
@@ -68,18 +95,15 @@ public class App
     	
     	JavaRDD<Tuple2> final_result = join_on_user.map(a -> new Tuple2(a._2._1, a._1._1)).distinct();
     	
+        Configuration hadoopconf =new Configuration();
+        delete_if_exists(name);
     	// output
-    	final_result.saveAsTextFile("hdfs://localhost:9000/user/krimmity/HW1/" + name);
+    	final_result.saveAsTextFile(hdfspath + userpath + outputpath + name);
     }
     
     public static String parser_time(String str)
     {
     	String[] parts = str.split(" ");
-    	//int photo_id = Integer.parseInt(parts[0]);
-    	//int user_id = Integer.parseInt(parts[1]);
-    	//Instant time = Instant.parse(parts[2]);
-    	//float lat = Float.parseFloat(parts[3]);
-    	//float lon = Float.parseFloat(parts[4]);
     	return parts[2];
     }
     
