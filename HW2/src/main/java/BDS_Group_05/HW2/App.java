@@ -49,7 +49,7 @@ public class App
         		.map(input -> parser_Photo(input))
         		.returns(new TypeHint<Tuple4<Integer, Integer, Float, Float>>(){});
         
-        DataStream<Tuple2<Integer, Integer>> Tag = env.addSource(new FlinkKafkaConsumer<>("Photo", new SimpleStringSchema(), properties))
+        DataStream<Tuple2<Integer, Integer>> Tag = env.addSource(new FlinkKafkaConsumer<>("Tag", new SimpleStringSchema(), properties))
         		.assignTimestampsAndWatermarks(new PunctuatedAssigner())
         		.map(input -> parser_Tag(input))
         		// reference: https://www.codota.com/code/java/methods/org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator/returns
