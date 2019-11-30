@@ -1,26 +1,23 @@
 package BDS_Group_05.HW2;
 
 import java.util.Properties;
-
-import org.apache.flink.api.common.serialization.SimpleStringSchema;
-import org.apache.flink.api.common.typeinfo.TypeHint;
+import org.apache.log4j.BasicConfigurator;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple4;
+import org.apache.flink.runtime.state.filesystem.FsStateBackend;
+import org.apache.flink.api.common.typeinfo.TypeHint;
+import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.TimeCharacteristic;
-import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.AssignerWithPunctuatedWatermarks;
-import org.apache.flink.streaming.api.functions.sink.SinkFunction;
-import org.apache.flink.streaming.api.watermark.Watermark;
-import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
-import org.apache.log4j.BasicConfigurator;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
 
 
-
-import org.apache.flink.streaming.api.datastream.DataStream;
 
 public class App 
 {
@@ -37,8 +34,12 @@ public class App
         
         //env.enableCheckpointing(10); // checkpoint every 10 ms
         env.enableCheckpointing(10000); // checkpoint every 10 s
-        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+        env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
+        env.setStateBackend(new FsStateBackend("hdfs://hdfs://localhost:9000/user/krimmity/HW2"));   // ?????
         
+        // TODO: latency metrics??????
+        
+        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
         DataStream<Tuple3<Integer, Float, Float>> GPS = env.addSource(new FlinkKafkaConsumer<>("GPS", new SimpleStringSchema(), properties))
         		.assignTimestampsAndWatermarks(new PunctuatedAssigner())
         		.map(input -> parser_GPS(input))
@@ -63,7 +64,7 @@ public class App
         		.apply(new JoinTagPhoto());
 		
 		// join on user_id, to get where the user is tracked, <photo_id, user_id, lat1, lon1, lat2, lon2>
-        DataStream<Tuple2<Integer, Integer>> join_GPS = join_Tag_Photo.join(GPS)
+        DataStream<String> join_GPS = join_Tag_Photo.join(GPS)
         		.where(new SelectKey())            // select user_id from join_Tag_Photo
         		.equalTo(new SelectKeyFromGPS())   // select user_id from GPS
         		.window(SlidingEventTimeWindows.of(Time.seconds(15), Time.seconds(5)))
@@ -71,18 +72,15 @@ public class App
         		.filter(new Myfilter())            // filter out the location with distance > 5km
         		.map(input -> new Tuple2<Integer, Integer>(input.f1, 1))   // project to get <user_id, 1>
         		.returns(new TypeHint<Tuple2<Integer, Integer>>(){})
-        		.keyBy(1)                          // all records with the same key are assigned to the same partition
-        		// (user, 1) + (user, 1) = (user, 2)
-        		.reduce((a, b) -> new Tuple2<Integer, Integer>(a.f0, a.f1 + b.f1));
+        		.keyBy(0)                          // all records with the same key are assigned to the same partition
+        		.reduce((a, b) -> new Tuple2<Integer, Integer>(a.f0, a.f1 + b.f1))  // (user, 1) + (user, 1) = (user, 2)
+        		.map(input -> tostring(input));    // Tuple2<Integer, Integer> --> String
 
         //join_GPS.print();
-        /*
-        SinkFunction<Tuple2<Integer, Integer>> myProducer = new FlinkKafkaProducer<Tuple2<Integer, Integer>>(
-        		"localhost:9092",            // broker list
-                "HW2",                  // target topic
-                (KeyedSerializationSchema<Tuple2<Integer, Integer>>) new SimpleStringSchema());   // serialization schema
         
-        result.addSink(myProducer);*/
+        // TODO ??????????
+		FlinkKafkaProducer<String> myProducer = new FlinkKafkaProducer<>("localhost:9092", "output", new SimpleStringSchema());
+		join_GPS.addSink(myProducer );
 
         try 
         {
@@ -119,5 +117,12 @@ public class App
     	int photo_id = Integer.parseInt(parts[0]);
     	int user_id = Integer.parseInt(parts[1]);
     	return new Tuple2<Integer, Integer>(photo_id, user_id);
+    }
+    
+    public static String tostring(Tuple2<Integer, Integer> input)
+    {
+    	String user_id = Integer.toString(input.f0);
+    	String count = Integer.toString(input.f1);
+    	return user_id + " " + count;
     }
 }
