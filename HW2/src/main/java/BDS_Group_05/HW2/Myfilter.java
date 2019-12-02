@@ -22,5 +22,4 @@ public class Myfilter implements
 		if(distance <= 5) return true;
 		else return false;
 	}
-
 }

@@ -1,19 +1,19 @@
 package BDS_Group_05.HW2;
 
 import org.apache.flink.api.common.functions.JoinFunction;
-import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.api.java.tuple.Tuple4;
+import org.apache.flink.api.java.tuple.Tuple3;
+import org.apache.flink.api.java.tuple.Tuple5;
 
-public class JoinTagPhoto implements JoinFunction<Tuple2<Integer, Integer>, 
-                                                  Tuple4<Integer, Integer, Float, Float>, 
-                                                  Tuple4<Integer, Integer, Float, Float>> 
+public class JoinTagPhoto implements JoinFunction<Tuple3<Integer, Integer, Long>,                // <photo_id, user_id>
+                                                  Tuple5<Integer, Integer, Float, Float, Long>,  // <photo_id, user_id, lat, lon>
+                                                  Tuple5<Integer, Integer, Float, Float, Long>>  // <photo_id, user_id, lat, lon>
 {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public Tuple4<Integer, Integer, Float, Float> join(Tuple2<Integer, Integer> tag, Tuple4<Integer, Integer, Float, Float> photo) throws Exception 
+	public Tuple5<Integer, Integer, Float, Float, Long> join(Tuple3<Integer, Integer, Long> tag, Tuple5<Integer, Integer, Float, Float, Long> photo) throws Exception 
 	{
 		// <photo_id, user_id, lat, lon>
-		return new Tuple4<Integer, Integer, Float, Float>(tag.f0, tag.f1, photo.f2, photo.f3);
+		return new Tuple5<Integer, Integer, Float, Float, Long>(tag.f0, tag.f1, photo.f2, photo.f3, photo.f4);   // timestamp????
 	}
 }
