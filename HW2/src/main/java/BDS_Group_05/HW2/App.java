@@ -54,12 +54,18 @@ public class App
         
         // reference: https://ci.apache.org/projects/flink/flink-docs-stable/dev/stream/operators/windows.html#sliding-wixandows
         // GPS: <user_id, lat, lon, timestamp>
-        DataStream<Tuple4<Integer, Float, Float, Long>> GPS = env.addSource(GPS_consumer)
+       /* DataStream<Tuple4<Integer, Float, Float, Long>> GPS = env.addSource(GPS_consumer)
         		.assignTimestampsAndWatermarks(new PunctuatedAssigner())
         		//.map(new parser_GPS())
         		.map(input -> parser_GPS(input))
         		// reference: https://www.codota.com/code/java/methods/org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator/returns
         		.returns(new TypeHint<Tuple4<Integer, Float, Float, Long>>(){});
+        */
+
+        DataStream<String> preGPS = env.addSource(GPS_consumer)
+        		.assignTimestampsAndWatermarks(new PunctuatedAssigner());
+        		//.map(new parser_GPS())
+
         
         // Photo: <photo_id, user_id, lat, lon, timestamp>
         DataStream<Tuple5<Integer, Integer, Float, Float, Long>> Photo = env.addSource(Photo_consumer)
@@ -73,6 +79,20 @@ public class App
         		.map(input -> parser_Tag(input))
         		.returns(new TypeHint<Tuple3<Integer, Integer, Long>>(){});
         
+        // Windowed_GPS: GPS join itself
+		DataStream<Tuple4<Integer, Float, Float, Long>> windowed_GPS = preGPS.join(preGPS)
+        		.where(new SelectKeyFromPreGPS())
+        		.equalTo(new SelectKeyFromPreGPS())
+        		.window(SlidingEventTimeWindows.of(window_length, window_slide))
+        		.apply(new JoinTwoGPS())
+        		.map(input -> parser_GPS(input))
+        		.returns(new TypeHint<Tuple4<Integer, Float, Float, Long>>(){});
+        		;
+        
+		DataStream<Tuple4<Integer, Float, Float, Long>> GPS = preGPS
+        		.map(input -> parser_GPS(input))
+        		.returns(new TypeHint<Tuple4<Integer, Float, Float, Long>>(){});
+		
         // join on photo_id, to get where each photo was posted, <photo_id, user_id, lat, lon>
         // reference (window join): https://ci.apache.org/projects/flink/flink-docs-stable/dev/stream/operators/joining.html
 		DataStream<Tuple5<Integer, Integer, Float, Float, Long>> windowed_join_Tag_Photo = Tag.join(Photo)
@@ -81,12 +101,10 @@ public class App
 	            .window(SlidingEventTimeWindows.of(window_length, window_slide))
         		.apply(new JoinTagPhoto());        // the join function
 		
-		DataStream<Tuple4<Integer, Float, Float, Long>> windowed_GPS = GPS.join(GPS)
-        		.where(new SelectKeyFromGPS())
-        		.equalTo(new SelectKeyFromGPS())
-        		.window(SlidingEventTimeWindows.of(window_length, window_slide))
-        		.apply(new JoinTwoGPS());
+		windowed_join_Tag_Photo.print();
+
 		
+/*
 		// join on user_id, to get where the user is tracked, <photo_id, user_id, lat1, lon1, lat2, lon2>
 		// lat1, lon1: where the photo was posted
 		// lat2, lon2: where the user was tracked
@@ -107,7 +125,6 @@ public class App
         		.reduce((a, b) -> new Tuple2<Integer, Integer>(a.f0, a.f1 + b.f1))  // (user, 1) + (user, 1) = (user, 2)
         		.map(input -> tostring(input));    // Tuple2<Integer, Integer> --> String*/
 		
-        join_GPS.print();
         
         /**************************** PRODUCER *********************************/
         // TODO output to Kafka topic
