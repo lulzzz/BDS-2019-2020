@@ -31,6 +31,9 @@ public class App
 		Time window_length = Time.seconds(15);
 		Time window_slide = Time.seconds(5);
     	StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+    	final String GPS_file = "/Users/lfc746/Desktop/BDS-2019-2020/HW2/testFile/GPS_test"; 
+    	final String Tag_file = "/Users/lfc746/Desktop/BDS-2019-2020/HW2/testFile/Tag_test"; 
+    	final String Photo_file = "/Users/lfc746/Desktop/BDS-2019-2020/HW2/testFile/Photo_test"; 
     	
     	Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", "localhost:9092");
@@ -53,30 +56,44 @@ public class App
         
         /**************************** READ DATA FROM KAFKA *********************************/
         // Photo: <photo_id, user_id, lat, lon, timestamp>
-        DataStream<Tuple5<Integer, Integer, Float, Float, Long>> Photo = env.addSource(Photo_consumer)
+      //  DataStream<Tuple5<Integer, Integer, Float, Float, Long>> Photo = env.addSource(Photo_consumer)
+        DataStream<Tuple5<Integer, Integer, Float, Float, Long>> Photo = env.readTextFile(Photo_file)
         		.assignTimestampsAndWatermarks(new PunctuatedAssigner())
         		.map(input -> parser_Photo(input))
         		// reference: https://www.codota.com/code/java/methods/org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator/returns
         		.returns(new TypeHint<Tuple5<Integer, Integer, Float, Float, Long>>(){});
         
         // Tag: <photo_id, user_id>
-        DataStream<Tuple3<Integer, Integer, Long>> Tag = env.addSource(Tag_consumer)
+      //  DataStream<Tuple3<Integer, Integer, Long>> Tag = env.addSource(Tag_consumer)
+        DataStream<Tuple3<Integer, Integer, Long>> Tag = env.readTextFile(Tag_file)
         		.assignTimestampsAndWatermarks(new PunctuatedAssigner())
         		.map(input -> parser_Tag(input))
         		.returns(new TypeHint<Tuple3<Integer, Integer, Long>>(){});
         
         // GPS: <user_id, lat, lon, timestamp>
-        DataStream<String> preGPS = env.addSource(GPS_consumer)
+     //   DataStream<String> preGPS = env.addSource(GPS_consumer)
+        DataStream<String> preGPS = env.readTextFile(GPS_file)
         		.assignTimestampsAndWatermarks(new PunctuatedAssigner());
         
         // Windowed_GPS: GPS join itself
-		DataStream<Tuple4<Integer, Float, Float, Long>> windowed_GPS = preGPS.join(preGPS)
+		DataStream<Tuple4<Integer, Float, Float, Long>> windowed_GPS =preGPS.join(preGPS)
         		.where(new SelectString())
         		.equalTo(new SelectString())
         		.window(SlidingEventTimeWindows.of(window_length, window_slide))
         		.apply(new JoinTwoGPS())
         		.map(input -> parser_GPS(input))
         		.returns(new TypeHint<Tuple4<Integer, Float, Float, Long>>(){});
+        	/*	.keyBy(0)
+        		.window(TumblingEventTimeWindows.of(window_slide))
+        		.apply(new WindowFunction<Tuple4<Integer, Float, Float, Long>, Tuple4<Integer, Float, Float, Long>, Tuple, TimeWindow>() {
+
+					private static final long serialVersionUID = 1L;
+
+					@Override
+        		    public void apply(Tuple tuple, TimeWindow window, Iterable<Tuple4<Integer, Float, Float, Long>> input, Collector<Tuple4<Integer, Float, Float, Long>> out) throws Exception {
+        		        out.collect(input.iterator().next());
+        		    }
+        		});*/
 		
         // join on photo_id, to get where each photo was posted, <photo_id, user_id, lat, lon>
         // reference (window join): https://ci.apache.org/projects/flink/flink-docs-stable/dev/stream/operators/joining.html
@@ -115,8 +132,12 @@ public class App
         		.returns(new TypeHint<Tuple2<Integer, Integer>>(){})
         		.keyBy(0)
         		.reduce((a, b) -> new Tuple2<Integer, Integer>(a.f0, a.f1 + b.f1))  // (user, 1) + (user, 1) = (user, 2)
-        		.map(input -> tostring(input))
-        		.print();// Tuple2<Integer, Integer> --> String
+        		.map(input -> tostring(input));
+        		//.print();// Tuple2<Integer, Integer> --> String
+         /**************************** TEST *********************************/
+        	//	System.out.print("preGPS:");
+        	//	preGPS.print();
+        		
         		
         
         /**************************** PRODUCER *********************************/
