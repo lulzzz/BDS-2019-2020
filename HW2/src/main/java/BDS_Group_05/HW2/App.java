@@ -6,6 +6,7 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.api.java.tuple.Tuple5;
+import org.apache.flink.api.java.tuple.Tuple6;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.TimeCharacteristic;
@@ -14,8 +15,10 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
+
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 
 public class App 
@@ -29,16 +32,13 @@ public class App
     	Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", "localhost:9092");
         properties.setProperty("zookeeper.connect", "localhost:2181");
-        properties.setProperty("group.id", "test");   // a group of consumers called "test"
+        properties.setProperty("group.id", "HW2");   // a group of consumers called "HW2"
         
         /**************************** CHECKPOINT *********************************/
         //env.enableCheckpointing(10); // start a checkpoint every 10 ms
         env.enableCheckpointing(10000); // start a checkpoint every 10 s
         env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
         //env.setStateBackend(new FsStateBackend("hdfs://localhost:9000/user/krimmity/checkpoint"));   // ??????
-        
-        /**************************** METRICS *********************************/
-        // TODO: latency metrics??????
         
         /**************************** TIMESTAMP & WATERMARK *********************************/
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
@@ -47,30 +47,13 @@ public class App
         FlinkKafkaConsumer<String> GPS_consumer = new FlinkKafkaConsumer<String>("GPS", new SimpleStringSchema(), properties);
         FlinkKafkaConsumer<String> Tag_consumer = new FlinkKafkaConsumer<String>("Tag", new SimpleStringSchema(), properties);
         FlinkKafkaConsumer<String> Photo_consumer = new FlinkKafkaConsumer<String>("Photo", new SimpleStringSchema(), properties);
-        //consumer.setStartFromTimestamp(startupOffsetsTimestamp);
         
-        // reference: https://www.codota.com/code/java/methods/org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator/returns
-		//returns(new TypeHint<Tuple4<Integer, Float, Float, Long>>(){});
-        
-        // reference: https://ci.apache.org/projects/flink/flink-docs-stable/dev/stream/operators/windows.html#sliding-wixandows
-        // GPS: <user_id, lat, lon, timestamp>
-       /* DataStream<Tuple4<Integer, Float, Float, Long>> GPS = env.addSource(GPS_consumer)
-        		.assignTimestampsAndWatermarks(new PunctuatedAssigner())
-        		//.map(new parser_GPS())
-        		.map(input -> parser_GPS(input))
-        		// reference: https://www.codota.com/code/java/methods/org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator/returns
-        		.returns(new TypeHint<Tuple4<Integer, Float, Float, Long>>(){});
-        */
-
-        DataStream<String> preGPS = env.addSource(GPS_consumer)
-        		.assignTimestampsAndWatermarks(new PunctuatedAssigner());
-        		//.map(new parser_GPS())
-
-        
+        /**************************** READ DATA FROM KAFKA *********************************/
         // Photo: <photo_id, user_id, lat, lon, timestamp>
         DataStream<Tuple5<Integer, Integer, Float, Float, Long>> Photo = env.addSource(Photo_consumer)
         		.assignTimestampsAndWatermarks(new PunctuatedAssigner())
         		.map(input -> parser_Photo(input))
+        		// reference: https://www.codota.com/code/java/methods/org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator/returns
         		.returns(new TypeHint<Tuple5<Integer, Integer, Float, Float, Long>>(){});
         
         // Tag: <photo_id, user_id>
@@ -79,17 +62,16 @@ public class App
         		.map(input -> parser_Tag(input))
         		.returns(new TypeHint<Tuple3<Integer, Integer, Long>>(){});
         
+        // GPS: <user_id, lat, lon, timestamp>
+        DataStream<String> preGPS = env.addSource(GPS_consumer)
+        		.assignTimestampsAndWatermarks(new PunctuatedAssigner());
+        
         // Windowed_GPS: GPS join itself
 		DataStream<Tuple4<Integer, Float, Float, Long>> windowed_GPS = preGPS.join(preGPS)
-        		.where(new SelectKeyFromPreGPS())
-        		.equalTo(new SelectKeyFromPreGPS())
+        		.where(new SelectString())
+        		.equalTo(new SelectString())
         		.window(SlidingEventTimeWindows.of(window_length, window_slide))
         		.apply(new JoinTwoGPS())
-        		.map(input -> parser_GPS(input))
-        		.returns(new TypeHint<Tuple4<Integer, Float, Float, Long>>(){});
-        		;
-        
-		DataStream<Tuple4<Integer, Float, Float, Long>> GPS = preGPS
         		.map(input -> parser_GPS(input))
         		.returns(new TypeHint<Tuple4<Integer, Float, Float, Long>>(){});
 		
@@ -100,31 +82,27 @@ public class App
 	            .equalTo(new SelectKeyFromPhoto()) // select photo_id from Photo
 	            .window(SlidingEventTimeWindows.of(window_length, window_slide))
         		.apply(new JoinTagPhoto());        // the join function
-		
-		windowed_join_Tag_Photo.print();
 
-		
-/*
 		// join on user_id, to get where the user is tracked, <photo_id, user_id, lat1, lon1, lat2, lon2>
 		// lat1, lon1: where the photo was posted
 		// lat2, lon2: where the user was tracked
-        DataStream<Tuple2<Integer, Integer>> join_GPS = windowed_join_Tag_Photo.join(windowed_GPS)
+        DataStream<Object> join_GPS = windowed_join_Tag_Photo.join(windowed_GPS)
         		.where(new SelectKey())            // select user_id from join_Tag_Photo
         		.equalTo(new SelectKeyFromGPS())   // select user_id from GPS
-        		.window(TumblingProcessingTimeWindows.of(window_length))
+        		.window(TumblingEventTimeWindows.of(window_length))
         		.apply(new JoinGPS())              // join on user_id, the result is <photo_id, user_id, lat1, lon1, lat2, lon2>
         		.filter(new Myfilter())            // filter out the location with distance > 5km
-        		.map(input -> new Tuple2<Integer, Integer>(input.f1, input.f0))
+        		.map(input -> new Tuple2<Integer, Integer>(input.f1, input.f0))  // user_id, photo_id
         		.returns(new TypeHint<Tuple2<Integer, Integer>>(){})
         		.keyBy(0)                          // partition by user_id
-        		.flatMap(new DuplicateFilter());
-        /*
+        		.flatMap(new DuplicateFilter())
         		.map(input -> new Tuple2<Integer, Integer>(input.f1, 1))   // project to get <user_id, 1>
         		.returns(new TypeHint<Tuple2<Integer, Integer>>(){})
         		.keyBy(0)
         		.reduce((a, b) -> new Tuple2<Integer, Integer>(a.f0, a.f1 + b.f1))  // (user, 1) + (user, 1) = (user, 2)
-        		.map(input -> tostring(input));    // Tuple2<Integer, Integer> --> String*/
+        		.map(input -> tostring(input));    // Tuple2<Integer, Integer> --> String
 		
+        join_GPS.print();
         
         /**************************** PRODUCER *********************************/
         // TODO output to Kafka topic

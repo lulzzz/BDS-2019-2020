@@ -1,7 +1,6 @@
 package BDS_Group_05.HW2;
 
 import org.apache.flink.api.common.functions.JoinFunction;
-import org.apache.flink.api.java.tuple.Tuple4;
 
 public class JoinTwoGPS implements JoinFunction<String, String, String> 
 {
