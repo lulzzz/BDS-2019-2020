@@ -7,7 +7,7 @@ public class PunctuatedAssigner implements AssignerWithPunctuatedWatermarks<Stri
 {
 	private static final long serialVersionUID = 1L;
 	private long currentMaxTimestamp;
-	private static long d = 0;    // delay 20 ms
+	private static long d = 20;    // delay 20 ms
 	
 	@Override 
     public Watermark checkAndGetNextWatermark(String lastEvent, long extractedTimestamp) 
