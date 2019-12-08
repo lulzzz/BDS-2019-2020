@@ -47,6 +47,25 @@
       <artifactId>slf4j-log4j12</artifactId>
       <version>1.7.5</version>
    </dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-common -->
+	<dependency>
+	    <groupId>org.apache.hadoop</groupId>
+	    <artifactId>hadoop-common</artifactId>
+	    <version>3.2.1</version>
+	</dependency>
     
   </dependencies>
+  <build>
+  <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+        </configuration>
+    </plugin>
+   </plugins>
+   </build>
 </project>

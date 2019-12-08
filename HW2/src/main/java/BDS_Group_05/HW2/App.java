@@ -6,6 +6,7 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.api.java.tuple.Tuple5;
+import org.apache.flink.runtime.state.filesystem.FsStateBackend;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.TimeCharacteristic;
@@ -13,7 +14,6 @@ import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
@@ -28,17 +28,17 @@ public class App
 	public static void main(String[] args)
     {
         /**************************** CHECKPOINT *********************************/
-        //env.enableCheckpointing(10); // start a checkpoint every 10 ms
+        env.enableCheckpointing(10); // start a checkpoint every 10 ms
         env.enableCheckpointing(10000); // start a checkpoint every 10 s
         env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
-        //env.setStateBackend(new FsStateBackend("hdfs://localhost:9000/user/krimmity/checkpoint"));   // TODO: ??????
+        env.setStateBackend(new FsStateBackend("hdfs://localhost:9000/user/ziming/checkpoint"));   // TODO: ??????
         
         /**************************** TIMESTAMP & WATERMARK **********************/
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
         
         /**************************** PROCESS DATA *******************************/
-        processData();
-        //processTestData();
+        //processData();
+        processTestData();
     }
 	
 	public static void processData()
@@ -65,9 +65,9 @@ public class App
 	
 	public static void processTestData()
 	{
-		final String GPS_file = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/GPS_test"; 
-    	final String Tag_file = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/Tag_test"; 
-    	final String Photo_file = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/Photo_test"; 
+		final String GPS_file = "/Users/lfc746/Desktop/BDS-2019-2020/HW2/testFile/GPS_test"; 
+    	final String Tag_file = "/Users/lfc746/Desktop/BDS-2019-2020/HW2/testFile/Tag_test"; 
+    	final String Photo_file = "/Users/lfc746/Desktop/BDS-2019-2020/HW2/testFile/Photo_test"; 
     	
     	DataStream<String> Photo = env.readTextFile(Photo_file);
     	DataStream<String> Tag = env.readTextFile(Tag_file);
