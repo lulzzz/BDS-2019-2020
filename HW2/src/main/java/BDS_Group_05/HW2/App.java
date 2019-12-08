@@ -21,12 +21,12 @@ public class App
 {
 	public static Time window_length = Time.seconds(15);
 	public static Time window_slide = Time.seconds(5);
-	
+	public static final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
 
 	
 	public static void main(String[] args) throws Exception
     {
-		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         /**************************** CHECKPOINT *********************************/
         //env.enableCheckpointing(10); // start a checkpoint every 10 ms
         env.enableCheckpointing(10000); // start a checkpoint every 10 s
