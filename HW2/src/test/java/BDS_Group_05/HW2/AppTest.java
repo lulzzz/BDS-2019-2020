@@ -15,23 +15,29 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 
 public class AppTest extends TestCase
 {
-    public void testSmallDataset() throws IOException
+	public static final String usr_path = "/Users/lfc746/Desktop/BDS-2019-2020/HW2/testFile/";
+	public void testSmallDataset() throws IOException
     {
     	App.env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
     	
-    	final String GPS_file = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/smallDataset-GPS"; 
-    	final String Tag_file = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/smallDataset-Tag"; 
-    	final String Photo_file = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/smallDataset-Photo"; 
-    	final String path = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/smallDataset-actual";
+    	final String GPS_file = usr_path + "smallDataset-GPS"; 
+    	final String Tag_file = usr_path + "smallDataset-Tag"; 
+    	final String Photo_file = usr_path + "smallDataset-Photo"; 
+    	final String path = usr_path + "smallDataset-actual";
     	
     	DataStream<String> Photo = App.env.readTextFile(Photo_file);
     	DataStream<String> Tag = App.env.readTextFile(Tag_file);
     	DataStream<String> GPS = App.env.readTextFile(GPS_file);
     	
-    	App.process(Photo, Tag, GPS, true, path);
+    	try {
+			App.process(Photo, Tag, GPS, true, path);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	
-    	File file1 = new File("/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/smallDataset-actual");
-    	File file2 = new File("/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/smallDataset-expect");
+    	File file1 = new File(usr_path + "smallDataset-actual");
+    	File file2 = new File(usr_path + "smallDataset-expect");
     	@SuppressWarnings("resource")
 		BufferedReader buffer1 = new BufferedReader(new FileReader(file1));
     	@SuppressWarnings("resource")
@@ -62,32 +68,42 @@ public class AppTest extends TestCase
     	App.env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
     	
     	// process out-of-order data
-    	final String out_GPS_file = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/out-of-order-GPS"; 
-    	final String out_Tag_file = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/out-of-order-Tag"; 
-    	final String out_Photo_file = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/out-of-order-Photo"; 
-    	final String out_path = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/out-of-order-result";
+    	final String out_GPS_file = usr_path + "out-of-order-GPS"; 
+    	final String out_Tag_file = usr_path + "out-of-order-Tag"; 
+    	final String out_Photo_file = usr_path + "out-of-order-Photo"; 
+    	final String out_path = usr_path + "out-of-order-result";
     	
     	DataStream<String> out_Photo = App.env.readTextFile(out_Photo_file);
     	DataStream<String> out_Tag = App.env.readTextFile(out_Tag_file);
     	DataStream<String> out_GPS = App.env.readTextFile(out_GPS_file);
     	
-    	App.process(out_Photo, out_Tag, out_GPS, true, out_path);
+    	try {
+			App.process(out_Photo, out_Tag, out_GPS, true, out_path);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	
     	// process in-order data
-    	final String in_GPS_file = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/in-order-GPS"; 
-    	final String in_Tag_file = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/in-order-Tag"; 
-    	final String in_Photo_file = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/in-order-Photo"; 
-    	final String in_path = "/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/in-order-result";
+    	final String in_GPS_file = usr_path + "in-order-GPS"; 
+    	final String in_Tag_file = usr_path + "in-order-Tag"; 
+    	final String in_Photo_file = usr_path + "in-order-Photo"; 
+    	final String in_path = usr_path + "in-order-result";
     	
     	DataStream<String> in_Photo = App.env.readTextFile(in_Photo_file);
     	DataStream<String> in_Tag = App.env.readTextFile(in_Tag_file);
     	DataStream<String> in_GPS = App.env.readTextFile(in_GPS_file);
     	
-    	App.process(in_Photo, in_Tag, in_GPS, true, in_path);
+    	try {
+			App.process(in_Photo, in_Tag, in_GPS, true, in_path);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	
     	// compare two results
-    	File file1 = new File("/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/out-of-order-result");
-    	File file2 = new File("/Users/krimmity/Documents/BDS-2019-2020/HW2/testFile/in-order-result");
+    	File file1 = new File(usr_path + "out-of-order-result");
+    	File file2 = new File(usr_path + "in-order-result");
     	@SuppressWarnings("resource")
 		BufferedReader buffer1 = new BufferedReader(new FileReader(file1));
     	@SuppressWarnings("resource")

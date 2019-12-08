@@ -22,17 +22,17 @@ public class App
 	public static Time window_length = Time.seconds(15);
 	public static Time window_slide = Time.seconds(5);
 	
-	public static StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
 	
-	@SuppressWarnings("deprecation")
-	public static void main(String[] args)
+	public static void main(String[] args) throws Exception
     {
+		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         /**************************** CHECKPOINT *********************************/
         //env.enableCheckpointing(10); // start a checkpoint every 10 ms
         env.enableCheckpointing(10000); // start a checkpoint every 10 s
         // https://ci.apache.org/projects/flink/flink-docs-stable/dev/projectsetup/dependencies.html#hadoop-dependencies
         // https://ci.apache.org/projects/flink/flink-docs-release-1.9/ops/deployment/hadoop.html#configuring-flink-with-hadoop-classpaths
-        env.setStateBackend(new FsStateBackend("hdfs://localhost:9000/user/krimmity/checkpoint"));
+        env.setStateBackend(new FsStateBackend("hdfs://localhost:9000/user/ziming/checkpoint"));
         
         /**************************** TIMESTAMP & WATERMARK **********************/
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
@@ -40,7 +40,7 @@ public class App
         /**************************** PROPERTIES *********************************/
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", "localhost:9092");
-        properties.setProperty("zookeeper.connect", "localhost:2181");
+      //  properties.setProperty("zookeeper.connect", "localhost:2181");
         properties.setProperty("group.id", "HW2");   // a group of consumers called "HW2"
         
         /**************************** CONSUMER ***********************************/
@@ -52,12 +52,16 @@ public class App
         DataStream<String> Tag = env.addSource(Tag_consumer);
         DataStream<String> GPS = env.addSource(GPS_consumer);
         
-        process(Photo, Tag, GPS, false, "");
+
+		process(Photo, Tag, GPS, false, "");
+		Photo.print();
+    	env.execute("Window Join and Aggregation");
     }
 	
-	public static void process(DataStream<String> Photo_source, DataStream<String> Tag_source, DataStream<String> GPS_source, boolean isTest, String path)
+	public static void process(DataStream<String> Photo_source, DataStream<String> Tag_source, DataStream<String> GPS_source, boolean isTest, String path) throws Exception
 	{
         // Photo: <photo_id, user_id, lat, lon, timestamp>
+		System.out.print("tsetestsetset");
         DataStream<Tuple5<Integer, Integer, Float, Float, Long>> Photo = Photo_source.assignTimestampsAndWatermarks(new PunctuatedAssigner())
         		.map(input -> parser_Photo(input))
         		// reference: https://www.codota.com/code/java/methods/org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator/returns
@@ -121,14 +125,9 @@ public class App
          	join_GPS.addSink(myProducer);
         }
         
-        try 
-        {
-			env.execute("Window Join and Aggregation");
-		} 
-        catch (Exception e) 
-        {
-			e.printStackTrace();
-		}
+
+		//	env.execute("Window Join and Aggregation");
+
 	}
 	
 	public static Tuple5<Integer, Integer, Float, Float, Long> parser_Photo(String str)
