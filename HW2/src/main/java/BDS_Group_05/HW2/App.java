@@ -1,19 +1,18 @@
 package BDS_Group_05.HW2;
 
 import java.util.Properties;
-
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.api.java.tuple.Tuple5;
-import org.apache.flink.runtime.state.filesystem.FsStateBackend;
 import org.apache.flink.api.common.typeinfo.TypeHint;
-import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.runtime.state.filesystem.FsStateBackend;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
@@ -25,29 +24,26 @@ public class App
 	
 	public static StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 	
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args)
     {
         /**************************** CHECKPOINT *********************************/
-        env.enableCheckpointing(10); // start a checkpoint every 10 ms
+        //env.enableCheckpointing(10); // start a checkpoint every 10 ms
         env.enableCheckpointing(10000); // start a checkpoint every 10 s
-        env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
-        env.setStateBackend(new FsStateBackend("hdfs://localhost:9000/user/ziming/checkpoint"));   // TODO: ??????
+        // https://ci.apache.org/projects/flink/flink-docs-stable/dev/projectsetup/dependencies.html#hadoop-dependencies
+        // https://ci.apache.org/projects/flink/flink-docs-release-1.9/ops/deployment/hadoop.html#configuring-flink-with-hadoop-classpaths
+        env.setStateBackend(new FsStateBackend("hdfs://localhost:9000/user/krimmity/checkpoint"));
         
         /**************************** TIMESTAMP & WATERMARK **********************/
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
         
-        /**************************** PROCESS DATA *******************************/
-        //processData();
-        processTestData();
-    }
-	
-	public static void processData()
-	{
-		Properties properties = new Properties();
+        /**************************** PROPERTIES *********************************/
+        Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", "localhost:9092");
         properties.setProperty("zookeeper.connect", "localhost:2181");
         properties.setProperty("group.id", "HW2");   // a group of consumers called "HW2"
         
+        /**************************** CONSUMER ***********************************/
         FlinkKafkaConsumer<String> GPS_consumer = new FlinkKafkaConsumer<String>("GPS", new SimpleStringSchema(), properties);
         FlinkKafkaConsumer<String> Tag_consumer = new FlinkKafkaConsumer<String>("Tag", new SimpleStringSchema(), properties);
         FlinkKafkaConsumer<String> Photo_consumer = new FlinkKafkaConsumer<String>("Photo", new SimpleStringSchema(), properties);
@@ -56,27 +52,10 @@ public class App
         DataStream<String> Tag = env.addSource(Tag_consumer);
         DataStream<String> GPS = env.addSource(GPS_consumer);
         
-        process(Photo, Tag, GPS);
-        
-        // TODO output to Kafka topic
-     	//FlinkKafkaProducer<String> myProducer = new FlinkKafkaProducer<>("localhost:9092", "output", new SimpleStringSchema());
-     	//join_GPS.addSink(myProducer );
-	}
+        process(Photo, Tag, GPS, false, "");
+    }
 	
-	public static void processTestData()
-	{
-		final String GPS_file = "/Users/lfc746/Desktop/BDS-2019-2020/HW2/testFile/GPS_test"; 
-    	final String Tag_file = "/Users/lfc746/Desktop/BDS-2019-2020/HW2/testFile/Tag_test"; 
-    	final String Photo_file = "/Users/lfc746/Desktop/BDS-2019-2020/HW2/testFile/Photo_test"; 
-    	
-    	DataStream<String> Photo = env.readTextFile(Photo_file);
-    	DataStream<String> Tag = env.readTextFile(Tag_file);
-    	DataStream<String> GPS = env.readTextFile(GPS_file);
-    	
-    	process(Photo, Tag, GPS);
-	}
-	
-	public static void process(DataStream<String> Photo_source, DataStream<String> Tag_source, DataStream<String> GPS_source)
+	public static void process(DataStream<String> Photo_source, DataStream<String> Tag_source, DataStream<String> GPS_source, boolean isTest, String path)
 	{
         // Photo: <photo_id, user_id, lat, lon, timestamp>
         DataStream<Tuple5<Integer, Integer, Float, Float, Long>> Photo = Photo_source.assignTimestampsAndWatermarks(new PunctuatedAssigner())
@@ -111,7 +90,8 @@ public class App
 		// join on user_id, to get where the user is tracked, <photo_id, user_id, lat1, lon1, lat2, lon2>
 		// lat1, lon1: where the photo was posted
 		// lat2, lon2: where the user was tracked
-        DataStream<String> join_GPS = windowed_join_Tag_Photo.join(windowed_GPS)
+        DataStream<String> join_GPS = 
+        		windowed_join_Tag_Photo.join(windowed_GPS)
         		.where(new SelectKey())                                            // select user_id from join_Tag_Photo
         		.equalTo(new SelectKeyFromGPS())                                   // select user_id from GPS
         		.window(TumblingEventTimeWindows.of(window_slide))
@@ -129,8 +109,18 @@ public class App
         		.reduce((a, b) -> new Tuple2<Integer, Integer>(a.f0, a.f1 + b.f1)) // (user, 1) + (user, 1) = (user, 2)
         		.map(input -> tostring(input));                                    // Tuple2<Integer, Integer> --> String
         
-        join_GPS.print();
-
+        if(isTest)
+        {
+        	join_GPS.writeAsText(path, org.apache.flink.core.fs.FileSystem.WriteMode.OVERWRITE)
+        	        .setParallelism(1);
+        }
+        else
+        {
+        	@SuppressWarnings("deprecation")
+			FlinkKafkaProducer<String> myProducer = new FlinkKafkaProducer<String>("localhost:9092", "output", new SimpleStringSchema());
+         	join_GPS.addSink(myProducer);
+        }
+        
         try 
         {
 			env.execute("Window Join and Aggregation");
