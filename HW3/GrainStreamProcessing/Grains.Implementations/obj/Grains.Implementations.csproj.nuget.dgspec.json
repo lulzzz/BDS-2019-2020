@@ -1,0 +1,197 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/krimmity/Projects/GrainStreamProcessing/Grains.Implementations/Grains.Implementations.csproj": {}
+  },
+  "projects": {
+    "/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/Functions.Interfaces.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/Functions.Interfaces.csproj",
+        "projectName": "Functions.Interfaces",
+        "projectPath": "/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/Functions.Interfaces.csproj",
+        "packagesPath": "/Users/krimmity/.nuget/packages/",
+        "outputPath": "/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/krimmity/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.100/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/krimmity/Projects/GrainStreamProcessing/Grains.Implementations/Grains.Implementations.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/krimmity/Projects/GrainStreamProcessing/Grains.Implementations/Grains.Implementations.csproj",
+        "projectName": "Grains.Implementations",
+        "projectPath": "/Users/krimmity/Projects/GrainStreamProcessing/Grains.Implementations/Grains.Implementations.csproj",
+        "packagesPath": "/Users/krimmity/.nuget/packages/",
+        "outputPath": "/Users/krimmity/Projects/GrainStreamProcessing/Grains.Implementations/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/krimmity/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/Functions.Interfaces.csproj": {
+                "projectPath": "/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/Functions.Interfaces.csproj"
+              },
+              "/Users/krimmity/Projects/GrainStreamProcessing/Grains.Interfaces/Grains.Interfaces.csproj": {
+                "projectPath": "/Users/krimmity/Projects/GrainStreamProcessing/Grains.Interfaces/Grains.Interfaces.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Microsoft.Extensions.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
+            "Microsoft.Orleans.CodeGenerator.MSBuild": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.0.1, )"
+            },
+            "Microsoft.Orleans.Core.Abstractions": {
+              "target": "Package",
+              "version": "[3.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.100/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/krimmity/Projects/GrainStreamProcessing/Grains.Interfaces/Grains.Interfaces.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/krimmity/Projects/GrainStreamProcessing/Grains.Interfaces/Grains.Interfaces.csproj",
+        "projectName": "Grains.Interfaces",
+        "projectPath": "/Users/krimmity/Projects/GrainStreamProcessing/Grains.Interfaces/Grains.Interfaces.csproj",
+        "packagesPath": "/Users/krimmity/.nuget/packages/",
+        "outputPath": "/Users/krimmity/Projects/GrainStreamProcessing/Grains.Interfaces/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/krimmity/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/Functions.Interfaces.csproj": {
+                "projectPath": "/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/Functions.Interfaces.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Microsoft.Orleans.CodeGenerator.MSBuild": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.0.1, )"
+            },
+            "Microsoft.Orleans.Core.Abstractions": {
+              "target": "Package",
+              "version": "[3.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.100/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

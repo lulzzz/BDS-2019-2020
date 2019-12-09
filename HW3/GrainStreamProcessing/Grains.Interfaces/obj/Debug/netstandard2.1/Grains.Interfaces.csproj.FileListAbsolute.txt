@@ -1,0 +1,2 @@
+/Users/krimmity/Projects/GrainStreamProcessing/Grains.Interfaces/obj/Debug/netstandard2.1/Grains.Interfaces.csprojAssemblyReference.cache
+/Users/krimmity/Projects/GrainStreamProcessing/Grains.Interfaces/obj/Debug/netstandard2.1/Grains.Interfaces.csproj.OrleansCodeGenInputs.cache

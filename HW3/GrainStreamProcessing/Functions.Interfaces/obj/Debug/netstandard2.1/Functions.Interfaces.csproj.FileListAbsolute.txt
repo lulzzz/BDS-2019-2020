@@ -1,0 +1,8 @@
+/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/bin/Debug/netstandard2.1/Functions.Interfaces.deps.json
+/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/bin/Debug/netstandard2.1/Functions.Interfaces.dll
+/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/bin/Debug/netstandard2.1/Functions.Interfaces.pdb
+/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/obj/Debug/netstandard2.1/Functions.Interfaces.csprojAssemblyReference.cache
+/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/obj/Debug/netstandard2.1/Functions.Interfaces.AssemblyInfoInputs.cache
+/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/obj/Debug/netstandard2.1/Functions.Interfaces.AssemblyInfo.cs
+/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/obj/Debug/netstandard2.1/Functions.Interfaces.dll
+/Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/obj/Debug/netstandard2.1/Functions.Interfaces.pdb
