@@ -12,7 +12,7 @@ namespace Client
     {
         static int Main(string[] args)
         {
-            return RunMainAsync().Result; ;
+            return RunMainAsync().Result;
         }
 
         private static async Task<int> RunMainAsync()

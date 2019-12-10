@@ -5,15 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="3.0.1" />
-    <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="3.0.1">
+    <ProjectReference Include="..\Grains.Interfaces\Grains.Interfaces.csproj" />
+    <ProjectReference Include="..\Functions.Interfaces\Functions.Interfaces.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Orleans.CodeGenerator.MSBuild" Version="2.2.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Grains.Interfaces\Grains.Interfaces.csproj" />
-    <ProjectReference Include="..\Functions.Interfaces\Functions.Interfaces.csproj" />
+    <PackageReference Include="Microsoft.Orleans.Core" Version="2.2.0" />
   </ItemGroup>
 </Project>

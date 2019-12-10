@@ -6,3 +6,10 @@
 /Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/obj/Debug/netstandard2.1/Functions.Interfaces.AssemblyInfo.cs
 /Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/obj/Debug/netstandard2.1/Functions.Interfaces.dll
 /Users/krimmity/Projects/GrainStreamProcessing/Functions.Interfaces/obj/Debug/netstandard2.1/Functions.Interfaces.pdb
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Functions.Interfaces/bin/Debug/netstandard2.1/Functions.Interfaces.deps.json
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Functions.Interfaces/bin/Debug/netstandard2.1/Functions.Interfaces.dll
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Functions.Interfaces/bin/Debug/netstandard2.1/Functions.Interfaces.pdb
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Functions.Interfaces/obj/Debug/netstandard2.1/Functions.Interfaces.AssemblyInfoInputs.cache
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Functions.Interfaces/obj/Debug/netstandard2.1/Functions.Interfaces.AssemblyInfo.cs
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Functions.Interfaces/obj/Debug/netstandard2.1/Functions.Interfaces.dll
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Functions.Interfaces/obj/Debug/netstandard2.1/Functions.Interfaces.pdb

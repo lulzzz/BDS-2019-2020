@@ -1,20 +1,40 @@
 ﻿<Properties StartupConfiguration="{D876E224-6C26-4EA4-AA8D-ABF85DD67603}|Default">
   <MonoDevelop.Ide.ItemProperties.Client FirstBuild="True" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Grains.Implementations/SampleGrain.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Functions.Interfaces/IFilterFunction.cs">
     <Files>
-      <File FileName="Grains.Interfaces/ISample.cs" Line="1" Column="1" />
-      <File FileName="Grains.Implementations/SampleGrain.cs" Line="1" Column="1" />
+      <File FileName="Silo/Program.cs" Line="1" Column="1" />
+      <File FileName="Client/Program.cs" Line="1" Column="1" />
+      <File FileName="Functions.Implementations/LargerThanTen.cs" Line="1" Column="1" />
+      <File FileName="Functions.Interfaces/IFilterFunction.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="GrainStreamProcessing" expanded="True">
-            <Node name="Client" expanded="True" />
+            <Node name="Client" expanded="True">
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
+            </Node>
             <Node name="Functions.Implementations" expanded="True" />
-            <Node name="Functions.Interfaces" expanded="True" />
-            <Node name="Grains.Implementations" expanded="True" />
-            <Node name="Grains.Interfaces" expanded="True" />
-            <Node name="Silo" expanded="True" selected="True" />
+            <Node name="Functions.Interfaces" expanded="True">
+              <Node name="IFilterFunction.cs" selected="True" />
+            </Node>
+            <Node name="Grains.Implementations" expanded="True">
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
+            </Node>
+            <Node name="Grains.Interfaces" expanded="True">
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
+            </Node>
+            <Node name="Silo" expanded="True">
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
+            </Node>
           </Node>
         </State>
       </Pad>
