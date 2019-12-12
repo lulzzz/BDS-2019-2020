@@ -1,0 +1,86 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETStandard,Version=v2.1": {
+      "Functions.Interfaces/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.1",
+        "compile": {
+          "bin/placeholder/Functions.Interfaces.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Functions.Interfaces.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Functions.Interfaces/1.0.0": {
+      "type": "project",
+      "path": "../Functions.Interfaces/Functions.Interfaces.csproj",
+      "msbuildProject": "../Functions.Interfaces/Functions.Interfaces.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETStandard,Version=v2.1": [
+      "Functions.Interfaces >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "/Users/krimmity/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Functions.Implementations/Functions.Implementations.csproj",
+      "projectName": "Functions.Implementations",
+      "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Functions.Implementations/Functions.Implementations.csproj",
+      "packagesPath": "/Users/krimmity/.nuget/packages/",
+      "outputPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Functions.Implementations/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/Users/krimmity/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "netstandard2.1"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "projectReferences": {
+            "/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Functions.Interfaces/Functions.Interfaces.csproj": {
+              "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Functions.Interfaces/Functions.Interfaces.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "netstandard2.1": {
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "NETStandard.Library": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.100/RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

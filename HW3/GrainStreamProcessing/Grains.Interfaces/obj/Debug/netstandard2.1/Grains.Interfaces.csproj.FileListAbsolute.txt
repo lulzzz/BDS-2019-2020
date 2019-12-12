@@ -1,0 +1,15 @@
+/Users/krimmity/Projects/GrainStreamProcessing/Grains.Interfaces/obj/Debug/netstandard2.1/Grains.Interfaces.csprojAssemblyReference.cache
+/Users/krimmity/Projects/GrainStreamProcessing/Grains.Interfaces/obj/Debug/netstandard2.1/Grains.Interfaces.csproj.OrleansCodeGenInputs.cache
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Grains.Interfaces/bin/Debug/netstandard2.1/Grains.Interfaces.deps.json
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Grains.Interfaces/bin/Debug/netstandard2.1/Grains.Interfaces.dll
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Grains.Interfaces/bin/Debug/netstandard2.1/Grains.Interfaces.pdb
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Grains.Interfaces/bin/Debug/netstandard2.1/Functions.Interfaces.dll
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Grains.Interfaces/bin/Debug/netstandard2.1/Functions.Interfaces.pdb
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Grains.Interfaces/obj/Debug/netstandard2.1/Grains.Interfaces.csprojAssemblyReference.cache
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Grains.Interfaces/obj/Debug/netstandard2.1/Grains.Interfaces.csproj.OrleansCodeGenInputs.cache
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Grains.Interfaces/obj/Debug/netstandard2.1/Grains.Interfaces.orleans.g.cs
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Grains.Interfaces/obj/Debug/netstandard2.1/Grains.Interfaces.AssemblyInfoInputs.cache
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Grains.Interfaces/obj/Debug/netstandard2.1/Grains.Interfaces.AssemblyInfo.cs
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Grains.Interfaces/obj/Debug/netstandard2.1/Grains.Interfaces.csproj.CopyComplete
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Grains.Interfaces/obj/Debug/netstandard2.1/Grains.Interfaces.dll
+/Users/krimmity/Documents/BDS-2019-2020/HW3/GrainStreamProcessing/Grains.Interfaces/obj/Debug/netstandard2.1/Grains.Interfaces.pdb
