@@ -1,0 +1,23 @@
+﻿<Properties StartupConfiguration="{C3A3EF28-F41B-4DEC-A2AE-DA5E0F9FAADF}|Default">
+  <MonoDevelop.Ide.ItemProperties.Client PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="StreamProcessing" expanded="True">
+            <Node name="Function" expanded="True" />
+            <Node name="Grain.Implementation" expanded="True" />
+            <Node name="Grain.Interface" expanded="True" />
+            <Node name="Silo" expanded="True" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

@@ -1,0 +1,192 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Client/Client.csproj": {}
+  },
+  "projects": {
+    "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Client/Client.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Client/Client.csproj",
+        "projectName": "Client",
+        "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Client/Client.csproj",
+        "packagesPath": "/Users/krimmity/.nuget/packages/",
+        "outputPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Client/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/krimmity/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.0": {
+            "projectReferences": {
+              "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj": {
+                "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.0": {
+          "dependencies": {
+            "Microsoft.Extensions.Logging.Console": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
+            "Microsoft.Orleans.Client": {
+              "target": "Package",
+              "version": "[3.0.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.100/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj",
+        "projectName": "Function",
+        "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj",
+        "packagesPath": "/Users/krimmity/.nuget/packages/",
+        "outputPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/krimmity/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.100/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj",
+        "projectName": "Grain.Interface",
+        "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj",
+        "packagesPath": "/Users/krimmity/.nuget/packages/",
+        "outputPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/krimmity/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj": {
+                "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Microsoft.Orleans.CodeGenerator.MSBuild": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.0.2, )"
+            },
+            "Microsoft.Orleans.Core": {
+              "target": "Package",
+              "version": "[3.0.2, )"
+            },
+            "Microsoft.Orleans.Core.Abstractions": {
+              "target": "Package",
+              "version": "[3.0.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.100/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
