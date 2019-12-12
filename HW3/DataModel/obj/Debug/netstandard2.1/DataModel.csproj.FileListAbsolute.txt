@@ -1,0 +1,7 @@
+/Users/liangyuan/Projects/OrleansTest3/DataModel/bin/Debug/netstandard2.1/DataModel.deps.json
+/Users/liangyuan/Projects/OrleansTest3/DataModel/bin/Debug/netstandard2.1/DataModel.dll
+/Users/liangyuan/Projects/OrleansTest3/DataModel/bin/Debug/netstandard2.1/DataModel.pdb
+/Users/liangyuan/Projects/OrleansTest3/DataModel/obj/Debug/netstandard2.1/DataModel.AssemblyInfoInputs.cache
+/Users/liangyuan/Projects/OrleansTest3/DataModel/obj/Debug/netstandard2.1/DataModel.AssemblyInfo.cs
+/Users/liangyuan/Projects/OrleansTest3/DataModel/obj/Debug/netstandard2.1/DataModel.dll
+/Users/liangyuan/Projects/OrleansTest3/DataModel/obj/Debug/netstandard2.1/DataModel.pdb

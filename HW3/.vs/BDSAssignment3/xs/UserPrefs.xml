@@ -1,0 +1,43 @@
+﻿<Properties StartupConfiguration="{9C328602-EC29-4E47-B07F-4C23B6ED3D3C}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Grains/FlatMapGrain.cs">
+    <Files>
+      <File FileName="DataModel/Functions.cs" Line="11" Column="30" />
+      <File FileName="GrainInterfaces/IFlatMap.cs" Line="5" Column="48" />
+      <File FileName="Grains/FlatMapGrain.cs" Line="9" Column="69" />
+      <File FileName="Grains/FilterGrain.cs" Line="1" Column="1" />
+      <File FileName="GrainInterfaces/IFilter.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="BDSAssignment3" expanded="True">
+            <Node name="Client" expanded="True" />
+            <Node name="GrainInterfaces" expanded="True" />
+            <Node name="Grains" expanded="True">
+              <Node name="FlatMapGrain.cs" selected="True" />
+            </Node>
+            <Node name="Model" expanded="True" />
+            <Node name="Silo" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.Silo PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations>
+    <MultiItemSolutionRunConfiguration Id="多个项目" Name="多个项目">
+      <Items>
+        <StartupItem ItemId="{128F7FED-B724-4EAB-94F7-CDCD1E44B014}" ItemName="Client" ConfigurationId="Default" />
+        <StartupItem ItemId="{9C328602-EC29-4E47-B07F-4C23B6ED3D3C}" ItemName="Silo" ConfigurationId="Default" />
+      </Items>
+    </MultiItemSolutionRunConfiguration>
+  </MultiItemStartupConfigurations>
+</Properties>

@@ -9,7 +9,7 @@ import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.datastream.DataStream;
-//import org.apache.flink.runtime.state.filesystem.FsStateBackend;
+import org.apache.flink.runtime.state.filesystem.FsStateBackend;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
@@ -24,17 +24,15 @@ public class App
 	public static Time window_slide = Time.seconds(5);
 	public static final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-
-	
 	public static void main(String[] args) throws Exception
     {
 		
         /**************************** CHECKPOINT *********************************/
-       // env.enableCheckpointing(10); // start a checkpoint every 10 ms
-      //  env.enableCheckpointing(10000); // start a checkpoint every 10 s
+      //  env.enableCheckpointing(10); // start a checkpoint every 10 ms
+        env.enableCheckpointing(10000); // start a checkpoint every 10 s
         // https://ci.apache.org/projects/flink/flink-docs-stable/dev/projectsetup/dependencies.html#hadoop-dependencies
         // https://ci.apache.org/projects/flink/flink-docs-release-1.9/ops/deployment/hadoop.html#configuring-flink-with-hadoop-classpaths
-        //env.setStateBackend(new FsStateBackend("hdfs://localhost:9000/user/ziming/checkpoint"));
+        env.setStateBackend(new FsStateBackend("hdfs://localhost:9000/user/ziming/checkpoint"));
         
         /**************************** TIMESTAMP & WATERMARK **********************/
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
@@ -42,8 +40,8 @@ public class App
         /**************************** PROPERTIES *********************************/
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", "localhost:9092");
-      //  properties.setProperty("zookeeper.connect", "localhost:2181");
-      //  properties.setProperty("group.id", "HW2");   // a group of consumers called "HW2"
+        properties.setProperty("zookeeper.connect", "localhost:2181");
+        properties.setProperty("group.id", "HW2");   // a group of consumers called "HW2"
         
         /**************************** CONSUMER ***********************************/
         FlinkKafkaConsumer<String> GPS_consumer = new FlinkKafkaConsumer<String>("GPS", new SimpleStringSchema(), properties);
@@ -54,7 +52,6 @@ public class App
         DataStream<String> Tag = env.addSource(Tag_consumer);
         DataStream<String> GPS = env.addSource(GPS_consumer);
 
-
 		process(Photo, Tag, GPS, false, "");
     	env.execute("Window Join and Aggregation");
     }
@@ -62,7 +59,6 @@ public class App
 	public static void process(DataStream<String> Photo_source, DataStream<String> Tag_source, DataStream<String> GPS_source, boolean isTest, String path) throws Exception
 	{
         // Photo: <photo_id, user_id, lat, lon, timestamp>
-		System.out.print("tsetestsetset");
         DataStream<Tuple5<Integer, Integer, Float, Float, Long>> Photo = Photo_source.assignTimestampsAndWatermarks(new PunctuatedAssigner())
         		.map(input -> parser_Photo(input))
         		// reference: https://www.codota.com/code/java/methods/org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator/returns
