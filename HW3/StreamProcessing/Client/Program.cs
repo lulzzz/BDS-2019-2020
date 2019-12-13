@@ -66,13 +66,16 @@ namespace StreamProcessing.Client
             // Get photo, tag and gps streams
             var streamProvider = client.GetStreamProvider("SMSProvider");
             var guid = new Guid();
+
+            // GetStream: can only use GUID + string (get a handle to a stream)
             var photoStream = streamProvider.GetStream<string>(guid, "Photo");
             var tagStream = streamProvider.GetStream<string>(guid, "Tag");
             var gpsStream = streamProvider.GetStream<string>(guid, "GPS");
 
-            var photoSource = client.GetGrain<ISourceGrain>(guid, "Photo");
-            var tagSource = client.GetGrain<ISourceGrain>(guid, "Tag");
-            var gpsSource = client.GetGrain<ISourceGrain>(guid, "GPS");
+            // GetGrain: here we use compound primary key (Integer + string)
+            var photoSource = client.GetGrain<ISourceGrain>(0, "Photo");
+            var tagSource = client.GetGrain<ISourceGrain>(0, "Tag");
+            var gpsSource = client.GetGrain<ISourceGrain>(0, "GPS");
 
             // Activate source grains for photo, tag and gps streams by calling Init method, in order to subscribe these streams.
             await photoSource.Init();
@@ -88,8 +91,10 @@ namespace StreamProcessing.Client
             // The code below shows how to specify an exact grain class which implements the IFilter interface
 
             Random random = new Random();
-            //var filterGrain = client.GetGrain<IFilter>(0, "GrainStreamProcessing.GrainImpl.LargerThanTenFilter");
-            var filterGrain = client.GetGrain<IFilterGrain>(0, "GrainStreamProcessing.GrainImpl.OddNumberFilter");
+
+            // GetGrain: here we use compound primary key (Integer + namespace string)
+            //var filterGrain = client.GetGrain<IFilterGrain>(0, "StreamProcessing.Grain.Implementation.LargerThanTenFilter");
+            var filterGrain = client.GetGrain<IFilterGrain>(0, "StreamProcessing.Grain.Implementation.OddNumberFilter");
             for (int i = 0; i < 20; ++i)
             {
                 long r = random.Next(20); // Randomly generate twenty numbers between 0 and 19.

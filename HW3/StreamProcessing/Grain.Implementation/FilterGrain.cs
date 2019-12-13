@@ -12,23 +12,18 @@ namespace StreamProcessing.Grain.Implementation
         {
             if (Apply((T)e)) // If the function returns true, send the element to SinkGrain
             {
-                this.GrainFactory.GetGrain<ISinkGrain>(0, "GrainStreamProcessing.GrainImpl.SinkGrain").Process(e);
+                this.GrainFactory.GetGrain<ISinkGrain>(0, "StreamProcessing.Grain.Implementation.SinkGrain").Process(e);
             } // Otherwise, skip it
             return Task.CompletedTask;
         }
     }
+
     public class LargerThanTenFilter : FilterGrain<long>
     {
         public override bool Apply(long e) // Implements the Apply method, filtering numbers larger than 10
         {
-            if (e > 10)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            if (e > 10) return true;
+            else return false;
         }
     }
 
@@ -36,14 +31,8 @@ namespace StreamProcessing.Grain.Implementation
     {
         public override bool Apply(long e) // Implements the Apply method, filtering odd numbers
         {
-            if (e % 2 == 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            if (e % 2 == 1) return true;
+            else return false;
         }
     }
 }

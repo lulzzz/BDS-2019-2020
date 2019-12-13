@@ -12,8 +12,8 @@ namespace GrainStreamProcessing.GrainImpl
         public abstract List<T> Apply(T e);
         public Task Process(object e) // Implements the Process method from IFilter
         {
-
-            this.GrainFactory.GetGrain<ISinkGrain>(0, "GrainStreamProcessing.GrainImpl.SinkGrain").Process(Apply((T)e));
+            List<T> result = Apply((T)e);
+            this.GrainFactory.GetGrain<ISinkGrain>(0, "GrainStreamProcessing.GrainImpl.SinkGrain").Process(result);
             return Task.CompletedTask;
         }
     }

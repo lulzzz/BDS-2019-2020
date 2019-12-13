@@ -2,7 +2,7 @@
 
 namespace StreamProcessing.Grain.Interface
 {
-    public interface ISinkGrain : Orleans.IGrainWithIntegerKey
+    public interface ISinkGrain : Orleans.IGrainWithIntegerCompoundKey
     {
         Task Process(object e);
     }
