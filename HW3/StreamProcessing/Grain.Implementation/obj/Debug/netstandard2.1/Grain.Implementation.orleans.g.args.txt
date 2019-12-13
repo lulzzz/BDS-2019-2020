@@ -9,6 +9,7 @@ Compile:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Imple
 Compile:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/FlatMapGrain.cs
 Compile:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/SinkGrain.cs
 Compile:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/SourceGrain.cs
+Compile:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/WindowJoinGrain.cs
 Reference:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/bin/Debug/netstandard2.1/Function.dll
 Reference:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/bin/Debug/netstandard2.1/Grain.Interface.dll
 Reference:/Users/krimmity/.nuget/packages/microsoft.aspnetcore.connections.abstractions/3.0.0/lib/netstandard2.1/Microsoft.AspNetCore.Connections.Abstractions.dll

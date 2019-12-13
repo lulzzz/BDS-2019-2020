@@ -8,7 +8,7 @@ namespace StreamProcessing.Grain.Implementation
     public abstract class FilterGrain : Orleans.Grain, IFilterGrain, IFilterFunction
     {
         public abstract bool Apply(MyType e);
-        public Task Process(object e) // Implements the Process method from IFilter
+        public Task Process(MyType e) // Implements the Process method from IFilter
         {
             if (Apply((MyType)e)) // If the function returns true, send the element to SinkGrain
             {

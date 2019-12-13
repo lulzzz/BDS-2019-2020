@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
+using StreamProcessing.Function;
 
 namespace StreamProcessing.Grain.Interface
 {
     public interface IFlatMapGrain : Orleans.IGrainWithIntegerKey
     {
-        Task Process(object e);
+        Task Process(MyType e);
     }
 }

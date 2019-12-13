@@ -11,7 +11,7 @@ namespace GrainStreamProcessing.GrainImpl
     {
         public abstract List<MyType> Apply(MyType e);
 
-        public Task Process(object e) // Implements the Process method from IFilter
+        public Task Process(MyType e) // Implements the Process method from IFilter
         {
             List<MyType> result = Apply((MyType)e);
             foreach (MyType r in result)

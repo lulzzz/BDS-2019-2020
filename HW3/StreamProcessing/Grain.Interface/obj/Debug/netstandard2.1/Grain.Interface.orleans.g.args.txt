@@ -6,7 +6,8 @@ OutputType:Library
 TargetPath:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/bin/Debug/netstandard2.1/Grain.Interface.dll
 CodeGenOutputFile:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/obj/Debug/netstandard2.1/Grain.Interface.orleans.g.cs
 Compile:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/IFilterGrain.cs
-Compile:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/IFlatMap.cs
+Compile:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/IFlatMapGrain.cs
+Compile:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/IJoinGrain.cs
 Compile:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/ISinkGrain.cs
 Compile:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/ISourceGrain.cs
 Reference:/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/bin/Debug/netstandard2.1/Function.dll

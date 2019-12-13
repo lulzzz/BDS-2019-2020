@@ -1,18 +1,16 @@
 ﻿<Properties StartupConfiguration="{C3A3EF28-F41B-4DEC-A2AE-DA5E0F9FAADF}|Default">
   <MonoDevelop.Ide.ItemProperties.Client PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Silo/Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Grain.Interface/IFlatMapGrain.cs">
     <Files>
-      <File FileName="Grain.Implementation/FilterGrain.cs" Line="37" Column="31" />
-      <File FileName="Grain.Implementation/FlatMapGrain.cs" Line="1" Column="1" />
-      <File FileName="Grain.Implementation/SinkGrain.cs" Line="1" Column="1" />
-      <File FileName="Grain.Implementation/SourceGrain.cs" Line="1" Column="1" />
-      <File FileName="Grain.Implementation/WindowJoinGrain.cs" Line="1" Column="1" />
-      <File FileName="Grain.Interface/IFilterGrain.cs" Line="1" Column="1" />
-      <File FileName="Grain.Interface/IFlatMapGrain.cs" Line="1" Column="1" />
+      <File FileName="Client/Program.cs" Line="84" Column="36" />
+      <File FileName="Grain.Implementation/FilterGrain.cs" Line="10" Column="46" />
+      <File FileName="Grain.Implementation/WindowJoinGrain.cs" Line="26" Column="1" />
+      <File FileName="Grain.Interface/IFilterGrain.cs" Line="11" Column="1" />
+      <File FileName="Grain.Interface/IFlatMapGrain.cs" Line="2" Column="33" />
       <File FileName="Grain.Interface/IJoinGrain.cs" Line="1" Column="1" />
       <File FileName="Grain.Interface/ISinkGrain.cs" Line="1" Column="1" />
       <File FileName="Grain.Interface/ISourceGrain.cs" Line="1" Column="1" />
-      <File FileName="Silo/Program.cs" Line="1" Column="1" />
+      <File FileName="Grain.Implementation/FlatMapGrain.cs" Line="10" Column="49" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -21,10 +19,10 @@
             <Node name="Client" expanded="True" />
             <Node name="Function" expanded="True" />
             <Node name="Grain.Implementation" expanded="True" />
-            <Node name="Grain.Interface" expanded="True" />
-            <Node name="Silo" expanded="True">
-              <Node name="Program.cs" selected="True" />
+            <Node name="Grain.Interface" expanded="True">
+              <Node name="IFlatMapGrain.cs" selected="True" />
             </Node>
+            <Node name="Silo" expanded="True" />
           </Node>
         </State>
       </Pad>
