@@ -10,6 +10,7 @@ namespace GrainStreamProcessing.GrainImpl
     public abstract class FlatMapGrain<T> : Grain, IFlatMapGrain, IFlatMapFunction<T>
     {
         public abstract List<T> Apply(T e);
+
         public Task Process(object e) // Implements the Process method from IFilter
         {
             List<T> result = Apply((T)e);

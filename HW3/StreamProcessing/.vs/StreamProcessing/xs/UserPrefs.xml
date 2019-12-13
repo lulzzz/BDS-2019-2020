@@ -1,25 +1,28 @@
 ﻿<Properties StartupConfiguration="{C3A3EF28-F41B-4DEC-A2AE-DA5E0F9FAADF}|Default">
   <MonoDevelop.Ide.ItemProperties.Client PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Function/IFlatMapFunction.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Grain.Implementation/FilterGrain.cs">
     <Files>
-      <File FileName="Grain.Interface/IJoinGrain.cs" Line="10" Column="1" />
-      <File FileName="Grain.Implementation/JoinGrain.cs" Line="19" Column="1" />
-      <File FileName="Function/IWindowFunction.cs" Line="6" Column="1" />
-      <File FileName="Grain.Implementation/SourceGrain.cs" Line="1" Column="1" />
-      <File FileName="Grain.Implementation/FlatMapGrain.cs" Line="31" Column="25" />
-      <File FileName="Grain.Implementation/FilterGrain.cs" Line="1" Column="1" />
-      <File FileName="Grain.Interface/IFlatMapGrain.cs" Line="1" Column="1" />
+      <File FileName="Grain.Implementation/JoinGrain.cs" Line="20" Column="1" />
+      <File FileName="Grain.Implementation/FlatMapGrain.cs" Line="1" Column="1" />
       <File FileName="Function/IFlatMapFunction.cs" Line="1" Column="1" />
+      <File FileName="Function/IWindowFunction.cs" Line="8" Column="28" />
+      <File FileName="Function/Timestamp.cs" Line="1" Column="1" />
+      <File FileName="Client/Program.cs" Line="82" Column="36" />
+      <File FileName="Grain.Implementation/SourceGrain.cs" Line="50" Column="17" />
+      <File FileName="Function/MyType.cs" Line="6" Column="29" />
+      <File FileName="Grain.Implementation/SinkGrain.cs" Line="15" Column="10" />
+      <File FileName="Grain.Interface/ISinkGrain.cs" Line="10" Column="2" />
+      <File FileName="Grain.Implementation/FilterGrain.cs" Line="12" Column="30" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="StreamProcessing" expanded="True">
             <Node name="Client" expanded="True" />
-            <Node name="Function" expanded="True">
-              <Node name="IFlatMapFunction.cs" selected="True" />
+            <Node name="Function" expanded="True" />
+            <Node name="Grain.Implementation" expanded="True">
+              <Node name="FilterGrain.cs" selected="True" />
             </Node>
-            <Node name="Grain.Implementation" expanded="True" />
             <Node name="Grain.Interface" expanded="True" />
             <Node name="Silo" expanded="True" />
           </Node>

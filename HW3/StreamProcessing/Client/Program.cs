@@ -99,6 +99,9 @@ namespace StreamProcessing.Client
             {
                 long r = random.Next(20); // Randomly generate twenty numbers between 0 and 19.
                 Console.WriteLine(r); // Output these numbers to Client console.
+
+                // TODO: ?????????
+                var record = new MyType("", "20", );
                 await filterGrain.Process(r); // Send these numbers to the filter operator, and numbers that pass this filter will be outputted onto Silo console.
             }
         }
