@@ -5,7 +5,7 @@ using StreamProcessing.Grain.Interface;
 
 namespace StreamProcessing.Grain.Implementation
 {
-    public abstract class FilterGrain<MyType> : Orleans.Grain, IFilterGrain, IFilterFunction<MyType>
+    public abstract class FilterGrain : Orleans.Grain, IFilterGrain, IFilterFunction
     {
         public abstract bool Apply(MyType e);
         public Task Process(object e) // Implements the Process method from IFilter
@@ -18,7 +18,7 @@ namespace StreamProcessing.Grain.Implementation
         }
     }
     
-    public class LargerThanTenFilter : FilterGrain<MyType>
+    public class LargerThanTenFilter : FilterGrain
     {
         public override bool Apply(MyType e) // Implements the Apply method, filtering numbers larger than 10
         {
@@ -28,7 +28,7 @@ namespace StreamProcessing.Grain.Implementation
         }
     }
 
-    public class OddNumberFilter : FilterGrain<MyType>
+    public class OddNumberFilter : FilterGrain
     {
         public override bool Apply(MyType e) // Implements the Apply method, filtering odd numbers
         {

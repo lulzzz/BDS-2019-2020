@@ -5,7 +5,7 @@ namespace StreamProcessing.Function
     public class WindowFunction
     {
         // long: the end time of a window
-        public Dictionary<long, MyType> window_data = null;
+        public Dictionary<long, List<MyType>> window_data = null;
         public long window_length;
         public long window_slide;
 
@@ -15,13 +15,12 @@ namespace StreamProcessing.Function
             window_slide = slide;
         }
 
-        public List<MyType> FeedData(MyType e)
+        public Dictionary<long, List<MyType>> FeedData(MyType e)
         {
-            List<MyType> fired_window = null;
             string value = e.value;
             long time = e.timestamp.getTimestamp();
 
-            if (value == "watermark") fired_window = Trigger(time);
+            if (value == "watermark") return Trigger(time);
             else
             {
                 long min_window = time / window_slide;
@@ -35,24 +34,27 @@ namespace StreamProcessing.Function
                 {
                     // assign new timestamps to the records after window operation
                     e.timestamp.setTimestamp(end - 1);
-                    window_data.Add(end, e);
+
+                    if (!window_data.ContainsKey(end)) window_data.Add(end, new List<MyType>());
+                    window_data[end].Add(e);
+
                     start += window_slide;
                     end += window_slide;
                 }
-            }
 
-            return fired_window;
+                return null;
+            }
         }
 
-        private List<MyType> Trigger(long watermark)
+        private Dictionary<long, List<MyType>> Trigger(long watermark)
         {
-            List<MyType> fired_window = null;
-            foreach (KeyValuePair<long, MyType> e in window_data)
+            Dictionary<long, List<MyType>> fired_window = null;
+            foreach (KeyValuePair<long, List<MyType>> e in window_data)
             {
                 long end = e.Key;
                 if (watermark >= end)
                 {
-                    fired_window.Add(e.Value);
+                    fired_window.Add(end, e.Value);
                     window_data.Remove(end);
                 }
             }
