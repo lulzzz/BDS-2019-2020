@@ -7,27 +7,37 @@ using System.Collections.Generic;
 
 namespace GrainStreamProcessing.GrainImpl
 {
-    public abstract class FlatMapGrain<T> : Grain, IFlatMapGrain, IFlatMapFunction<T>
+    public abstract class FlatMapGrain : Grain, IFlatMapGrain, IFlatMapFunction
     {
-        public abstract List<T> Apply(T e);
+        public abstract List<MyType> Apply(MyType e);
 
         public Task Process(object e) // Implements the Process method from IFilter
         {
-            List<T> result = Apply((T)e);
-            this.GrainFactory.GetGrain<ISinkGrain>(0, "GrainStreamProcessing.GrainImpl.SinkGrain").Process(result);
+            List<MyType> result = Apply((MyType)e);
+            foreach (MyType r in result)
+            {
+                this.GrainFactory.GetGrain<ISinkGrain>(0, "GrainStreamProcessing.GrainImpl.SinkGrain").Process(r);
+            }
+            
             return Task.CompletedTask;
         }
     }
 
-    public class Split : FlatMapGrain<String>
+    public class Split : FlatMapGrain
     {
-        public override List<String> Apply(String e)
+        public override List<MyType> Apply(MyType e)
         {
-            List<String> strs = new List<String>();
-            String[] parts = e.Split(" ");
+            String key = e.key;
+            String value = e.value;
+            Timestamp time = e.timestamp;
+
+
+            List<MyType> strs = new List<MyType>();
+            String[] parts = value.Split(" ");
             foreach (String part in parts)
             {
-                strs.Add(part);
+                MyType new_part = new MyType(key, part, time);
+                strs.Add(new_part);
             }
             return strs;
         }

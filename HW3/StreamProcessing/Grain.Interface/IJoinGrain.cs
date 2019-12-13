@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
+using StreamProcessing.Function;
 
 namespace StreamProcessing.Grain.Interface
 {
     public interface IJoinGrain : Orleans.IGrainWithIntegerKey
     {
-        Task Process(object e1, object e2);
+        Task Process(MyType e1, MyType e2);
     }
 }

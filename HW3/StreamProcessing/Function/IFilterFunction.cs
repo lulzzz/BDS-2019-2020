@@ -1,6 +1,6 @@
 ﻿namespace StreamProcessing.Function
 {
-    public interface IFilterFunction<MyType>
+    public interface IFilterFunction
     {
         bool Apply(MyType e);
     }

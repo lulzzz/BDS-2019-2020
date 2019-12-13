@@ -5,6 +5,7 @@ using Orleans.Configuration;
 using Orleans.Hosting;
 using System;
 using System.Threading.Tasks;
+using StreamProcessing.Function;
 
 namespace StreamProcessing.Client
 {
@@ -100,9 +101,9 @@ namespace StreamProcessing.Client
                 long r = random.Next(20); // Randomly generate twenty numbers between 0 and 19.
                 Console.WriteLine(r); // Output these numbers to Client console.
 
-                // TODO: ?????????
-                var record = new MyType("", "20", );
-                await filterGrain.Process(r); // Send these numbers to the filter operator, and numbers that pass this filter will be outputted onto Silo console.
+                Timestamp time = new Timestamp(0);
+                var record = new MyType("", "20", time);
+                await filterGrain.Process(record); // Send these numbers to the filter operator, and numbers that pass this filter will be outputted onto Silo console.
             }
         }
     }

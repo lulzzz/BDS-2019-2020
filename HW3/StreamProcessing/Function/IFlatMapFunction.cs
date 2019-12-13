@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 namespace StreamProcessing.Function
 {
-    public interface IFlatMapFunction<T>
+    public interface IFlatMapFunction
     {
-        List<T> Apply(T e);
+        List<MyType> Apply(MyType e);
     }
 }
