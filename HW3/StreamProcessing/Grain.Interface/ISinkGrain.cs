@@ -1,10 +1,7 @@
-﻿using System.Threading.Tasks;
-using StreamProcessing.Function;
-
+﻿using System;
 namespace StreamProcessing.Grain.Interface
 {
-    public interface ISinkGrain : Orleans.IGrainWithIntegerCompoundKey
+    public interface ISinkGrain : Orleans.IGrainWithGuidKey
     {
-        Task Process(MyType e);
     }
 }

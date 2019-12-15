@@ -7,7 +7,7 @@ using Orleans.Streams;
 
 namespace StreamProcessing.Client
 {
-    public class DataDriver
+    public static class DataDriver
     {
         static string rootPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         static string photoFilename = Path.Combine(rootPath, @"Photo");

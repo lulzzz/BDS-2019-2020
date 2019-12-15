@@ -10,7 +10,7 @@ namespace StreamProcessing.Grain.Implementation
     {
         public Task Process(MyType e)
         {
-            Console.WriteLine(e);// Output received data to Silo console
+            Console.WriteLine(e);     // Output received data to Silo console
             return Task.CompletedTask;
         }
     }

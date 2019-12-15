@@ -2,42 +2,98 @@
 using System.Threading.Tasks;
 using StreamProcessing.Grain.Interface;
 using System.Collections.Generic;
+using Orleans.Streams;
+using Orleans;
+using System;
 
 namespace StreamProcessing.Grain.Implementation
 {
     public abstract class WindowJoinGrain : Orleans.Grain, IJoinGrain
     {
+        private long window_length;
+        private long window_slide;
+        private IJobManagerGrain jobManager;
+        private IStreamProvider streamProvider;
         public Dictionary<long, List<MyType>> data1;
         public Dictionary<long, List<MyType>> data2;
 
-        public Task Process(MyType e1, MyType e2)   // Implement the Process method from IJoinGrain
+        public override async Task OnActivateAsync()
         {
-            // TODO: ask job manager how to set window length and slide
-            long window_length = 15000;
-            long window_slide = 5000;
-            WindowFunction func = new WindowFunction(window_length, window_slide);
+            List<Task> t = null;
+            
+            streamProvider = GetStreamProvider("SMSProvider");
+            jobManager = GrainFactory.GetGrain<IJobManagerGrain>(0, "JobManager");
+            window_length = jobManager.getWindow(this.GetPrimaryKey()).Item1;
+            window_slide = jobManager.getWindow(this.GetPrimaryKey()).Item2;
 
-            // r1 and r2 could be null
-            var r1 = func.FeedData(e1);
-            var r2 = func.FeedData(e2);
+            // ask the JobManager which streams it should subscribe
+            var subscribe = jobManager.getSubscribe(this.GetPrimaryKey());
 
-            foreach (KeyValuePair<long, List<MyType>> e in r1) data1.Add(e.Key, e.Value);
-            foreach (KeyValuePair<long, List<MyType>> e in r2) data2.Add(e.Key, e.Value);
-
-            foreach (KeyValuePair<long, List<MyType>> e in data1)
+            /********** Handle the first source stream*************************/
+            var stream1 = streamProvider.GetStream<MyType>(subscribe[0], "");
+            var subscriptionHandles = await stream1.GetAllSubscriptionHandles();
+            if (subscriptionHandles.Count > 0)
             {
-                if (data2.ContainsKey(e.Key))
-                {
-                    Join(e.Value, data2[e.Key]);
-                    data1.Remove(e.Key);
-                    data2.Remove(e.Key);
-                }
+                foreach (var subscriptionHandle in subscriptionHandles)
+                    await subscriptionHandle.ResumeAsync(Process1);
             }
+            t.Add(stream1.SubscribeAsync(Process1));
 
-            return Task.CompletedTask;
+            /********** Handle the second source stream************************/
+            var stream2 = streamProvider.GetStream<MyType>(subscribe[1], "");
+            var subscriptionHandles2 = await stream2.GetAllSubscriptionHandles();
+            if (subscriptionHandles.Count > 0)
+            {
+                foreach (var subscriptionHandle in subscriptionHandles)
+                    await subscriptionHandle.ResumeAsync(Process2);
+            }
+            t.Add(stream1.SubscribeAsync(Process2));
+
+            await Task.WhenAll(t);
         }
 
-        private void Join(List<MyType> input1, List<MyType> input2)
+        public async Task Process1(MyType e, StreamSequenceToken sequenceToken)   // Implement the Process method from IJoinGrain
+        {
+            String Key = jobManager.getKey(this.GetPrimaryKey()).Split(",")[0];
+            String Value = jobManager.getValue(this.GetPrimaryKey()).Split(",")[0];
+            MyType new_e = NewEvent.CreateNewEvent(e, Key, Value);
+
+            WindowFunction func = new WindowFunction(window_length, window_slide);
+
+            var r = func.FeedData(new_e);   // r could be null
+
+            foreach (KeyValuePair<long, List<MyType>> ee in r) data1.Add(ee.Key, ee.Value);
+            await checkIfCanJoin();
+        }
+
+        public async Task Process2(MyType e, StreamSequenceToken sequenceToken)   // Implement the Process method from IJoinGrain
+        {
+            String Key = jobManager.getKey(this.GetPrimaryKey()).Split(",")[1];
+            String Value = jobManager.getValue(this.GetPrimaryKey()).Split(",")[1];
+            MyType new_e = NewEvent.CreateNewEvent(e, Key, Value);
+
+            WindowFunction func = new WindowFunction(window_length, window_slide);
+
+            var r = func.FeedData(new_e);   // r could be null
+
+            foreach (KeyValuePair<long, List<MyType>> ee in r) data2.Add(ee.Key, ee.Value);
+            await checkIfCanJoin();
+        }
+
+        private async Task checkIfCanJoin()
+        {
+            foreach (KeyValuePair<long, List<MyType>> ee in data1)
+            {
+                if (data2.ContainsKey(ee.Key))
+                {
+                    await Join(ee.Value, data2[ee.Key]);
+                    data1.Remove(ee.Key);
+                    data2.Remove(ee.Key);
+                }
+            }
+        }
+
+        private async Task Join(List<MyType> input1, List<MyType> input2)
         {
             foreach (MyType r1 in input1)
             {
@@ -46,7 +102,12 @@ namespace StreamProcessing.Grain.Implementation
                     if (r1.key == r2.key)
                     {
                         MyType r = new MyType(r1.key, r1.value + " " + r2.value, r1.timestamp);
-                        this.GrainFactory.GetGrain<ISinkGrain>(0, "StreamProcessing.Grain.Implementation.SinkGrain").Process(r);
+                        List<Guid> streams = jobManager.getPublish(this.GetPrimaryKey());
+                        foreach (var item in streams)
+                        {
+                            var stream = streamProvider.GetStream<MyType>(item, "");
+                            await stream.OnNextAsync(r);
+                        }
                     }
                 }
             }

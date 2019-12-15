@@ -4,69 +4,78 @@ using StreamProcessing.Grain.Interface;
 using System.Threading.Tasks;
 using System;
 using StreamProcessing.Function;
+using System.Collections.Generic;
 
 namespace StreamProcessing.Grain.Implementation
 {
     public class SourceGrain : Orleans.Grain, ISourceGrain
     {
-        long delay = 0;
-        long currentMaxTimestamp = 0;
-        string streamName;
-        public Task Init()
-        {
-            Console.WriteLine($"SourceGrain of stream {streamName} starts.");
-            return Task.CompletedTask;
-        }
+        long delay;
+        long currentMaxTimestamp;
+        IJobManagerGrain jobManager;
+        IStreamProvider streamProvider;
 
         public override async Task OnActivateAsync()
         {
-            var primaryKey = this.GetPrimaryKey(out streamName);
-            var streamProvider = GetStreamProvider("SMSProvider");
-            var stream = streamProvider.GetStream<String>(primaryKey, streamName);
+            streamProvider = GetStreamProvider("SMSProvider");
+            jobManager = GrainFactory.GetGrain<IJobManagerGrain>(0, "JobManager");
 
-            // To resume stream in case of stream deactivation
-            var subscriptionHandles = await stream.GetAllSubscriptionHandles();
+            delay = jobManager.getDelay();
 
-            if (subscriptionHandles.Count > 0)
+            // ask the JobManager which streams it should subscribe
+            var subscribe = jobManager.getSubscribe(this.GetPrimaryKey());
+
+            foreach (var streamID in subscribe)
             {
-                foreach (var subscriptionHandle in subscriptionHandles)
-                {
-                    await subscriptionHandle.ResumeAsync(OnNextMessage);
-                }
-            }
+                var stream = streamProvider.GetStream<String>(streamID, "");
 
-            await stream.SubscribeAsync(OnNextMessage);
+                // To resume stream in case of stream deactivation
+                var subscriptionHandles = await stream.GetAllSubscriptionHandles();
+                if (subscriptionHandles.Count > 0)
+                {
+                    foreach (var subscriptionHandle in subscriptionHandles)
+                    {
+                        await subscriptionHandle.ResumeAsync(Process);
+                    }
+                }
+
+                // explicitly subscribe to a stream
+                await stream.SubscribeAsync(Process);
+            }
         }
 
         // reference: https://github.com/dotnet/orleans/blob/master/src/Orleans.Core.Abstractions/Streams/Core/StreamSequenceToken.cs
-        private Task OnNextMessage(string message, StreamSequenceToken sequenceToken)
+        private async Task Process(string message, StreamSequenceToken sequenceToken)
         {
-            Console.WriteLine($"Stream {streamName} receives: {message}.");
-            
             String[] parts = message.Split(" ");
             String new_message = "";
             // new_message is without timestamp column
-            for (int i = 0; i < parts.Length - 1; i++) new_message += " " + parts[i];
+            for (int i = 0; i < parts.Length - 1; i++) new_message += parts[i] + " ";
             long time = Convert.ToInt64(parts[parts.Length - 1]);
             Timestamp timestamp = new Timestamp(time);
 
             // reference: https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/using-structs
             var record = new MyType("", new_message, timestamp);
+            bool emit_watermark = false;
+            MyType watermark = new MyType("", "", new Timestamp(-1));
 
-            // TODO: ask the Job Manager what is the next operator
-            this.GrainFactory.GetGrain<ISinkGrain>(0, "StreamProcessing.Grain.Implementation.SinkGrain").Process(record);
-
-            // emit watermark
+            // see if need to emit watermark
             if (time > currentMaxTimestamp)
             {
                 currentMaxTimestamp = time;
-                // TODO: client should set the delay, otherwise default delay is 0
                 Timestamp time_for_watermark = new Timestamp(currentMaxTimestamp - delay);
-                var watermark = new MyType("", "watermark", time_for_watermark);
-                this.GrainFactory.GetGrain<ISinkGrain>(0, "StreamProcessing.Grain.Implementation.SinkGrain").Process(watermark);
+                watermark = new MyType("", "watermark", time_for_watermark);
+                emit_watermark = true;
             }
 
-            return Task.CompletedTask;
+            // ask the Job Manager what is the guid for the stream, and publish the data to some streams
+            List<Guid> streams = jobManager.getPublish(this.GetPrimaryKey());
+            foreach (var item in streams)
+            {
+                var stream = streamProvider.GetStream<MyType>(item, "");
+                await stream.OnNextAsync(record);
+                if (emit_watermark) await stream.OnNextAsync(watermark);
+            }
         }
     }
 }

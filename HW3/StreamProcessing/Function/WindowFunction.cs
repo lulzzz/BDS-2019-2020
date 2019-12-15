@@ -5,7 +5,7 @@ namespace StreamProcessing.Function
     public class WindowFunction
     {
         // long: the end time of a window
-        public Dictionary<long, List<MyType>> window_data = null;
+        public Dictionary<long, List<MyType>> window_data;
         public long window_length;
         public long window_slide;
 
@@ -21,29 +21,27 @@ namespace StreamProcessing.Function
             long time = e.timestamp.getTimestamp();
 
             if (value == "watermark") return Trigger(time);
-            else
+            
+            long min_window = time / window_slide;
+
+            // where the min_window starts and ends
+            long end = (min_window + 1) * window_slide;
+            long start = end - window_length;
+
+            // add the record to all possible windows
+            while (time >= start && time < end)
             {
-                long min_window = time / window_slide;
+                // assign new timestamps to the records after window operation
+                e.timestamp.setTimestamp(end - 1);
 
-                // where the min_window starts and ends
-                long end = (min_window + 1) * window_slide;
-                long start = end - window_length;
+                if (!window_data.ContainsKey(end)) window_data.Add(end, new List<MyType>());
+                window_data[end].Add(e);
 
-                // add the record to all possible windows
-                while (time >= start && time < end)
-                {
-                    // assign new timestamps to the records after window operation
-                    e.timestamp.setTimestamp(end - 1);
-
-                    if (!window_data.ContainsKey(end)) window_data.Add(end, new List<MyType>());
-                    window_data[end].Add(e);
-
-                    start += window_slide;
-                    end += window_slide;
-                }
-
-                return null;
+                start += window_slide;
+                end += window_slide;
             }
+
+            return null;
         }
 
         private Dictionary<long, List<MyType>> Trigger(long watermark)

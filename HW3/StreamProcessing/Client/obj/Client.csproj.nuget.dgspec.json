@@ -42,11 +42,11 @@
           "dependencies": {
             "Microsoft.Extensions.Logging.Console": {
               "target": "Package",
-              "version": "[3.1.0, )"
+              "version": "[2.2.0, )"
             },
             "Microsoft.Orleans.Client": {
               "target": "Package",
-              "version": "[3.0.2, )"
+              "version": "[2.2.0, )"
             }
           },
           "imports": [
@@ -158,15 +158,15 @@
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[3.0.2, )"
+              "version": "[2.2.0, )"
             },
             "Microsoft.Orleans.Core": {
               "target": "Package",
-              "version": "[3.0.2, )"
+              "version": "[2.2.0, )"
             },
             "Microsoft.Orleans.Core.Abstractions": {
               "target": "Package",
-              "version": "[3.0.2, )"
+              "version": "[2.2.0, )"
             }
           },
           "imports": [
