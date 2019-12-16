@@ -15,15 +15,20 @@ namespace StreamProcessing.Grain.Implementation
         IJobManagerGrain jobManager;
         IStreamProvider streamProvider;
 
+        public Task Init()
+        {
+            return Task.CompletedTask;
+        }
+
         public override async Task OnActivateAsync()
         {
             streamProvider = GetStreamProvider("SMSProvider");
             jobManager = GrainFactory.GetGrain<IJobManagerGrain>(0, "JobManager");
 
-            delay = jobManager.getDelay();
+            delay = jobManager.GetDelay().Result;
 
             // ask the JobManager which streams it should subscribe
-            var subscribe = jobManager.getSubscribe(this.GetPrimaryKey());
+            var subscribe = jobManager.GetSubscribe(this.GetPrimaryKey()).Result;
 
             foreach (var streamID in subscribe)
             {
@@ -47,8 +52,8 @@ namespace StreamProcessing.Grain.Implementation
         // reference: https://github.com/dotnet/orleans/blob/master/src/Orleans.Core.Abstractions/Streams/Core/StreamSequenceToken.cs
         private async Task Process(string message, StreamSequenceToken sequenceToken)
         {
-            String[] parts = message.Split(" ");
-            String new_message = "";
+            string[] parts = message.Split(" ");
+            string new_message = "";
             // new_message is without timestamp column
             for (int i = 0; i < parts.Length - 1; i++) new_message += parts[i] + " ";
             long time = Convert.ToInt64(parts[parts.Length - 1]);
@@ -69,7 +74,7 @@ namespace StreamProcessing.Grain.Implementation
             }
 
             // ask the Job Manager what is the guid for the stream, and publish the data to some streams
-            List<Guid> streams = jobManager.getPublish(this.GetPrimaryKey());
+            List<Guid> streams = jobManager.GetPublish(this.GetPrimaryKey()).Result;
             foreach (var item in streams)
             {
                 var stream = streamProvider.GetStream<MyType>(item, "");

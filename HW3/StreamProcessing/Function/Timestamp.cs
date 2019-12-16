@@ -1,5 +1,8 @@
-﻿namespace StreamProcessing.Function
+﻿using System;
+
+namespace StreamProcessing.Function
 {
+    [Serializable]
     public class Timestamp
     {
         long timestamp;

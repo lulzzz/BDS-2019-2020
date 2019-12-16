@@ -32,7 +32,7 @@ namespace StreamProcessing.Client
             }
             catch (Exception e)
             {
-                Console.WriteLine($"\nException while trying to run client: {e.Message}");
+                Console.WriteLine($"\nException while trying to run client: {e.StackTrace}, {e.Message}");
                 Console.WriteLine("Make sure the silo the client is trying to connect to is running.");
                 Console.WriteLine("\nPress any key to exit.");
                 Console.ReadKey();
@@ -51,7 +51,7 @@ namespace StreamProcessing.Client
                     options.ServiceId = "GrainStreamProcessing";
                 })
                 .ConfigureApplicationParts(parts => parts
-                .AddApplicationPart(typeof(ISourceGrain).Assembly).WithReferences()
+                .AddApplicationPart(typeof(IJobManagerGrain).Assembly).WithReferences()
                 )
                 .ConfigureLogging(logging => logging.AddConsole())
                 .AddSimpleMessageStreamProvider("SMSProvider")
@@ -65,51 +65,51 @@ namespace StreamProcessing.Client
         private static async Task Client3(IClusterClient client)
         {
             // STEP 1: create IDs for all grains and streams
-            var tagSourceGrain = new Guid();
-            var photoSourceGrain = new Guid();
-            var tagFilterGrain = new Guid();
-            var windowJoinGrain = new Guid();
-            var sinkGrain = new Guid();
+            var tagSourceGrain = Guid.NewGuid();
+            var photoSourceGrain = Guid.NewGuid();
+            var tagFilterGrain = Guid.NewGuid();
+            var windowJoinGrain = Guid.NewGuid();
+            var sinkGrain = Guid.NewGuid();
 
-            var SourceTagStream = new Guid();
-            var SourcePhotoStream = new Guid();
-            var TagStream = new Guid();
-            var PhotoStream = new Guid();
-            var FilteredTagStream = new Guid();
-            var JoinedStream = new Guid();
+            var SourceTagStream = Guid.NewGuid();
+            var SourcePhotoStream = Guid.NewGuid();
+            var TagStream = Guid.NewGuid();
+            var PhotoStream = Guid.NewGuid();
+            var FilteredTagStream = Guid.NewGuid();
+            var JoinedStream = Guid.NewGuid();
 
             var jobManager = client.GetGrain<IJobManagerGrain>(0, "JobManager");
 
             // STEP 2: register all subscribes and publishes, which only add the information to JobManager 
-            jobManager.registerSubscribe(tagSourceGrain, SourceTagStream);
-            jobManager.registerSubscribe(photoSourceGrain, SourcePhotoStream);
-            jobManager.registerSubscribe(tagFilterGrain, TagStream);
-            jobManager.registerSubscribe(windowJoinGrain, FilteredTagStream);
-            jobManager.registerSubscribe(windowJoinGrain, PhotoStream);
-            jobManager.registerSubscribe(sinkGrain, JoinedStream);
+            await jobManager.RegisterSubscribe(tagSourceGrain, SourceTagStream);
+            await jobManager.RegisterSubscribe(photoSourceGrain, SourcePhotoStream);
+            await jobManager.RegisterSubscribe(tagFilterGrain, TagStream);
+            await jobManager.RegisterSubscribe(windowJoinGrain, FilteredTagStream);
+            await jobManager.RegisterSubscribe(windowJoinGrain, PhotoStream);
+            await jobManager.RegisterSubscribe(sinkGrain, JoinedStream);
 
-            jobManager.registerPublish(tagSourceGrain, TagStream);
-            jobManager.registerPublish(photoSourceGrain, PhotoStream);
-            jobManager.registerPublish(tagFilterGrain, FilteredTagStream);
-            jobManager.registerPublish(windowJoinGrain, JoinedStream);
+            await jobManager.RegisterPublish(tagSourceGrain, TagStream);
+            await jobManager.RegisterPublish(photoSourceGrain, PhotoStream);
+            await jobManager.RegisterPublish(tagFilterGrain, FilteredTagStream);
+            await jobManager.RegisterPublish(windowJoinGrain, JoinedStream);
 
             // STEP 3: register the operators, which will activate the grain
             // string 1: user defined function
             // string 2 & 3: when the operator emits an event, which columns should be put to new Key and Value
-            jobManager.registerISourceGrain(tagSourceGrain, "SourceGrain", "0", "1");
-            jobManager.registerISourceGrain(photoSourceGrain, "SourceGrain", "0", "1 2 3");
-            jobManager.registerIFilterGrain(tagFilterGrain, "LargerThanTenFilter", "0", "1");
+            await jobManager.RegisterISourceGrain(tagSourceGrain, "SourceGrain", "0", "1");
+            await jobManager.RegisterISourceGrain(photoSourceGrain, "SourceGrain", "0", "1 2 3");
+            await jobManager.RegisterIFilterGrain(tagFilterGrain, "LargerThanTenFilter", "0", "1");
             // for Join Grain, string 2 defines which column is the key that user wants to join on
             // string 3 defines which columns that user wants to keep in the result after join operation
-            jobManager.registerIJoinGrain(windowJoinGrain, "WindowJoinGrain", "0, 0", "1, 2 3");
-            jobManager.registerISinkGrain(sinkGrain, "SinkGrain", "", "");
+            await jobManager.RegisterIJoinGrain(windowJoinGrain, "WindowJoinGrain", "0, 0", "1, 2 3");
+            await jobManager.RegisterISinkGrain(sinkGrain, "SinkGrain", "", "");
 
             // STEP 4: register window informations
             long window_length = 15000;
             long window_slide = 5000;
             long delay = 0;
-            jobManager.registerWindow(windowJoinGrain, window_length, window_slide);
-            jobManager.registerAllowedDelay(delay);
+            await jobManager.RegisterWindow(windowJoinGrain, window_length, window_slide);
+            await jobManager.RegisterAllowedDelay(delay);
 
             // STEP 5: activate the streams
             var streamProvider = client.GetStreamProvider("SMSProvider");
@@ -124,37 +124,37 @@ namespace StreamProcessing.Client
         private static async Task Client2(IClusterClient client)
         {
             // STEP 1: create IDs for all grains and streams
-            var tagSourceGrain = new Guid();
-            var photoSourceGrain = new Guid();
-            var gpsSourceGrain = new Guid();
-            var sinkGrain = new Guid();
+            var tagSourceGrain = Guid.NewGuid();
+            var photoSourceGrain = Guid.NewGuid();
+            var gpsSourceGrain = Guid.NewGuid();
+            var sinkGrain = Guid.NewGuid();
 
-            var tag = new Guid();
-            var photo = new Guid();
-            var gps = new Guid();
-            var tagStream = new Guid();
-            var photoStream = new Guid();
-            var gpsStream = new Guid();
+            var tag = Guid.NewGuid();
+            var photo = Guid.NewGuid();
+            var gps = Guid.NewGuid();
+            var tagStream = Guid.NewGuid();
+            var photoStream = Guid.NewGuid();
+            var gpsStream = Guid.NewGuid();
 
             var jobManager = client.GetGrain<IJobManagerGrain>(0, "JobManager");
 
             // STEP 2: register all subscribes and publishes, which only add the information to JobManager
-            jobManager.registerSubscribe(tagSourceGrain, tag);
-            jobManager.registerSubscribe(photoSourceGrain, photo);
-            jobManager.registerSubscribe(gpsSourceGrain, gps);
-            jobManager.registerSubscribe(sinkGrain, tagStream);
-            jobManager.registerSubscribe(sinkGrain, photoStream);
-            jobManager.registerSubscribe(sinkGrain, gpsStream);
+            await jobManager.RegisterSubscribe(tagSourceGrain, tag);
+            await jobManager.RegisterSubscribe(photoSourceGrain, photo);
+            await jobManager.RegisterSubscribe(gpsSourceGrain, gps);
+            await jobManager.RegisterSubscribe(sinkGrain, tagStream);
+            await jobManager.RegisterSubscribe(sinkGrain, photoStream);
+            await jobManager.RegisterSubscribe(sinkGrain, gpsStream);
 
-            jobManager.registerPublish(tagSourceGrain, tagStream);
-            jobManager.registerPublish(photoSourceGrain, photoStream);
-            jobManager.registerPublish(gpsSourceGrain, gpsStream);
+            await jobManager.RegisterPublish(tagSourceGrain, tagStream);
+            await jobManager.RegisterPublish(photoSourceGrain, photoStream);
+            await jobManager.RegisterPublish(gpsSourceGrain, gpsStream);
 
             // STEP 3: register the operators, which will activate the grain
-            jobManager.registerISourceGrain(tagSourceGrain, "SourceGrain", "", "all");
-            jobManager.registerISourceGrain(photoSourceGrain, "SourceGrain", "", "all");
-            jobManager.registerISourceGrain(gpsSourceGrain, "SourceGrain", "", "all");
-            jobManager.registerISinkGrain(sinkGrain, "SinkGrain", "", "all");
+            await jobManager.RegisterISourceGrain(tagSourceGrain, "SourceGrain", "", "all");
+            await jobManager.RegisterISourceGrain(photoSourceGrain, "SourceGrain", "", "all");
+            await jobManager.RegisterISourceGrain(gpsSourceGrain, "SourceGrain", "", "all");
+            await jobManager.RegisterISinkGrain(sinkGrain, "SinkGrain", "", "all");
 
             // STEP 4: activate the streams
             var streamProvider = client.GetStreamProvider("SMSProvider");
@@ -171,28 +171,28 @@ namespace StreamProcessing.Client
             // The code below shows how to specify an exact grain class which implements the IFilter interface
 
             // STEP 1: create IDs for all grains and streams
-            var filterGrain = new Guid();
-            var sinkGrain = new Guid();
+            var filterGrain = Guid.NewGuid();
+            var sinkGrain = Guid.NewGuid();
 
-            var sourceStream = new Guid();
-            var filteredStream = new Guid();
+            var sourceStream = Guid.NewGuid();
+            var filteredStream = Guid.NewGuid();
 
             var jobManager = client.GetGrain<IJobManagerGrain>(0, "JobManager");
-
+            
             // STEP 2: register all subscribes and publishes, which only add the information to JobManager
-            jobManager.registerSubscribe(filterGrain, sourceStream);
-            jobManager.registerSubscribe(sinkGrain, filteredStream);
+            await jobManager.RegisterSubscribe(filterGrain, sourceStream);
+            await jobManager.RegisterSubscribe(sinkGrain, filteredStream);
 
-            jobManager.registerPublish(filterGrain, filteredStream);
-
+            await jobManager.RegisterPublish(filterGrain, filteredStream);
+            
             // STEP 3: register the operators, which will activate the grain
-            jobManager.registerIFilterGrain(filterGrain, "LargerThanTen", "", "all");
-            jobManager.registerISinkGrain(sinkGrain, "SinkGrain", "", "all");
+            await jobManager.RegisterIFilterGrain(filterGrain, "LargerThanTen", "", "all");
+            await jobManager.RegisterISinkGrain(sinkGrain, "SinkGrain", "", "all");
 
             // STEP 4: activate the streams
             var streamProvider = client.GetStreamProvider("SMSProvider");
             var Stream = streamProvider.GetStream<MyType>(sourceStream, "");
-
+            
             Random random = new Random();
             for (int i = 0; i < 20; ++i)
             {
@@ -207,6 +207,4 @@ namespace StreamProcessing.Client
             }
         }
     }
-
-
 }

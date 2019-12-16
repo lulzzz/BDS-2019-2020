@@ -1,19 +1,18 @@
 ﻿using System;
-using Orleans;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using StreamProcessing.Grain.Interface;
 
-namespace Grain.Implementation
+namespace StreamProcessing.Grain.Implementation
 {
     public class JobManagerGrain : Orleans.Grain, IJobManagerGrain
     {
-        private Dictionary<Guid, Tuple<String, String, String>> operators;
+        private Dictionary<Guid, Tuple<string, string, string>> operators;
         private Dictionary<Guid, List<Guid>> subscribes;
         private Dictionary<Guid, List<Guid>> publishes;
         private Dictionary<Guid, Tuple<long, long>> windows;
         private long AllowedDelay;
-        private String NameSpace;
+        private string NameSpace;
 
         public override Task OnActivateAsync()
         {
@@ -26,41 +25,43 @@ namespace Grain.Implementation
             return Task.CompletedTask;
         }
 
-        public String getKey(Guid opID)
+        public Task<string> GetKey(Guid opID)
         {
-            if (operators.ContainsKey(opID)) return operators[opID].Item2;
+            if (operators.ContainsKey(opID)) return Task.FromResult(operators[opID].Item2);
             throw new Exception($"Exception: the op: {opID} is not registered in operators. ");
         }
-        public String getValue(Guid opID)
+        public Task<string> GetValue(Guid opID)
         {
-            if (operators.ContainsKey(opID)) return operators[opID].Item3;
+            if (operators.ContainsKey(opID)) return Task.FromResult(operators[opID].Item3);
             throw new Exception($"Exception: the op: {opID} is not registered in operators. ");
         }
 
-        public void registerWindow(Guid opID, long window_length, long window_slide)
+        public Task RegisterWindow(Guid opID, long window_length, long window_slide)
         {
             if (windows.ContainsKey(opID))
                 throw new Exception($"Exception: the window for op: {opID} is already registered in windows. ");
             windows.Add(opID, new Tuple<long, long>(window_length, window_slide));
+            return Task.CompletedTask;
         }
 
-        public void registerAllowedDelay(long delay)
+        public Task RegisterAllowedDelay(long delay)
         {
             AllowedDelay = delay;
+            return Task.CompletedTask;
         }
 
-        public Tuple<long, long> getWindow(Guid opID)
+        public Task<Tuple<long, long>> GetWindow(Guid opID)
         {
-            if (windows.ContainsKey(opID)) return windows[opID];
+            if (windows.ContainsKey(opID)) return Task.FromResult(windows[opID]);
             throw new Exception($"Exception: op: {opID} has't registered any window yet. ");
         }
 
-        public long getDelay()
+        public Task<long> GetDelay()
         {
-            return AllowedDelay;
+            return Task.FromResult(AllowedDelay);
         }
 
-        public void registerPublish(Guid opID, Guid streamID)
+        public Task RegisterPublish(Guid opID, Guid streamID)
         {
             if (publishes.ContainsKey(opID))
             {
@@ -71,9 +72,10 @@ namespace Grain.Implementation
                 publishes.Add(opID, new List<Guid>());
 
             publishes[opID].Add(streamID);
+            return Task.CompletedTask;
         }
 
-        public void registerSubscribe(Guid opID, Guid streamID)
+        public Task RegisterSubscribe(Guid opID, Guid streamID)
         {
             if (subscribes.ContainsKey(opID))
             {
@@ -84,56 +86,62 @@ namespace Grain.Implementation
                 subscribes.Add(opID, new List<Guid>());
 
             subscribes[opID].Add(streamID);
+            return Task.CompletedTask;
         }
 
-        public List<Guid> getPublish(Guid grainID)
+        public Task<List<Guid>> GetPublish(Guid grainID)
         {
-            return publishes[grainID];
+            return Task.FromResult(publishes[grainID]);
         }
 
-        public List<Guid> getSubscribe(Guid grainID)
+        public Task<List<Guid>> GetSubscribe(Guid grainID)
         {
-            return subscribes[grainID];
+            return Task.FromResult(subscribes[grainID]);
         }
 
-        public void registerISourceGrain(Guid opID, string userDefinedFunction, string Key, string Value)
-        {
-            if (operators.ContainsKey(opID))
-                throw new Exception($"Exception: op: {opID} is already registered in operators. ");
-            operators.Add(opID, new Tuple<String, String, String>(userDefinedFunction, Key, Value));
-            var grain = GrainFactory.GetGrain<ISourceGrain>(opID);
-        }
-
-        public void registerISinkGrain(Guid opID, string userDefinedFunction, string Key, string Value)
+        public Task RegisterISourceGrain(Guid opID, string userDefinedFunction, string Key, string Value)
         {
             if (operators.ContainsKey(opID))
                 throw new Exception($"Exception: op: {opID} is already registered in operators. ");
-            operators.Add(opID, new Tuple<String, String, String>(userDefinedFunction, Key, Value));
-            var grain = GrainFactory.GetGrain<ISinkGrain>(opID);
+            operators.Add(opID, new Tuple<string, string, string>(userDefinedFunction, Key, Value));
+            var _ = GrainFactory.GetGrain<ISourceGrain>(opID);
+            return Task.CompletedTask;
         }
 
-        public void registerIJoinGrain(Guid opID, string userDefinedFunction, string Key, string Value)
+        public Task RegisterISinkGrain(Guid opID, string userDefinedFunction, string Key, string Value)
         {
             if (operators.ContainsKey(opID))
                 throw new Exception($"Exception: op: {opID} is already registered in operators. ");
-            operators.Add(opID, new Tuple<String, String, String>(userDefinedFunction, Key, Value));
-            var grain = GrainFactory.GetGrain<IJoinGrain>(opID, NameSpace + userDefinedFunction);
+            operators.Add(opID, new Tuple<string, string, string>(userDefinedFunction, Key, Value));
+            var _ = GrainFactory.GetGrain<ISinkGrain>(opID);
+            return Task.CompletedTask;
         }
 
-        public void registerIFlatMapGrain(Guid opID, string userDefinedFunction, string Key, string Value)
+        public Task RegisterIJoinGrain(Guid opID, string userDefinedFunction, string Key, string Value)
         {
             if (operators.ContainsKey(opID))
                 throw new Exception($"Exception: op: {opID} is already registered in operators. ");
-            operators.Add(opID, new Tuple<String, String, String>(userDefinedFunction, Key, Value));
-            var grain = GrainFactory.GetGrain<IFlatMapGrain>(opID, NameSpace + userDefinedFunction);
+            operators.Add(opID, new Tuple<string, string, string>(userDefinedFunction, Key, Value));
+            var _ = GrainFactory.GetGrain<IJoinGrain>(opID, NameSpace + userDefinedFunction);
+            return Task.CompletedTask;
         }
 
-        public void registerIFilterGrain(Guid opID, string userDefinedFunction, string Key, string Value)
+        public Task RegisterIFlatMapGrain(Guid opID, string userDefinedFunction, string Key, string Value)
         {
             if (operators.ContainsKey(opID))
                 throw new Exception($"Exception: op: {opID} is already registered in operators. ");
-            operators.Add(opID, new Tuple<String, String, String>(userDefinedFunction, Key, Value));
-            var grain = GrainFactory.GetGrain<IFilterGrain>(opID, NameSpace + userDefinedFunction);
+            operators.Add(opID, new Tuple<string, string, string>(userDefinedFunction, Key, Value));
+            var _ = GrainFactory.GetGrain<IFlatMapGrain>(opID, NameSpace + userDefinedFunction);
+            return Task.CompletedTask;
+        }
+
+        public Task RegisterIFilterGrain(Guid opID, string userDefinedFunction, string Key, string Value)
+        {
+            if (operators.ContainsKey(opID))
+                throw new Exception($"Exception: op: {opID} is already registered in operators. ");
+            operators.Add(opID, new Tuple<string, string, string>(userDefinedFunction, Key, Value));
+            var _ = GrainFactory.GetGrain<IFilterGrain>(opID, NameSpace + userDefinedFunction);
+            return Task.CompletedTask;
         }
     }
 }

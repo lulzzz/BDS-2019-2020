@@ -17,17 +17,22 @@ namespace StreamProcessing.Grain.Implementation
         public Dictionary<long, List<MyType>> data1;
         public Dictionary<long, List<MyType>> data2;
 
+        public Task Init()
+        {
+            return Task.CompletedTask;
+        }
+
         public override async Task OnActivateAsync()
         {
             List<Task> t = null;
             
             streamProvider = GetStreamProvider("SMSProvider");
             jobManager = GrainFactory.GetGrain<IJobManagerGrain>(0, "JobManager");
-            window_length = jobManager.getWindow(this.GetPrimaryKey()).Item1;
-            window_slide = jobManager.getWindow(this.GetPrimaryKey()).Item2;
+            window_length = jobManager.GetWindow(this.GetPrimaryKey()).Result.Item1;
+            window_slide = jobManager.GetWindow(this.GetPrimaryKey()).Result.Item2;
 
             // ask the JobManager which streams it should subscribe
-            var subscribe = jobManager.getSubscribe(this.GetPrimaryKey());
+            var subscribe = jobManager.GetSubscribe(this.GetPrimaryKey()).Result;
 
             /********** Handle the first source stream*************************/
             var stream1 = streamProvider.GetStream<MyType>(subscribe[0], "");
@@ -54,8 +59,8 @@ namespace StreamProcessing.Grain.Implementation
 
         public async Task Process1(MyType e, StreamSequenceToken sequenceToken)   // Implement the Process method from IJoinGrain
         {
-            String Key = jobManager.getKey(this.GetPrimaryKey()).Split(",")[0];
-            String Value = jobManager.getValue(this.GetPrimaryKey()).Split(",")[0];
+            string Key = jobManager.GetKey(this.GetPrimaryKey()).Result.Split(",")[0];
+            string Value = jobManager.GetValue(this.GetPrimaryKey()).Result.Split(",")[0];
             MyType new_e = NewEvent.CreateNewEvent(e, Key, Value);
 
             WindowFunction func = new WindowFunction(window_length, window_slide);
@@ -68,8 +73,8 @@ namespace StreamProcessing.Grain.Implementation
 
         public async Task Process2(MyType e, StreamSequenceToken sequenceToken)   // Implement the Process method from IJoinGrain
         {
-            String Key = jobManager.getKey(this.GetPrimaryKey()).Split(",")[1];
-            String Value = jobManager.getValue(this.GetPrimaryKey()).Split(",")[1];
+            string Key = jobManager.GetKey(this.GetPrimaryKey()).Result.Split(",")[1];
+            string Value = jobManager.GetValue(this.GetPrimaryKey()).Result.Split(",")[1];
             MyType new_e = NewEvent.CreateNewEvent(e, Key, Value);
 
             WindowFunction func = new WindowFunction(window_length, window_slide);
@@ -102,7 +107,7 @@ namespace StreamProcessing.Grain.Implementation
                     if (r1.key == r2.key)
                     {
                         MyType r = new MyType(r1.key, r1.value + " " + r2.value, r1.timestamp);
-                        List<Guid> streams = jobManager.getPublish(this.GetPrimaryKey());
+                        List<Guid> streams = jobManager.GetPublish(this.GetPrimaryKey()).Result;
                         foreach (var item in streams)
                         {
                             var stream = streamProvider.GetStream<MyType>(item, "");

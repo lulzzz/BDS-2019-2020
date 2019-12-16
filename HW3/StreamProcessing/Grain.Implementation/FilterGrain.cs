@@ -13,6 +13,11 @@ namespace StreamProcessing.Grain.Implementation
         private IJobManagerGrain jobManager;
         private IStreamProvider streamProvider;
 
+        public Task Init()
+        {
+            return Task.CompletedTask;
+        }
+
         public abstract bool Apply(MyType e);
 
         public override async Task OnActivateAsync()
@@ -21,7 +26,7 @@ namespace StreamProcessing.Grain.Implementation
             jobManager = GrainFactory.GetGrain<IJobManagerGrain>(0, "JobManager");
 
             // ask the JobManager which streams it should subscribe
-            var subscribe = jobManager.getSubscribe(this.GetPrimaryKey());
+            var subscribe = jobManager.GetSubscribe(this.GetPrimaryKey()).Result;
 
             foreach (var streamID in subscribe)
             {
@@ -44,13 +49,13 @@ namespace StreamProcessing.Grain.Implementation
 
         private async Task Process(MyType e, StreamSequenceToken sequenceToken)
         {
-            String Key = jobManager.getKey(this.GetPrimaryKey());
-            String Value = jobManager.getValue(this.GetPrimaryKey());
+            string Key = jobManager.GetKey(this.GetPrimaryKey()).Result;
+            string Value = jobManager.GetValue(this.GetPrimaryKey()).Result;
             MyType new_e = NewEvent.CreateNewEvent(e, Key, Value);
 
             if (Apply(new_e)) // If the function returns true, send the element to SinkGrain
             {
-                List<Guid> streams = jobManager.getPublish(this.GetPrimaryKey());
+                List<Guid> streams = jobManager.GetPublish(this.GetPrimaryKey()).Result;
                 foreach (var item in streams)
                 {
                     var stream = streamProvider.GetStream<MyType>(item, "");

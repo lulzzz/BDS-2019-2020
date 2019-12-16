@@ -1,0 +1,6 @@
+/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/bin/Debug/netstandard2.1/Grain.Interface.deps.json
+/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/bin/Debug/netstandard2.1/Grain.Interface.dll
+/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/bin/Debug/netstandard2.1/Grain.Interface.pdb
+/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/bin/Debug/netstandard2.1/Function.dll
+/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/bin/Debug/netstandard2.1/Function.pdb
+/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/obj/Debug/netstandard2.1/codegen/Grain.Interface.AssemblyInfoInputs.cache

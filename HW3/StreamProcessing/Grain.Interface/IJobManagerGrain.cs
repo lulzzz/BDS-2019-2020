@@ -4,25 +4,24 @@ using System.Threading.Tasks;
 
 namespace StreamProcessing.Grain.Interface
 {
-    public interface IJobManagerGrain : Orleans.IGrainWithIntegerKey
+    public interface IJobManagerGrain : Orleans.IGrainWithIntegerCompoundKey
     {
-        // call by the client
-        void registerISourceGrain(Guid opID, String userDefinedFunction, String Key, String Value);
-        void registerISinkGrain(Guid opID, String userDefinedFunction, String Key, String Value);
-        void registerIJoinGrain(Guid opID, String userDefinedFunction, String Key, String Value);
-        void registerIFlatMapGrain(Guid opID, String userDefinedFunction, String Key, String Value);
-        void registerIFilterGrain(Guid opID, String userDefinedFunction, String Key, String Value);
-        String getKey(Guid opID);
-        String getValue(Guid opID);
+        Task RegisterISourceGrain(Guid opID, string userDefinedFunction, string Key, string Value);
+        Task RegisterISinkGrain(Guid opID, string userDefinedFunction, string Key, string Value);
+        Task RegisterIJoinGrain(Guid opID, string userDefinedFunction, string Key, string Value);
+        Task RegisterIFlatMapGrain(Guid opID, string userDefinedFunction, string Key, string Value);
+        Task RegisterIFilterGrain(Guid opID, string userDefinedFunction, string Key, string Value);
+        Task<string> GetKey(Guid opID);
+        Task<string> GetValue(Guid opID);
 
-        void registerSubscribe(Guid opID, Guid streamID);
-        void registerPublish(Guid opID, Guid streamID);
-        List<Guid> getPublish(Guid grainID);
-        List<Guid> getSubscribe(Guid grainID);
+        Task RegisterSubscribe(Guid opID, Guid streamID);
+        Task RegisterPublish(Guid opID, Guid streamID);
+        Task<List<Guid>> GetPublish(Guid grainID);
+        Task<List<Guid>> GetSubscribe(Guid grainID);
 
-        void registerWindow(Guid opID, long window_length, long window_slide);
-        void registerAllowedDelay(long delay);
-        Tuple<long, long> getWindow(Guid opID);
-        long getDelay();
+        Task RegisterWindow(Guid opID, long window_length, long window_slide);
+        Task RegisterAllowedDelay(long delay);
+        Task<Tuple<long, long>> GetWindow(Guid opID);
+        Task<long> GetDelay();
     }
 }

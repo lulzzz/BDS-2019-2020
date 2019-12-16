@@ -1,6 +1,12 @@
-﻿<Properties StartupConfiguration="{C3A3EF28-F41B-4DEC-A2AE-DA5E0F9FAADF}|Default">
+﻿<Properties StartupConfiguration="{A1FACEAC-A329-4769-8981-C2D98E2CA10E}|Default">
   <MonoDevelop.Ide.ItemProperties.Client PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Silo/Program.cs">
+    <Files>
+      <File FileName="Client/Program.cs" Line="56" Column="67" />
+      <File FileName="Grain.Interface/IJobManagerGrain.cs" />
+      <File FileName="Silo/Program.cs" Line="52" Column="63" />
+      <File FileName="Grain.Implementation/JobManagerGrain.cs" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
@@ -9,9 +15,10 @@
               <Node name="Dependencies" expanded="True">
                 <Node name="PackageDependencies" expanded="True" />
               </Node>
-              <Node name="Program.cs" selected="True" />
             </Node>
-            <Node name="Function" expanded="True" />
+            <Node name="Function" expanded="True">
+              <Node name="Dependencies" expanded="True" />
+            </Node>
             <Node name="Grain.Implementation" expanded="True">
               <Node name="Dependencies" expanded="True">
                 <Node name="PackageDependencies" expanded="True" />
@@ -26,12 +33,14 @@
               <Node name="Dependencies" expanded="True">
                 <Node name="PackageDependencies" expanded="True" />
               </Node>
+              <Node name="Program.cs" selected="True" />
             </Node>
           </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.Silo PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

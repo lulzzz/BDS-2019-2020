@@ -3,7 +3,6 @@ using Orleans;
 using Orleans.Configuration;
 using Orleans.Hosting;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using StreamProcessing.Grain.Implementation;
 
@@ -47,7 +46,7 @@ namespace StreamProcessing.Silo
                     options.ServiceId = "GrainStreamProcessing";
                 })
                 .ConfigureApplicationParts(parts => parts
-                .AddApplicationPart(typeof(SourceGrain).Assembly).WithReferences()
+                .AddApplicationPart(typeof(JobManagerGrain).Assembly).WithReferences()
                 )
                 .ConfigureLogging(logging => logging.AddConsole())
                 .AddSimpleMessageStreamProvider("SMSProvider")

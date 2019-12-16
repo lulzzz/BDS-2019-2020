@@ -42,11 +42,15 @@
           "dependencies": {
             "Microsoft.Extensions.Logging.Console": {
               "target": "Package",
-              "version": "[2.2.0, )"
+              "version": "[3.1.0, )"
             },
             "Microsoft.Orleans.Client": {
               "target": "Package",
-              "version": "[2.2.0, )"
+              "version": "[3.0.2, )"
+            },
+            "Orleans.Streams.Utils": {
+              "target": "Package",
+              "version": "[8.0.0, )"
             }
           },
           "imports": [
@@ -154,19 +158,15 @@
       "frameworks": {
         "netstandard2.1": {
           "dependencies": {
-            "Microsoft.Orleans.CodeGenerator.MSBuild": {
+            "Microsoft.Orleans.Core.Abstractions": {
+              "target": "Package",
+              "version": "[3.0.2, )"
+            },
+            "Microsoft.Orleans.OrleansCodeGenerator.Build": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[2.2.0, )"
-            },
-            "Microsoft.Orleans.Core": {
-              "target": "Package",
-              "version": "[2.2.0, )"
-            },
-            "Microsoft.Orleans.Core.Abstractions": {
-              "target": "Package",
-              "version": "[2.2.0, )"
+              "version": "[3.0.2, )"
             }
           },
           "imports": [

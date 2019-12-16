@@ -13,6 +13,11 @@ namespace GrainStreamProcessing.GrainImpl
         private IJobManagerGrain jobManager;
         private IStreamProvider streamProvider;
 
+        public Task Init()
+        {
+            return Task.CompletedTask;
+        }
+
         public abstract List<MyType> Apply(MyType e);
 
         public override async Task OnActivateAsync()
@@ -21,7 +26,7 @@ namespace GrainStreamProcessing.GrainImpl
             jobManager = GrainFactory.GetGrain<IJobManagerGrain>(0, "JobManager");
 
             // ask the JobManager which streams it should subscribe
-            var subscribe = jobManager.getSubscribe(this.GetPrimaryKey());
+            var subscribe = jobManager.GetSubscribe(this.GetPrimaryKey()).Result;
 
             foreach (var streamID in subscribe)
             {
@@ -44,12 +49,12 @@ namespace GrainStreamProcessing.GrainImpl
 
         public async Task Process(MyType e, StreamSequenceToken sequenceToken) // Implements the Process method from IFilter
         {
-            String Key = jobManager.getKey(this.GetPrimaryKey());
-            String Value = jobManager.getValue(this.GetPrimaryKey());
+            string Key = jobManager.GetKey(this.GetPrimaryKey()).Result;
+            string Value = jobManager.GetValue(this.GetPrimaryKey()).Result;
             MyType new_e = NewEvent.CreateNewEvent(e, Key, Value);
 
             List<MyType> result = Apply(new_e);
-            List<Guid> streams = jobManager.getPublish(this.GetPrimaryKey());
+            List<Guid> streams = jobManager.GetPublish(this.GetPrimaryKey()).Result;
             foreach (var item1 in streams)
             {
                 var stream = streamProvider.GetStream<MyType>(item1, "");
@@ -62,13 +67,13 @@ namespace GrainStreamProcessing.GrainImpl
     {
         public override List<MyType> Apply(MyType e)
         {
-            String key = e.key;
-            String value = e.value;
+            string key = e.key;
+            string value = e.value;
             Timestamp time = e.timestamp;
 
             List<MyType> strs = new List<MyType>();
-            String[] parts = value.Split(" ");
-            foreach (String part in parts)
+            string[] parts = value.Split(" ");
+            foreach (string part in parts)
             {
                 MyType new_part = new MyType(key, part, time);
                 strs.Add(new_part);
