@@ -1788,7 +1788,7 @@
       },
       "Function/1.0.0": {
         "type": "project",
-        "framework": ".NETStandard,Version=v2.1",
+        "framework": ".NETCoreApp,Version=v3.0",
         "compile": {
           "bin/placeholder/Function.dll": {}
         },
@@ -1796,11 +1796,27 @@
           "bin/placeholder/Function.dll": {}
         }
       },
-      "Grain.Interface/1.0.0": {
+      "Grain.Implementation/1.0.0": {
         "type": "project",
-        "framework": ".NETStandard,Version=v2.1",
+        "framework": ".NETCoreApp,Version=v3.0",
         "dependencies": {
           "Function": "1.0.0",
+          "Grain.Interface": "1.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.0",
+          "Microsoft.Orleans.Core.Abstractions": "3.0.2"
+        },
+        "compile": {
+          "bin/placeholder/Grain.Implementation.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Grain.Implementation.dll": {}
+        }
+      },
+      "Grain.Interface/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.0",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.0",
           "Microsoft.Orleans.Core.Abstractions": "3.0.2"
         },
         "compile": {
@@ -6339,6 +6355,11 @@
       "path": "../Function/Function.csproj",
       "msbuildProject": "../Function/Function.csproj"
     },
+    "Grain.Implementation/1.0.0": {
+      "type": "project",
+      "path": "../Grain.Implementation/Grain.Implementation.csproj",
+      "msbuildProject": "../Grain.Implementation/Grain.Implementation.csproj"
+    },
     "Grain.Interface/1.0.0": {
       "type": "project",
       "path": "../Grain.Interface/Grain.Interface.csproj",
@@ -6347,6 +6368,8 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.0": [
+      "Function >= 1.0.0",
+      "Grain.Implementation >= 1.0.0",
       "Grain.Interface >= 1.0.0",
       "Microsoft.Extensions.Logging.Console >= 3.1.0",
       "Microsoft.Orleans.Client >= 3.0.2",
@@ -6377,6 +6400,12 @@
       "frameworks": {
         "netcoreapp3.0": {
           "projectReferences": {
+            "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj": {
+              "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj"
+            },
+            "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/Grain.Implementation.csproj": {
+              "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/Grain.Implementation.csproj"
+            },
             "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj": {
               "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj"
             }

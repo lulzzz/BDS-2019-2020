@@ -17,13 +17,13 @@
           "/Users/krimmity/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "netstandard2.1"
+          "netcoreapp3.0"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netstandard2.1": {
+          "netcoreapp3.0": {
             "projectReferences": {}
           }
         },
@@ -34,7 +34,7 @@
         }
       },
       "frameworks": {
-        "netstandard2.1": {
+        "netcoreapp3.0": {
           "imports": [
             "net461",
             "net462",
@@ -46,7 +46,7 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "NETStandard.Library": {
+            "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
@@ -67,13 +67,13 @@
           "/Users/krimmity/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "netstandard2.1"
+          "netcoreapp3.0"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netstandard2.1": {
+          "netcoreapp3.0": {
             "projectReferences": {
               "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj": {
                 "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj"
@@ -91,15 +91,11 @@
         }
       },
       "frameworks": {
-        "netstandard2.1": {
+        "netcoreapp3.0": {
           "dependencies": {
             "Microsoft.Extensions.Logging.Abstractions": {
               "target": "Package",
               "version": "[3.1.0, )"
-            },
-            "Microsoft.Orleans.Core": {
-              "target": "Package",
-              "version": "[3.0.2, )"
             },
             "Microsoft.Orleans.Core.Abstractions": {
               "target": "Package",
@@ -123,7 +119,7 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "NETStandard.Library": {
+            "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
@@ -144,18 +140,14 @@
           "/Users/krimmity/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "netstandard2.1"
+          "netcoreapp3.0"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netstandard2.1": {
-            "projectReferences": {
-              "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj": {
-                "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj"
-              }
-            }
+          "netcoreapp3.0": {
+            "projectReferences": {}
           }
         },
         "warningProperties": {
@@ -165,8 +157,12 @@
         }
       },
       "frameworks": {
-        "netstandard2.1": {
+        "netcoreapp3.0": {
           "dependencies": {
+            "Microsoft.Extensions.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
             "Microsoft.Orleans.Core.Abstractions": {
               "target": "Package",
               "version": "[3.0.2, )"
@@ -189,7 +185,7 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "NETStandard.Library": {
+            "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },

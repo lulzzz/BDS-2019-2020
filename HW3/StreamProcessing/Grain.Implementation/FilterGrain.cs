@@ -5,9 +5,11 @@ using StreamProcessing.Function;
 using StreamProcessing.Grain.Interface;
 using Orleans.Streams;
 using System.Collections.Generic;
+using Orleans.Concurrency;
 
 namespace StreamProcessing.Grain.Implementation
 {
+    [Reentrant]
     public abstract class FilterGrain : Orleans.Grain, IFilterGrain, IFilterFunction
     {
         private IJobManagerGrain jobManager;
@@ -26,11 +28,11 @@ namespace StreamProcessing.Grain.Implementation
             jobManager = GrainFactory.GetGrain<IJobManagerGrain>(0, "JobManager");
 
             // ask the JobManager which streams it should subscribe
-            var subscribe = jobManager.GetSubscribe(this.GetPrimaryKey()).Result;
+            var subscribe = await jobManager.GetSubscribe(this.GetPrimaryKey());
 
             foreach (var streamID in subscribe)
             {
-                var stream = streamProvider.GetStream<MyType>(streamID, "");
+                var stream = streamProvider.GetStream<MyType>(streamID, null);
 
                 // To resume stream in case of stream deactivation
                 var subscriptionHandles = await stream.GetAllSubscriptionHandles();
@@ -49,19 +51,33 @@ namespace StreamProcessing.Grain.Implementation
 
         private async Task Process(MyType e, StreamSequenceToken sequenceToken)
         {
-            string Key = jobManager.GetKey(this.GetPrimaryKey()).Result;
-            string Value = jobManager.GetValue(this.GetPrimaryKey()).Result;
-            MyType new_e = NewEvent.CreateNewEvent(e, Key, Value);
-
-            if (Apply(new_e)) // If the function returns true, send the element to SinkGrain
+            //Console.WriteLine($"Filter Grain receives: {e.key}, {e.value}, {e.timestamp.GetTimestamp()}");
+            bool emit_e;
+            MyType ee;
+            if (e.value == "watermark")
             {
-                List<Guid> streams = jobManager.GetPublish(this.GetPrimaryKey()).Result;
+                ee = e;
+                emit_e = true;
+            }
+            else
+            {
+                string Key = await jobManager.GetKey(this.GetPrimaryKey());
+                string Value = await jobManager.GetValue(this.GetPrimaryKey());
+                ee = NewEvent.CreateNewEvent(e, Key, Value);
+                emit_e = Apply(ee);
+            }
+
+            List<Task> t = new List<Task>();
+            if (emit_e) // If the function returns true, send the element to SinkGrain
+            {
+                List<Guid> streams = await jobManager.GetPublish(this.GetPrimaryKey());
                 foreach (var item in streams)
                 {
-                    var stream = streamProvider.GetStream<MyType>(item, "");
-                    await stream.OnNextAsync(new_e);
+                    var stream = streamProvider.GetStream<MyType>(item, null);
+                    t.Add(stream.OnNextAsync(ee));
                 }
             }
+            await Task.WhenAll(t);
         }
     }
     

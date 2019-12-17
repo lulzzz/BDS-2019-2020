@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using System;
 using StreamProcessing.Function;
 using System.Collections.Generic;
+using Orleans.Concurrency;
 
 namespace StreamProcessing.Grain.Implementation
 {
+    [Reentrant]
     public class SourceGrain : Orleans.Grain, ISourceGrain
     {
         long delay;
@@ -25,14 +27,14 @@ namespace StreamProcessing.Grain.Implementation
             streamProvider = GetStreamProvider("SMSProvider");
             jobManager = GrainFactory.GetGrain<IJobManagerGrain>(0, "JobManager");
 
-            delay = jobManager.GetDelay().Result;
+            delay = await jobManager.GetDelay();
 
             // ask the JobManager which streams it should subscribe
-            var subscribe = jobManager.GetSubscribe(this.GetPrimaryKey()).Result;
+            var subscribe = await jobManager.GetSubscribe(this.GetPrimaryKey());
 
             foreach (var streamID in subscribe)
             {
-                var stream = streamProvider.GetStream<String>(streamID, "");
+                var stream = streamProvider.GetStream<string>(streamID, null);
 
                 // To resume stream in case of stream deactivation
                 var subscriptionHandles = await stream.GetAllSubscriptionHandles();
@@ -52,6 +54,7 @@ namespace StreamProcessing.Grain.Implementation
         // reference: https://github.com/dotnet/orleans/blob/master/src/Orleans.Core.Abstractions/Streams/Core/StreamSequenceToken.cs
         private async Task Process(string message, StreamSequenceToken sequenceToken)
         {
+            //Console.WriteLine($"SourceGrain receives: {message}");
             string[] parts = message.Split(" ");
             string new_message = "";
             // new_message is without timestamp column
@@ -62,25 +65,26 @@ namespace StreamProcessing.Grain.Implementation
             // reference: https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/using-structs
             var record = new MyType("", new_message, timestamp);
             bool emit_watermark = false;
-            MyType watermark = new MyType("", "", new Timestamp(-1));
+            MyType watermark = new MyType("", "watermark", new Timestamp(-1));
 
             // see if need to emit watermark
             if (time > currentMaxTimestamp)
             {
                 currentMaxTimestamp = time;
-                Timestamp time_for_watermark = new Timestamp(currentMaxTimestamp - delay);
-                watermark = new MyType("", "watermark", time_for_watermark);
+                watermark.timestamp.SetTimestamp(currentMaxTimestamp - delay);
                 emit_watermark = true;
             }
 
             // ask the Job Manager what is the guid for the stream, and publish the data to some streams
-            List<Guid> streams = jobManager.GetPublish(this.GetPrimaryKey()).Result;
+            List<Guid> streams = await jobManager.GetPublish(this.GetPrimaryKey());
+            List<Task> t = new List<Task>();
             foreach (var item in streams)
             {
-                var stream = streamProvider.GetStream<MyType>(item, "");
-                await stream.OnNextAsync(record);
-                if (emit_watermark) await stream.OnNextAsync(watermark);
+                var stream = streamProvider.GetStream<MyType>(item, null);
+                t.Add(stream.OnNextAsync(record));
+                if (emit_watermark) t.Add(stream.OnNextAsync(watermark));
             }
+            await Task.WhenAll(t);
         }
     }
 }

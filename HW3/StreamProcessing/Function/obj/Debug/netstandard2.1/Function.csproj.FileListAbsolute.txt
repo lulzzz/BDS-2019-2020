@@ -1,6 +1,7 @@
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/bin/Debug/netstandard2.1/Function.deps.json
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/bin/Debug/netstandard2.1/Function.dll
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/bin/Debug/netstandard2.1/Function.pdb
+/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netstandard2.1/Function.csprojAssemblyReference.cache
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netstandard2.1/Function.AssemblyInfoInputs.cache
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netstandard2.1/Function.AssemblyInfo.cs
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netstandard2.1/Function.dll

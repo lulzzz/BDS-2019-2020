@@ -1139,7 +1139,6 @@
           "Function": "1.0.0",
           "Grain.Interface": "1.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "3.1.0",
-          "Microsoft.Orleans.Core": "3.0.2",
           "Microsoft.Orleans.Core.Abstractions": "3.0.2"
         },
         "runtime": {
@@ -1148,7 +1147,7 @@
       },
       "Grain.Interface/1.0.0": {
         "dependencies": {
-          "Function": "1.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.0",
           "Microsoft.Orleans.Core.Abstractions": "3.0.2"
         },
         "runtime": {

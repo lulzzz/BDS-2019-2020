@@ -10,11 +10,11 @@ namespace StreamProcessing.Function
         {
             this.timestamp = timestamp;
         }
-        public long getTimestamp()
+        public long GetTimestamp()
         {
             return timestamp;
         }
-        public void setTimestamp(long timestamp)
+        public void SetTimestamp(long timestamp)
         {
             this.timestamp = timestamp;
         }

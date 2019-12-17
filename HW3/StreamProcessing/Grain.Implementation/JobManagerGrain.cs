@@ -16,10 +16,10 @@ namespace StreamProcessing.Grain.Implementation
 
         public override Task OnActivateAsync()
         {
-            operators = null;
-            subscribes = null;
-            publishes = null;
-            windows = null;
+            operators = new Dictionary<Guid, Tuple<string, string, string>>();
+            subscribes = new Dictionary<Guid, List<Guid>>();
+            publishes = new Dictionary<Guid, List<Guid>>();
+            windows = new Dictionary<Guid, Tuple<long, long>>();
             AllowedDelay = 0;
             NameSpace = "StreamProcessing.Grain.Implementation.";
             return Task.CompletedTask;
@@ -99,49 +99,49 @@ namespace StreamProcessing.Grain.Implementation
             return Task.FromResult(subscribes[grainID]);
         }
 
-        public Task RegisterISourceGrain(Guid opID, string userDefinedFunction, string Key, string Value)
+        public async Task RegisterISourceGrain(Guid opID, string userDefinedFunction, string Key, string Value)
         {
             if (operators.ContainsKey(opID))
                 throw new Exception($"Exception: op: {opID} is already registered in operators. ");
             operators.Add(opID, new Tuple<string, string, string>(userDefinedFunction, Key, Value));
-            var _ = GrainFactory.GetGrain<ISourceGrain>(opID);
-            return Task.CompletedTask;
+            var grain = GrainFactory.GetGrain<ISourceGrain>(opID, NameSpace + userDefinedFunction);
+            await grain.Init();
         }
 
-        public Task RegisterISinkGrain(Guid opID, string userDefinedFunction, string Key, string Value)
+        public async Task RegisterISinkGrain(Guid opID, string userDefinedFunction, string Key, string Value)
         {
             if (operators.ContainsKey(opID))
                 throw new Exception($"Exception: op: {opID} is already registered in operators. ");
             operators.Add(opID, new Tuple<string, string, string>(userDefinedFunction, Key, Value));
-            var _ = GrainFactory.GetGrain<ISinkGrain>(opID);
-            return Task.CompletedTask;
+            var grain = GrainFactory.GetGrain<ISinkGrain>(opID, NameSpace + userDefinedFunction);
+            await grain.Init();
         }
 
-        public Task RegisterIJoinGrain(Guid opID, string userDefinedFunction, string Key, string Value)
+        public async Task RegisterIJoinGrain(Guid opID, string userDefinedFunction, string Key, string Value)
         {
             if (operators.ContainsKey(opID))
                 throw new Exception($"Exception: op: {opID} is already registered in operators. ");
             operators.Add(opID, new Tuple<string, string, string>(userDefinedFunction, Key, Value));
-            var _ = GrainFactory.GetGrain<IJoinGrain>(opID, NameSpace + userDefinedFunction);
-            return Task.CompletedTask;
+            var grain = GrainFactory.GetGrain<IJoinGrain>(opID, NameSpace + userDefinedFunction);
+            await grain.Init();
         }
 
-        public Task RegisterIFlatMapGrain(Guid opID, string userDefinedFunction, string Key, string Value)
+        public async Task RegisterIFlatMapGrain(Guid opID, string userDefinedFunction, string Key, string Value)
         {
             if (operators.ContainsKey(opID))
                 throw new Exception($"Exception: op: {opID} is already registered in operators. ");
             operators.Add(opID, new Tuple<string, string, string>(userDefinedFunction, Key, Value));
-            var _ = GrainFactory.GetGrain<IFlatMapGrain>(opID, NameSpace + userDefinedFunction);
-            return Task.CompletedTask;
+            var grain = GrainFactory.GetGrain<IFlatMapGrain>(opID, NameSpace + userDefinedFunction);
+            await grain.Init();
         }
 
-        public Task RegisterIFilterGrain(Guid opID, string userDefinedFunction, string Key, string Value)
+        public async Task RegisterIFilterGrain(Guid opID, string userDefinedFunction, string Key, string Value)
         {
             if (operators.ContainsKey(opID))
                 throw new Exception($"Exception: op: {opID} is already registered in operators. ");
             operators.Add(opID, new Tuple<string, string, string>(userDefinedFunction, Key, Value));
-            var _ = GrainFactory.GetGrain<IFilterGrain>(opID, NameSpace + userDefinedFunction);
-            return Task.CompletedTask;
+            var grain = GrainFactory.GetGrain<IFilterGrain>(opID, NameSpace + userDefinedFunction);
+            await grain.Init();
         }
     }
 }

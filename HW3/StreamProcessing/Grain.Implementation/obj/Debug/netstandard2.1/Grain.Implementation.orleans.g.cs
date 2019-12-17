@@ -8,9 +8,127 @@
 #pragma warning disable 693
 #pragma warning disable 1591
 #pragma warning disable 1998
-[assembly: global::Orleans.Metadata.FeaturePopulatorAttribute(typeof(OrleansGeneratedCode.OrleansCodeGen7e2645116eFeaturePopulator))]
+[assembly: global::Orleans.Metadata.FeaturePopulatorAttribute(typeof(OrleansGeneratedCode.OrleansCodeGen8184396d46FeaturePopulator))]
 [assembly: global::Orleans.CodeGeneration.OrleansCodeGenerationTargetAttribute(@"Grain.Implementation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
-namespace OrleansGeneratedCode1FB26223
+namespace StreamProcessing.Grain.Implementation
+{
+    using global::Orleans;
+    using global::System.Reflection;
+
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute(@"Orleans-CodeGenerator", @"2.0.0.0"), global::System.SerializableAttribute, global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute, global::Orleans.CodeGeneration.GrainReferenceAttribute(typeof(global::StreamProcessing.Grain.Implementation.IHelloworld))]
+    internal class OrleansCodeGenHelloworldReference : global::Orleans.Runtime.GrainReference, global::StreamProcessing.Grain.Implementation.IHelloworld
+    {
+        protected OrleansCodeGenHelloworldReference(global::Orleans.Runtime.GrainReference other): base(other)
+        {
+        }
+
+        OrleansCodeGenHelloworldReference(global::Orleans.Runtime.GrainReference other, global::Orleans.CodeGeneration.InvokeMethodOptions invokeMethodOptions): base(other, invokeMethodOptions)
+        {
+        }
+
+        protected OrleansCodeGenHelloworldReference(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context): base(info, context)
+        {
+        }
+
+        public override global::System.Int32 InterfaceId
+        {
+            get
+            {
+                return -572685061;
+            }
+        }
+
+        public override global::System.UInt16 InterfaceVersion
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
+        public override global::System.String InterfaceName
+        {
+            get
+            {
+                return @"global::StreamProcessing.Grain.Implementation.IHelloworld";
+            }
+        }
+
+        public override global::System.Boolean IsCompatible(global::System.Int32 interfaceId)
+        {
+            return interfaceId == -572685061;
+        }
+
+        public override global::System.String GetMethodName(global::System.Int32 interfaceId, global::System.Int32 methodId)
+        {
+            switch (interfaceId)
+            {
+                case -572685061:
+                    switch (methodId)
+                    {
+                        case -1925673939:
+                            return @"Init";
+                        default:
+                            throw new global::System.NotImplementedException(@"interfaceId=" + -572685061 + @",methodId=" + methodId);
+                    }
+
+                default:
+                    throw new global::System.NotImplementedException(@"interfaceId=" + interfaceId);
+            }
+        }
+
+        public global::System.Threading.Tasks.Task Init()
+        {
+            return base.InvokeMethodAsync<global::System.Object>(-1925673939, null);
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute(@"Orleans-CodeGenerator", @"2.0.0.0"), global::Orleans.CodeGeneration.MethodInvokerAttribute(typeof(global::StreamProcessing.Grain.Implementation.IHelloworld), -572685061), global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute]
+    internal class OrleansCodeGenHelloworldMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
+    {
+        public async global::System.Threading.Tasks.Task<global::System.Object> Invoke(global::Orleans.Runtime.IAddressable grain, global::Orleans.CodeGeneration.InvokeMethodRequest request)
+        {
+            global::System.Int32 interfaceId = request.InterfaceId;
+            global::System.Int32 methodId = request.MethodId;
+            global::System.Object[] arguments = request.Arguments;
+            if (grain == null)
+                throw new global::System.ArgumentNullException(@"grain");
+            switch (interfaceId)
+            {
+                case -572685061:
+                    switch (methodId)
+                    {
+                        case -1925673939:
+                            await ((global::StreamProcessing.Grain.Implementation.IHelloworld)grain).Init();
+                            return null;
+                        default:
+                            throw new global::System.NotImplementedException(@"interfaceId=" + -572685061 + @",methodId=" + methodId);
+                    }
+
+                default:
+                    throw new global::System.NotImplementedException(@"interfaceId=" + interfaceId);
+            }
+        }
+
+        public global::System.Int32 InterfaceId
+        {
+            get
+            {
+                return -572685061;
+            }
+        }
+
+        public global::System.UInt16 InterfaceVersion
+        {
+            get
+            {
+                return 1;
+            }
+        }
+    }
+}
+
+namespace OrleansGeneratedCode1B3102D7
 {
     using global::Orleans;
     using global::System.Reflection;
@@ -19,10 +137,11 @@ namespace OrleansGeneratedCode1FB26223
 namespace OrleansGeneratedCode
 {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute(@"Orleans-CodeGenerator", @"2.0.0.0")]
-    internal sealed class OrleansCodeGen7e2645116eFeaturePopulator : global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainInterfaceFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainClassFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Serialization.SerializerFeature>
+    internal sealed class OrleansCodeGen8184396d46FeaturePopulator : global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainInterfaceFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainClassFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Serialization.SerializerFeature>
     {
         public void Populate(global::Orleans.Metadata.GrainInterfaceFeature feature)
         {
+            feature.Interfaces.Add(new global::Orleans.Metadata.GrainInterfaceMetadata(typeof(global::StreamProcessing.Grain.Implementation.IHelloworld), typeof(StreamProcessing.Grain.Implementation.OrleansCodeGenHelloworldReference), typeof(StreamProcessing.Grain.Implementation.OrleansCodeGenHelloworldMethodInvoker), -572685061));
         }
 
         public void Populate(global::Orleans.Metadata.GrainClassFeature feature)
@@ -30,6 +149,7 @@ namespace OrleansGeneratedCode
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::GrainStreamProcessing.GrainImpl.SplitValue)));
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.LargerThanTenFilter)));
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.OddNumberFilter)));
+            feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.Helloworld)));
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.JobManagerGrain)));
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.SinkGrain)));
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.SourceGrain)));
@@ -44,6 +164,8 @@ namespace OrleansGeneratedCode
             feature.AddKnownType(@"StreamProcessing.Function.IFilterFunction,Function", @"StreamProcessing.Function.IFilterFunction");
             feature.AddKnownType(@"StreamProcessing.Grain.Implementation.LargerThanTenFilter,Grain.Implementation", @"StreamProcessing.Grain.Implementation.LargerThanTenFilter");
             feature.AddKnownType(@"StreamProcessing.Grain.Implementation.OddNumberFilter,Grain.Implementation", @"StreamProcessing.Grain.Implementation.OddNumberFilter");
+            feature.AddKnownType(@"StreamProcessing.Grain.Implementation.IHelloworld,Grain.Implementation", @"StreamProcessing.Grain.Implementation.IHelloworld");
+            feature.AddKnownType(@"StreamProcessing.Grain.Implementation.Helloworld,Grain.Implementation", @"StreamProcessing.Grain.Implementation.Helloworld");
             feature.AddKnownType(@"StreamProcessing.Grain.Implementation.JobManagerGrain,Grain.Implementation", @"StreamProcessing.Grain.Implementation.JobManagerGrain");
             feature.AddKnownType(@"StreamProcessing.Grain.Implementation.SinkGrain,Grain.Implementation", @"StreamProcessing.Grain.Implementation.SinkGrain");
             feature.AddKnownType(@"StreamProcessing.Grain.Implementation.SourceGrain,Grain.Implementation", @"StreamProcessing.Grain.Implementation.SourceGrain");

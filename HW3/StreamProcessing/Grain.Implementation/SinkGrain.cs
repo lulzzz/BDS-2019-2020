@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Orleans;
+using Orleans.Concurrency;
 using Orleans.Streams;
 using StreamProcessing.Function;
 using StreamProcessing.Grain.Interface;
@@ -8,6 +9,7 @@ using StreamProcessing.Grain.Interface;
 
 namespace StreamProcessing.Grain.Implementation
 {
+    [Reentrant]
     public class SinkGrain : Orleans.Grain, ISinkGrain
     {
         private IJobManagerGrain jobManager;
@@ -24,11 +26,11 @@ namespace StreamProcessing.Grain.Implementation
             jobManager = GrainFactory.GetGrain<IJobManagerGrain>(0, "JobManager");
 
             // ask the JobManager which streams it should subscribe
-            var subscribe = jobManager.GetSubscribe(this.GetPrimaryKey()).Result;
+            var subscribe = await jobManager.GetSubscribe(this.GetPrimaryKey());
 
             foreach (var streamID in subscribe)
             {
-                var stream = streamProvider.GetStream<MyType>(streamID, "");
+                var stream = streamProvider.GetStream<MyType>(streamID, null);
 
                 // To resume stream in case of stream deactivation
                 var subscriptionHandles = await stream.GetAllSubscriptionHandles();
@@ -47,7 +49,7 @@ namespace StreamProcessing.Grain.Implementation
 
         public async Task Process(MyType e, StreamSequenceToken sequenceToken) // Implements the Process method from IFilter
         {
-            Console.WriteLine(e);     // Output received data to Silo console
+            Console.WriteLine($"SinkGrain  key = {e.key}, value = {e.value}, {e.timestamp.GetTimestamp()}");     // Output received data to Silo console
             await Task.CompletedTask;
         }
     }

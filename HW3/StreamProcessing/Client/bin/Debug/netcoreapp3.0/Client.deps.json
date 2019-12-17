@@ -8,6 +8,8 @@
     ".NETCoreApp,Version=v3.0": {
       "Client/1.0.0": {
         "dependencies": {
+          "Function": "1.0.0",
+          "Grain.Implementation": "1.0.0",
           "Grain.Interface": "1.0.0",
           "Microsoft.Extensions.Logging.Console": "3.1.0",
           "Microsoft.Orleans.Client": "3.0.2",
@@ -1134,9 +1136,20 @@
           "Function.dll": {}
         }
       },
-      "Grain.Interface/1.0.0": {
+      "Grain.Implementation/1.0.0": {
         "dependencies": {
           "Function": "1.0.0",
+          "Grain.Interface": "1.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.0",
+          "Microsoft.Orleans.Core.Abstractions": "3.0.2"
+        },
+        "runtime": {
+          "Grain.Implementation.dll": {}
+        }
+      },
+      "Grain.Interface/1.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.0",
           "Microsoft.Orleans.Core.Abstractions": "3.0.2"
         },
         "runtime": {
@@ -1978,6 +1991,11 @@
       "hashPath": "system.xml.xmldocument.4.3.0.nupkg.sha512"
     },
     "Function/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Grain.Implementation/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

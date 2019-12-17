@@ -5,9 +5,11 @@ using StreamProcessing.Grain.Interface;
 using System.Collections.Generic;
 using Orleans.Streams;
 using Orleans;
+using Orleans.Concurrency;
 
 namespace GrainStreamProcessing.GrainImpl
 {
+    [Reentrant]
     public abstract class FlatMapGrain : Orleans.Grain, IFlatMapGrain, IFlatMapFunction
     {
         private IJobManagerGrain jobManager;
@@ -26,11 +28,11 @@ namespace GrainStreamProcessing.GrainImpl
             jobManager = GrainFactory.GetGrain<IJobManagerGrain>(0, "JobManager");
 
             // ask the JobManager which streams it should subscribe
-            var subscribe = jobManager.GetSubscribe(this.GetPrimaryKey()).Result;
+            var subscribe = await jobManager.GetSubscribe(this.GetPrimaryKey());
 
             foreach (var streamID in subscribe)
             {
-                var stream = streamProvider.GetStream<MyType>(streamID, "");
+                var stream = streamProvider.GetStream<MyType>(streamID, null);
 
                 // To resume stream in case of stream deactivation
                 var subscriptionHandles = await stream.GetAllSubscriptionHandles();
@@ -49,17 +51,23 @@ namespace GrainStreamProcessing.GrainImpl
 
         public async Task Process(MyType e, StreamSequenceToken sequenceToken) // Implements the Process method from IFilter
         {
-            string Key = jobManager.GetKey(this.GetPrimaryKey()).Result;
-            string Value = jobManager.GetValue(this.GetPrimaryKey()).Result;
-            MyType new_e = NewEvent.CreateNewEvent(e, Key, Value);
-
-            List<MyType> result = Apply(new_e);
-            List<Guid> streams = jobManager.GetPublish(this.GetPrimaryKey()).Result;
+            List<MyType> result = new List<MyType>();
+            if (e.value == "watermark") result.Add(e);
+            else
+            {
+                string Key = await jobManager.GetKey(this.GetPrimaryKey());
+                string Value = await jobManager.GetValue(this.GetPrimaryKey());
+                MyType new_e = NewEvent.CreateNewEvent(e, Key, Value);
+                result = Apply(new_e);
+            }
+            List<Task> t = new List<Task>();
+            List<Guid> streams = await jobManager.GetPublish(this.GetPrimaryKey());
             foreach (var item1 in streams)
             {
-                var stream = streamProvider.GetStream<MyType>(item1, "");
-                foreach (var item2 in result) await stream.OnNextAsync(item2);
+                var stream = streamProvider.GetStream<MyType>(item1, null);
+                foreach (var item2 in result) t.Add(stream.OnNextAsync(item2));
             }
+            await Task.WhenAll(t);
         }
     }
 

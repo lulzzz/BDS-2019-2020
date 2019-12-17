@@ -1,0 +1,77 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.0": {
+      "Grain.Interface/1.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.0",
+          "Microsoft.Orleans.Core.Abstractions": "3.0.2",
+          "Microsoft.Orleans.OrleansCodeGenerator.Build": "3.0.2"
+        },
+        "runtime": {
+          "Grain.Interface.dll": {}
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions/3.1.0": {
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "assemblyVersion": "3.1.0.0",
+            "fileVersion": "3.100.19.56504"
+          }
+        }
+      },
+      "Microsoft.Orleans.Core.Abstractions/3.0.2": {
+        "dependencies": {
+          "System.Memory": "4.5.3"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Orleans.Core.Abstractions.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        }
+      },
+      "Microsoft.Orleans.OrleansCodeGenerator.Build/3.0.2": {},
+      "System.Memory/4.5.3": {}
+    }
+  },
+  "libraries": {
+    "Grain.Interface/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Extensions.Logging.Abstractions/3.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-jjo4YXRx6MIpv6DiRxJjSpl+sPP0+5VW0clMEdLyIAz44PPwrDTFrd5PZckIxIXl1kKZ2KK6IL2nkt0+ug2MQg==",
+      "path": "microsoft.extensions.logging.abstractions/3.1.0",
+      "hashPath": "microsoft.extensions.logging.abstractions.3.1.0.nupkg.sha512"
+    },
+    "Microsoft.Orleans.Core.Abstractions/3.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dAHiie7+M0P4HzIDzHmD4HSJ9iYK+FMz3ojloxxCUzXtMUjiFlWw6kC5xi8mBFS3d4opraD++J5PJVISliLMMg==",
+      "path": "microsoft.orleans.core.abstractions/3.0.2",
+      "hashPath": "microsoft.orleans.core.abstractions.3.0.2.nupkg.sha512"
+    },
+    "Microsoft.Orleans.OrleansCodeGenerator.Build/3.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Ggc5ixyyyAm8uHXi2oLqW5mYEjekby7OAXs538rZnFEBz3slTpzfCwimMUust3vWWDkeOxCFS6MIraWRtw+eFw==",
+      "path": "microsoft.orleans.orleanscodegenerator.build/3.0.2",
+      "hashPath": "microsoft.orleans.orleanscodegenerator.build.3.0.2.nupkg.sha512"
+    },
+    "System.Memory/4.5.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-3oDzvc/zzetpTKWMShs1AADwZjQ/36HnsufHRPcOjyRAAMLDlu2iD33MBI2opxnezcVUtXyqDXXjoFMOU9c7SA==",
+      "path": "system.memory/4.5.3",
+      "hashPath": "system.memory.4.5.3.nupkg.sha512"
+    }
+  }
+}

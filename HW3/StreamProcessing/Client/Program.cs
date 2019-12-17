@@ -22,9 +22,9 @@ namespace StreamProcessing.Client
             {
                 using (var client = await ConnectClient())
                 {
-                    await Client1(client);
+                    //await Client1(client);
                     //await Client2(client);
-                    //await Client3(client);
+                    await Client3(client);
                     Console.ReadKey();
                 }
 
@@ -50,14 +50,28 @@ namespace StreamProcessing.Client
                     options.ClusterId = "cluster";
                     options.ServiceId = "GrainStreamProcessing";
                 })
-                .ConfigureApplicationParts(parts => parts
-                .AddApplicationPart(typeof(IJobManagerGrain).Assembly).WithReferences()
-                )
+                //.ConfigureApplicationParts(parts => parts
+                //.AddApplicationPart(typeof(IJobManagerGrain).Assembly).WithReferences()
+                //)
                 .ConfigureLogging(logging => logging.AddConsole())
                 .AddSimpleMessageStreamProvider("SMSProvider")
                 .Build();
 
-            await client.Connect();
+            int i = 0;
+            int maxReTry = 10;
+            while (i < maxReTry)
+            {
+                try
+                {
+                    await client.Connect();
+                    i = maxReTry;
+                }
+                catch (Exception e)
+                {
+                    if (i < maxReTry - 1) i++;
+                    else throw new Exception($"Exception: {e.Message}");
+                }
+            }
             Console.WriteLine("Client successfully connected to silo host \n");
             return client;
         }
@@ -80,7 +94,14 @@ namespace StreamProcessing.Client
 
             var jobManager = client.GetGrain<IJobManagerGrain>(0, "JobManager");
 
-            // STEP 2: register all subscribes and publishes, which only add the information to JobManager 
+            // STEP 2: register window informations
+            long window_length = 15000;
+            long window_slide = 5000;
+            long delay = 0;
+            await jobManager.RegisterWindow(windowJoinGrain, window_length, window_slide);
+            await jobManager.RegisterAllowedDelay(delay);
+
+            // STEP 3: register all subscribes and publishes, which only add the information to JobManager 
             await jobManager.RegisterSubscribe(tagSourceGrain, SourceTagStream);
             await jobManager.RegisterSubscribe(photoSourceGrain, SourcePhotoStream);
             await jobManager.RegisterSubscribe(tagFilterGrain, TagStream);
@@ -93,7 +114,7 @@ namespace StreamProcessing.Client
             await jobManager.RegisterPublish(tagFilterGrain, FilteredTagStream);
             await jobManager.RegisterPublish(windowJoinGrain, JoinedStream);
 
-            // STEP 3: register the operators, which will activate the grain
+            // STEP 4: register the operators, which will activate the grain
             // string 1: user defined function
             // string 2 & 3: when the operator emits an event, which columns should be put to new Key and Value
             await jobManager.RegisterISourceGrain(tagSourceGrain, "SourceGrain", "0", "1");
@@ -104,18 +125,11 @@ namespace StreamProcessing.Client
             await jobManager.RegisterIJoinGrain(windowJoinGrain, "WindowJoinGrain", "0, 0", "1, 2 3");
             await jobManager.RegisterISinkGrain(sinkGrain, "SinkGrain", "", "");
 
-            // STEP 4: register window informations
-            long window_length = 15000;
-            long window_slide = 5000;
-            long delay = 0;
-            await jobManager.RegisterWindow(windowJoinGrain, window_length, window_slide);
-            await jobManager.RegisterAllowedDelay(delay);
-
             // STEP 5: activate the streams
             var streamProvider = client.GetStreamProvider("SMSProvider");
-            var tag = streamProvider.GetStream<string>(SourceTagStream, "");
-            var photo = streamProvider.GetStream<string>(SourcePhotoStream, "");
-            var gps = streamProvider.GetStream<string>(new Guid(), "");
+            var tag = streamProvider.GetStream<string>(SourceTagStream, null);
+            var photo = streamProvider.GetStream<string>(SourcePhotoStream, null);
+            var gps = streamProvider.GetStream<string>(new Guid(), null);
 
             // STEP 6: let DataDriver feeds data to streams
             await DataDriver.Run(photo, tag, gps, 1600, 0);
@@ -151,16 +165,16 @@ namespace StreamProcessing.Client
             await jobManager.RegisterPublish(gpsSourceGrain, gpsStream);
 
             // STEP 3: register the operators, which will activate the grain
-            await jobManager.RegisterISourceGrain(tagSourceGrain, "SourceGrain", "", "all");
-            await jobManager.RegisterISourceGrain(photoSourceGrain, "SourceGrain", "", "all");
-            await jobManager.RegisterISourceGrain(gpsSourceGrain, "SourceGrain", "", "all");
-            await jobManager.RegisterISinkGrain(sinkGrain, "SinkGrain", "", "all");
+            await jobManager.RegisterISourceGrain(tagSourceGrain, "SourceGrain", "", "0");
+            await jobManager.RegisterISourceGrain(photoSourceGrain, "SourceGrain", "", "0");
+            await jobManager.RegisterISourceGrain(gpsSourceGrain, "SourceGrain", "", "0");
+            await jobManager.RegisterISinkGrain(sinkGrain, "SinkGrain", "", "0");
 
             // STEP 4: activate the streams
             var streamProvider = client.GetStreamProvider("SMSProvider");
-            var Tag = streamProvider.GetStream<string>(tag, "");
-            var Photo = streamProvider.GetStream<string>(photo, "");
-            var GPS = streamProvider.GetStream<string>(gps, "");
+            var Tag = streamProvider.GetStream<string>(tag, null);
+            var Photo = streamProvider.GetStream<string>(photo, null);
+            var GPS = streamProvider.GetStream<string>(gps, null);
 
             // STEP 5: let DataDriver feeds data to streams
             await DataDriver.Run(Tag, Photo, GPS, 1600, 0);
@@ -168,7 +182,7 @@ namespace StreamProcessing.Client
 
         private static async Task Client1(IClusterClient client)
         {
-            // The code below shows how to specify an exact grain class which implements the IFilter interface
+            //string NameSpace = "StreamProcessing.Grain.Implementation.";
 
             // STEP 1: create IDs for all grains and streams
             var filterGrain = Guid.NewGuid();
@@ -178,7 +192,7 @@ namespace StreamProcessing.Client
             var filteredStream = Guid.NewGuid();
 
             var jobManager = client.GetGrain<IJobManagerGrain>(0, "JobManager");
-            
+
             // STEP 2: register all subscribes and publishes, which only add the information to JobManager
             await jobManager.RegisterSubscribe(filterGrain, sourceStream);
             await jobManager.RegisterSubscribe(sinkGrain, filteredStream);
@@ -186,18 +200,19 @@ namespace StreamProcessing.Client
             await jobManager.RegisterPublish(filterGrain, filteredStream);
             
             // STEP 3: register the operators, which will activate the grain
-            await jobManager.RegisterIFilterGrain(filterGrain, "LargerThanTen", "", "all");
-            await jobManager.RegisterISinkGrain(sinkGrain, "SinkGrain", "", "all");
+            await jobManager.RegisterIFilterGrain(filterGrain, "LargerThanTenFilter", "0", "");
+            await jobManager.RegisterISinkGrain(sinkGrain, "SinkGrain", "", "0");
 
             // STEP 4: activate the streams
             var streamProvider = client.GetStreamProvider("SMSProvider");
-            var Stream = streamProvider.GetStream<MyType>(sourceStream, "");
-            
+            var Stream = streamProvider.GetStream<MyType>(sourceStream, null);
+
             Random random = new Random();
+            Console.Write("Client console: ");
             for (int i = 0; i < 20; ++i)
             {
                 long r = random.Next(20);  // Randomly generate twenty numbers between 0 and 19.
-                Console.WriteLine(r);      // Output these numbers to Client console.
+                Console.Write(r + " ");      // Output these numbers to Client console.
 
                 Timestamp time = new Timestamp(0);
                 var record = new MyType(r.ToString(), "", time);

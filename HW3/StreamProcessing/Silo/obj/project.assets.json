@@ -1789,7 +1789,7 @@
       },
       "Function/1.0.0": {
         "type": "project",
-        "framework": ".NETStandard,Version=v2.1",
+        "framework": ".NETCoreApp,Version=v3.0",
         "compile": {
           "bin/placeholder/Function.dll": {}
         },
@@ -1799,12 +1799,11 @@
       },
       "Grain.Implementation/1.0.0": {
         "type": "project",
-        "framework": ".NETStandard,Version=v2.1",
+        "framework": ".NETCoreApp,Version=v3.0",
         "dependencies": {
           "Function": "1.0.0",
           "Grain.Interface": "1.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "3.1.0",
-          "Microsoft.Orleans.Core": "3.0.2",
           "Microsoft.Orleans.Core.Abstractions": "3.0.2"
         },
         "compile": {
@@ -1816,9 +1815,9 @@
       },
       "Grain.Interface/1.0.0": {
         "type": "project",
-        "framework": ".NETStandard,Version=v2.1",
+        "framework": ".NETCoreApp,Version=v3.0",
         "dependencies": {
-          "Function": "1.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "3.1.0",
           "Microsoft.Orleans.Core.Abstractions": "3.0.2"
         },
         "compile": {
