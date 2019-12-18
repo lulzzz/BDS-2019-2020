@@ -9,6 +9,7 @@ namespace StreamProcessing.Grain.Implementation
     {
         private Dictionary<Guid, Tuple<string, string, string>> operators;
         private Dictionary<Guid, List<Guid>> subscribes;
+        private Dictionary<Guid, Tuple<Guid, Guid>> two_source_subscribes;
         private Dictionary<Guid, List<Guid>> publishes;
         private Dictionary<Guid, Tuple<long, long>> windows;
         private long AllowedDelay;
@@ -18,6 +19,7 @@ namespace StreamProcessing.Grain.Implementation
         {
             operators = new Dictionary<Guid, Tuple<string, string, string>>();
             subscribes = new Dictionary<Guid, List<Guid>>();
+            two_source_subscribes = new Dictionary<Guid, Tuple<Guid, Guid>>();
             publishes = new Dictionary<Guid, List<Guid>>();
             windows = new Dictionary<Guid, Tuple<long, long>>();
             AllowedDelay = 0;
@@ -36,11 +38,11 @@ namespace StreamProcessing.Grain.Implementation
             throw new Exception($"Exception: the op: {opID} is not registered in operators. ");
         }
 
-        public Task RegisterWindow(Guid opID, long window_length, long window_slide)
+        public Task RegisterWindow(Guid opID, long length, long slide)
         {
             if (windows.ContainsKey(opID))
-                throw new Exception($"Exception: the window for op: {opID} is already registered in windows. ");
-            windows.Add(opID, new Tuple<long, long>(window_length, window_slide));
+                throw new Exception($"Exception: the window for {opID} is already registered in windows. ");
+            windows.Add(opID, new Tuple<long, long>(length, slide));
             return Task.CompletedTask;
         }
 
@@ -52,8 +54,7 @@ namespace StreamProcessing.Grain.Implementation
 
         public Task<Tuple<long, long>> GetWindow(Guid opID)
         {
-            if (windows.ContainsKey(opID)) return Task.FromResult(windows[opID]);
-            throw new Exception($"Exception: op: {opID} has't registered any window yet. ");
+            return Task.FromResult(windows[opID]);
         }
 
         public Task<long> GetDelay()
@@ -89,6 +90,14 @@ namespace StreamProcessing.Grain.Implementation
             return Task.CompletedTask;
         }
 
+        public Task RegisterTwoSourceSubscribe(Guid opID, Guid streamID1, Guid streamID2)
+        {
+            if (two_source_subscribes.ContainsKey(opID))
+                throw new Exception($"Exception: op: {opID} already subscribes two streams. ");
+            two_source_subscribes.Add(opID, new Tuple<Guid, Guid>(streamID1, streamID2));
+            return Task.CompletedTask;
+        }
+
         public Task<List<Guid>> GetPublish(Guid grainID)
         {
             return Task.FromResult(publishes[grainID]);
@@ -97,6 +106,11 @@ namespace StreamProcessing.Grain.Implementation
         public Task<List<Guid>> GetSubscribe(Guid grainID)
         {
             return Task.FromResult(subscribes[grainID]);
+        }
+
+        public Task<Tuple<Guid, Guid>> GetTwoSourceSubscribe(Guid grainID)
+        {
+            return Task.FromResult(two_source_subscribes[grainID]);
         }
 
         public async Task RegisterISourceGrain(Guid opID, string userDefinedFunction, string Key, string Value)
@@ -141,6 +155,15 @@ namespace StreamProcessing.Grain.Implementation
                 throw new Exception($"Exception: op: {opID} is already registered in operators. ");
             operators.Add(opID, new Tuple<string, string, string>(userDefinedFunction, Key, Value));
             var grain = GrainFactory.GetGrain<IFilterGrain>(opID, NameSpace + userDefinedFunction);
+            await grain.Init();
+        }
+
+        public async Task RegisterIWindowAggregateGrain(Guid opID, string userDefinedFunction, string Key, string Value)
+        {
+            if (operators.ContainsKey(opID))
+                throw new Exception($"Exception: op: {opID} is already registered in operators. ");
+            operators.Add(opID, new Tuple<string, string, string>(userDefinedFunction, Key, Value));
+            var grain = GrainFactory.GetGrain<IWindowAggregateGrain>(opID, NameSpace + userDefinedFunction);
             await grain.Init();
         }
     }

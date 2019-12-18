@@ -18,18 +18,23 @@ namespace StreamProcessing.Grain.Interface
         Task RegisterIFlatMapGrain(Guid opID, string userDefinedFunction, string Key, string Value);
         [AlwaysInterleave]
         Task RegisterIFilterGrain(Guid opID, string userDefinedFunction, string Key, string Value);
-        
+        [AlwaysInterleave]
+        Task RegisterIWindowAggregateGrain(Guid opID, string userDefinedFunction, string Key, string Value);
+
         [AlwaysInterleave]
         Task<string> GetKey(Guid opID);
         [AlwaysInterleave]
         Task<string> GetValue(Guid opID);
 
         Task RegisterSubscribe(Guid opID, Guid streamID);
+        Task RegisterTwoSourceSubscribe(Guid opID, Guid streamID1, Guid streamID2);
         Task RegisterPublish(Guid opID, Guid streamID);
         [AlwaysInterleave]
         Task<List<Guid>> GetPublish(Guid grainID);
         [AlwaysInterleave]
         Task<List<Guid>> GetSubscribe(Guid grainID);
+        [AlwaysInterleave]
+        Task<Tuple<Guid, Guid>> GetTwoSourceSubscribe(Guid grainID);
 
         Task RegisterWindow(Guid opID, long window_length, long window_slide);
         Task RegisterAllowedDelay(long delay);

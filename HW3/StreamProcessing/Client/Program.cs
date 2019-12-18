@@ -76,6 +76,92 @@ namespace StreamProcessing.Client
             return client;
         }
 
+        private static async Task TestClient(IClusterClient client)
+        {
+            // STEP 1: create IDs for all grains and streams
+            var tagSourceGrain = Guid.NewGuid();
+            var gpsSourceGrain = Guid.NewGuid();
+            var photoSourceGrain = Guid.NewGuid();
+            var joinTagPhotoGrain = Guid.NewGuid();
+            var joinGPSGPSGrain = Guid.NewGuid();
+            var joinBothGrain = Guid.NewGuid();
+            var filterGrain = Guid.NewGuid();
+            var windowDuplicateRemoveGrain = Guid.NewGuid();
+            var windowAggregateGrain = Guid.NewGuid();
+            var sinkGrain = Guid.NewGuid();
+
+            var SourceTagStream = Guid.NewGuid();
+            var SourceGPSStream = Guid.NewGuid();
+            var SourcePhotoStream = Guid.NewGuid();
+            var TagStream  = Guid.NewGuid();
+            var PhotoStream = Guid.NewGuid();
+            var GPSStream = Guid.NewGuid();
+            var JoinedTagPhotoStream = Guid.NewGuid();
+            var JoinedGPSGPSStream = Guid.NewGuid();
+            var JoinedBothStream = Guid.NewGuid();
+            var FilteredStream = Guid.NewGuid();
+            var DistinctStream = Guid.NewGuid();
+            var AggregatedStream = Guid.NewGuid();
+
+            var jobManager = client.GetGrain<IJobManagerGrain>(0, "JobManager");
+
+            // STEP 2: register window informations
+            long window_length = 15000;
+            long window_slide = 5000;
+            long delay = 0;
+            await jobManager.RegisterWindow(joinTagPhotoGrain,window_length, window_slide);
+            await jobManager.RegisterWindow(joinGPSGPSGrain, window_length, window_slide);
+            await jobManager.RegisterWindow(joinBothGrain, window_slide, window_slide);
+            await jobManager.RegisterWindow(windowDuplicateRemoveGrain, window_slide, window_slide);
+            await jobManager.RegisterWindow(windowAggregateGrain, window_slide, window_slide);
+            await jobManager.RegisterAllowedDelay(delay);
+
+            // STEP 3: register all subscribes and publishes, which only add the information to JobManager
+            await jobManager.RegisterSubscribe(tagSourceGrain, SourceTagStream);
+            await jobManager.RegisterSubscribe(gpsSourceGrain, SourceGPSStream);
+            await jobManager.RegisterSubscribe(photoSourceGrain, SourcePhotoStream);
+            await jobManager.RegisterTwoSourceSubscribe(joinTagPhotoGrain, TagStream, PhotoStream);
+            await jobManager.RegisterTwoSourceSubscribe(joinGPSGPSGrain, GPSStream, GPSStream);
+            await jobManager.RegisterTwoSourceSubscribe(joinBothGrain, JoinedTagPhotoStream, JoinedGPSGPSStream);
+            await jobManager.RegisterSubscribe(filterGrain, JoinedBothStream);
+            await jobManager.RegisterSubscribe(windowDuplicateRemoveGrain, FilteredStream);
+            await jobManager.RegisterSubscribe(windowAggregateGrain, DistinctStream);
+            await jobManager.RegisterSubscribe(sinkGrain, AggregatedStream);
+
+            await jobManager.RegisterPublish(tagSourceGrain, TagStream);
+            await jobManager.RegisterPublish(photoSourceGrain, PhotoStream);
+            await jobManager.RegisterPublish(gpsSourceGrain, GPSStream);
+            await jobManager.RegisterPublish(joinTagPhotoGrain, JoinedTagPhotoStream);
+            await jobManager.RegisterPublish(joinGPSGPSGrain, JoinedGPSGPSStream);
+            await jobManager.RegisterPublish(joinBothGrain, JoinedBothStream);
+            await jobManager.RegisterPublish(filterGrain, FilteredStream);
+            await jobManager.RegisterPublish(windowDuplicateRemoveGrain, DistinctStream);
+            await jobManager.RegisterPublish(windowAggregateGrain, AggregatedStream);
+
+            // STEP 4: register the operators, which will activate the grain
+            await jobManager.RegisterISourceGrain(tagSourceGrain, "SourceGrain", "", "0 1");                                      // tag = <photo_id, user_id>
+            await jobManager.RegisterISourceGrain(gpsSourceGrain, "SourceGrain", "", "0 1 2");                                    // gps = <user_id, lat, lon>
+            await jobManager.RegisterISourceGrain(photoSourceGrain, "SourceGrain", "", "0 1 2 3");                                // photo = <photo_id, user_id, lat, lon>
+            // For this join operation, tag will be the 1st source, photo will be the 2nd source
+            await jobManager.RegisterIJoinGrain(joinTagPhotoGrain, "WindowJoinGrain", "0, 0", "1, 2 3");                          // JoinedTagPhotoStream = <photo_id, user_id, lat1, lon1>
+            await jobManager.RegisterIJoinGrain(joinGPSGPSGrain, "WindowJoinGrain", "0 1 2, 0 1 2", "");                          // JoinedGPSGPSStream = <user_id, lat2, lon2>
+            // For this join operation, JoinedTagPhotoStream will be the 1st source, JoinedGPSGPSStream will be the 2nd source
+            await jobManager.RegisterIJoinGrain(joinBothGrain, "WindowJoinGrain", "1, 0", "0 2 3, 1 2");                          // JoinedBothStream = <user_id, photo_id, lat1, lon1, lat2, lon2>
+            await jobManager.RegisterIFilterGrain(joinBothGrain, "DistanceFilterGrain", "0 1", "2 3 4 5");                        // FilteredStream = <user_id, photo_id, lat1, lon1, lat2, lon2>
+            await jobManager.RegisterIWindowAggregateGrain(windowDuplicateRemoveGrain, "WindowDuplicateRemoveGrain", "0 1", "");  // DistinctStream = <user_id, photo_id>
+            await jobManager.RegisterIWindowAggregateGrain(windowAggregateGrain, "WindowCountByKeyGrain", "0", "1");              // AggregatedStream = <user_id, count>
+            await jobManager.RegisterISinkGrain(sinkGrain, "SinkGrain", "", "");
+
+            // STEP 5: activate the streams
+            var streamProvider = client.GetStreamProvider("SMSProvider");
+            var tag = streamProvider.GetStream<string>(SourceTagStream, null);
+            var photo = streamProvider.GetStream<string>(SourcePhotoStream, null);
+            var gps = streamProvider.GetStream<string>(SourceGPSStream, null);
+
+            // STEP 6: let DataDriver feeds data to streams
+            await DataDriver.Run(photo, tag, gps, 1600, 0);
+        }
+
         private static async Task Client3(IClusterClient client)
         {
             // STEP 1: create IDs for all grains and streams
@@ -105,8 +191,7 @@ namespace StreamProcessing.Client
             await jobManager.RegisterSubscribe(tagSourceGrain, SourceTagStream);
             await jobManager.RegisterSubscribe(photoSourceGrain, SourcePhotoStream);
             await jobManager.RegisterSubscribe(tagFilterGrain, TagStream);
-            await jobManager.RegisterSubscribe(windowJoinGrain, FilteredTagStream);
-            await jobManager.RegisterSubscribe(windowJoinGrain, PhotoStream);
+            await jobManager.RegisterTwoSourceSubscribe(windowJoinGrain, FilteredTagStream, PhotoStream);
             await jobManager.RegisterSubscribe(sinkGrain, JoinedStream);
 
             await jobManager.RegisterPublish(tagSourceGrain, TagStream);
@@ -116,9 +201,9 @@ namespace StreamProcessing.Client
 
             // STEP 4: register the operators, which will activate the grain
             // string 1: user defined function
-            // string 2 & 3: when the operator emits an event, which columns should be put to new Key and Value
-            await jobManager.RegisterISourceGrain(tagSourceGrain, "SourceGrain", "0", "1");
-            await jobManager.RegisterISourceGrain(photoSourceGrain, "SourceGrain", "0", "1 2 3");
+            // string 2 & 3: when the operator receives an event, which columns should be put to new Key and Value
+            await jobManager.RegisterISourceGrain(tagSourceGrain, "SourceGrain", "", "0 1");
+            await jobManager.RegisterISourceGrain(photoSourceGrain, "SourceGrain", "", "0 1 2 3");
             await jobManager.RegisterIFilterGrain(tagFilterGrain, "LargerThanTenFilter", "0", "1");
             // for Join Grain, string 2 defines which column is the key that user wants to join on
             // string 3 defines which columns that user wants to keep in the result after join operation

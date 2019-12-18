@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grain.Implementation", "Gra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grain.Interface", "Grain.Interface\Grain.Interface.csproj", "{A1D2D3D5-7204-4E65-A336-30CA7E04079E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{7BD74AFB-E31B-43B8-9587-6BCFFA49C19D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,5 +39,9 @@ Global
 		{A1D2D3D5-7204-4E65-A336-30CA7E04079E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1D2D3D5-7204-4E65-A336-30CA7E04079E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1D2D3D5-7204-4E65-A336-30CA7E04079E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BD74AFB-E31B-43B8-9587-6BCFFA49C19D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BD74AFB-E31B-43B8-9587-6BCFFA49C19D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BD74AFB-E31B-43B8-9587-6BCFFA49C19D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BD74AFB-E31B-43B8-9587-6BCFFA49C19D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

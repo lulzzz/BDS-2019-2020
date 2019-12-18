@@ -41,10 +41,10 @@ namespace StreamProcessing.Grain.Implementation
             func2 = new WindowFunction(window_length, window_slide);
 
             // ask the JobManager which streams it should subscribe
-            var subscribe = await jobManager.GetSubscribe(this.GetPrimaryKey());
+            var subscribe = await jobManager.GetTwoSourceSubscribe(this.GetPrimaryKey());
 
             /********** Handle the first source stream*************************/
-            var stream1 = streamProvider.GetStream<MyType>(subscribe[0], null);
+            var stream1 = streamProvider.GetStream<MyType>(subscribe.Item1, null);
             var subscriptionHandles = await stream1.GetAllSubscriptionHandles();
             if (subscriptionHandles.Count > 0)
             {
@@ -54,7 +54,7 @@ namespace StreamProcessing.Grain.Implementation
             t.Add(stream1.SubscribeAsync(Process1));
 
             /********** Handle the second source stream************************/
-            var stream2 = streamProvider.GetStream<MyType>(subscribe[1], null);
+            var stream2 = streamProvider.GetStream<MyType>(subscribe.Item2, null);
             var subscriptionHandles2 = await stream2.GetAllSubscriptionHandles();
             if (subscriptionHandles.Count > 0)
             {
