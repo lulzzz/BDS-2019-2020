@@ -1,31 +1,39 @@
-﻿<Properties StartupConfiguration="{C3A3EF28-F41B-4DEC-A2AE-DA5E0F9FAADF}|Default">
-  <MonoDevelop.Ide.ItemProperties.Test FirstBuild="True" />
+﻿<Properties StartupConfiguration="{A1FACEAC-A329-4769-8981-C2D98E2CA10E}|Default">
   <MonoDevelop.Ide.ItemProperties.Client PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Client/Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Grain.Implementation/WindowJoinGrain.cs">
     <Files>
-      <File FileName="Client/Program.cs" Line="89" Column="43" />
-      <File FileName="Grain.Implementation/WindowAggregateGrain.cs" Line="13" Column="1" />
-      <File FileName="Grain.Implementation/WindowJoinGrain.cs" Line="49" Column="46" />
+      <File FileName="Grain.Implementation/WindowJoinGrain.cs" Line="111" Column="64" />
+      <File FileName="Client/Program.cs" Line="150" Column="7" />
+      <File FileName="Grain.Interface/IJobManagerGrain.cs" Line="1" Column="1" />
+      <File FileName="Function/WindowFunction.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="StreamProcessing" expanded="True">
-            <Node name="Client" expanded="True">
-              <Node name="Program.cs" selected="True" />
+            <Node name="Client" expanded="True" />
+            <Node name="Function" expanded="True" />
+            <Node name="Grain.Implementation" expanded="True">
+              <Node name="WindowJoinGrain.cs" selected="True" />
             </Node>
-            <Node name="Grain.Implementation" expanded="True" />
             <Node name="Grain.Interface" expanded="True" />
+            <Node name="Silo" expanded="True" />
             <Node name="Test" expanded="True" />
           </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.Silo PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/WindowJoinGrain.cs" relfile="Grain.Implementation/WindowJoinGrain.cs" line="84" column="1" />
+      <Breakpoint file="/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/WindowJoinGrain.cs" relfile="Grain.Implementation/WindowJoinGrain.cs" line="85" column="1" />
+      <Breakpoint file="/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/WindowJoinGrain.cs" relfile="Grain.Implementation/WindowJoinGrain.cs" line="112" column="1" />
+      <Breakpoint file="/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/WindowJoinGrain.cs" relfile="Grain.Implementation/WindowJoinGrain.cs" line="113" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
 </Properties>

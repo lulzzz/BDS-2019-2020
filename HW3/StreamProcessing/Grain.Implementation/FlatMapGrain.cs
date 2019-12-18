@@ -9,7 +9,6 @@ using Orleans.Concurrency;
 
 namespace GrainStreamProcessing.GrainImpl
 {
-    [Reentrant]
     public abstract class FlatMapGrain : Orleans.Grain, IFlatMapGrain, IFlatMapFunction
     {
         private IJobManagerGrain jobManager;

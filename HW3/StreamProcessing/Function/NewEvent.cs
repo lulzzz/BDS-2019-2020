@@ -6,6 +6,7 @@ namespace StreamProcessing.Function
     {
         public static MyType CreateNewEvent(MyType e, string Key, string Value)
         {
+            //Console.WriteLine($"e.key = {e.key}, e.value = {e.value}, Key = {Key}, Value = {Value}");
             string[] key_parts = Key.Split(" ");
             string[] value_parts = Value.Split(" ");
 
@@ -32,7 +33,7 @@ namespace StreamProcessing.Function
                 int index = Convert.ToInt16(item);
                 if (index < len_key) new_col += e_Keys[index] + " ";
                 else if (index < len_key + len_value) new_col += e_Values[index - len_key] + " ";
-                else throw new Exception($"Exception: cannot create new event, because index is out of bound. ");
+                else throw new Exception($"Exception: cannot create new event, because index is out of bound. len_key = {len_key}, len_value = {len_value}, index = {index}");
             }
             return new_col;
         }

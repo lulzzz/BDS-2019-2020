@@ -5,7 +5,7 @@ namespace StreamProcessing.Function
     public class WindowFunction
     {
         // long: the end time of a window
-        private Dictionary<long, List<MyType>> window_data;
+        private SortedList<long, List<MyType>> window_data;
         private long window_length;
         private long window_slide;
 
@@ -13,10 +13,10 @@ namespace StreamProcessing.Function
         {
             window_length = length;
             window_slide = slide;
-            window_data = new Dictionary<long, List<MyType>>();
+            window_data = new SortedList<long, List<MyType>>();
         }
 
-        public Dictionary<long, List<MyType>> FeedData(MyType e)
+        public SortedList<long, List<MyType>> FeedData(MyType e)
         {
             string value = e.value;
             long time = e.timestamp.GetTimestamp();
@@ -43,12 +43,12 @@ namespace StreamProcessing.Function
             }
 
             // return an empty list when e is watermark
-            return new Dictionary<long, List<MyType>>();
+            return new SortedList<long, List<MyType>>();
         }
 
-        private Dictionary<long, List<MyType>> Trigger(long watermark)
+        private SortedList<long, List<MyType>> Trigger(long watermark)
         {
-            Dictionary<long, List<MyType>> fired_window = new Dictionary<long, List<MyType>>();
+            var fired_window = new SortedList<long, List<MyType>>();
             foreach (KeyValuePair<long, List<MyType>> e in window_data)
             {
                 long end = e.Key;

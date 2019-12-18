@@ -8,7 +8,7 @@
 #pragma warning disable 693
 #pragma warning disable 1591
 #pragma warning disable 1998
-[assembly: global::Orleans.Metadata.FeaturePopulatorAttribute(typeof(OrleansGeneratedCode.OrleansCodeGen536cd55058FeaturePopulator))]
+[assembly: global::Orleans.Metadata.FeaturePopulatorAttribute(typeof(OrleansGeneratedCode.OrleansCodeGen133425821eFeaturePopulator))]
 [assembly: global::Orleans.CodeGeneration.OrleansCodeGenerationTargetAttribute(@"Grain.Interface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
 namespace StreamProcessing.Grain.Interface
 {
@@ -300,18 +300,24 @@ namespace StreamProcessing.Grain.Interface
                             return @"RegisterIFlatMapGrain";
                         case 312992046:
                             return @"RegisterIFilterGrain";
+                        case 619378093:
+                            return @"RegisterIWindowAggregateGrain";
                         case -268088034:
                             return @"GetKey";
                         case 1109124783:
                             return @"GetValue";
                         case 848658137:
                             return @"RegisterSubscribe";
+                        case -1907146830:
+                            return @"RegisterTwoSourceSubscribe";
                         case 1728598256:
                             return @"RegisterPublish";
                         case -1123157861:
                             return @"GetPublish";
                         case -1768904416:
                             return @"GetSubscribe";
+                        case -1876552588:
+                            return @"GetTwoSourceSubscribe";
                         case 679831141:
                             return @"RegisterWindow";
                         case -1606313026:
@@ -354,6 +360,11 @@ namespace StreamProcessing.Grain.Interface
             return base.InvokeMethodAsync<global::System.Object>(312992046, new global::System.Object[]{opID, userDefinedFunction, Key, Value}, options: global::Orleans.CodeGeneration.InvokeMethodOptions.AlwaysInterleave);
         }
 
+        public global::System.Threading.Tasks.Task RegisterIWindowAggregateGrain(global::System.Guid opID, global::System.String userDefinedFunction, global::System.String Key, global::System.String Value)
+        {
+            return base.InvokeMethodAsync<global::System.Object>(619378093, new global::System.Object[]{opID, userDefinedFunction, Key, Value}, options: global::Orleans.CodeGeneration.InvokeMethodOptions.AlwaysInterleave);
+        }
+
         public global::System.Threading.Tasks.Task<global::System.String> GetKey(global::System.Guid opID)
         {
             return base.InvokeMethodAsync<global::System.String>(-268088034, new global::System.Object[]{opID}, options: global::Orleans.CodeGeneration.InvokeMethodOptions.AlwaysInterleave);
@@ -369,6 +380,11 @@ namespace StreamProcessing.Grain.Interface
             return base.InvokeMethodAsync<global::System.Object>(848658137, new global::System.Object[]{opID, streamID});
         }
 
+        public global::System.Threading.Tasks.Task RegisterTwoSourceSubscribe(global::System.Guid opID, global::System.Guid streamID1, global::System.Guid streamID2)
+        {
+            return base.InvokeMethodAsync<global::System.Object>(-1907146830, new global::System.Object[]{opID, streamID1, streamID2});
+        }
+
         public global::System.Threading.Tasks.Task RegisterPublish(global::System.Guid opID, global::System.Guid streamID)
         {
             return base.InvokeMethodAsync<global::System.Object>(1728598256, new global::System.Object[]{opID, streamID});
@@ -382,6 +398,11 @@ namespace StreamProcessing.Grain.Interface
         public global::System.Threading.Tasks.Task<global::System.Collections.Generic.List<global::System.Guid>> GetSubscribe(global::System.Guid grainID)
         {
             return base.InvokeMethodAsync<global::System.Collections.Generic.List<global::System.Guid>>(-1768904416, new global::System.Object[]{grainID}, options: global::Orleans.CodeGeneration.InvokeMethodOptions.AlwaysInterleave);
+        }
+
+        public global::System.Threading.Tasks.Task<global::System.Tuple<global::System.Guid, global::System.Guid>> GetTwoSourceSubscribe(global::System.Guid grainID)
+        {
+            return base.InvokeMethodAsync<global::System.Tuple<global::System.Guid, global::System.Guid>>(-1876552588, new global::System.Object[]{grainID}, options: global::Orleans.CodeGeneration.InvokeMethodOptions.AlwaysInterleave);
         }
 
         public global::System.Threading.Tasks.Task RegisterWindow(global::System.Guid opID, global::System.Int64 window_length, global::System.Int64 window_slide)
@@ -435,12 +456,18 @@ namespace StreamProcessing.Grain.Interface
                         case 312992046:
                             await ((global::StreamProcessing.Grain.Interface.IJobManagerGrain)grain).RegisterIFilterGrain((global::System.Guid)arguments[0], (global::System.String)arguments[1], (global::System.String)arguments[2], (global::System.String)arguments[3]);
                             return null;
+                        case 619378093:
+                            await ((global::StreamProcessing.Grain.Interface.IJobManagerGrain)grain).RegisterIWindowAggregateGrain((global::System.Guid)arguments[0], (global::System.String)arguments[1], (global::System.String)arguments[2], (global::System.String)arguments[3]);
+                            return null;
                         case -268088034:
                             return await ((global::StreamProcessing.Grain.Interface.IJobManagerGrain)grain).GetKey((global::System.Guid)arguments[0]);
                         case 1109124783:
                             return await ((global::StreamProcessing.Grain.Interface.IJobManagerGrain)grain).GetValue((global::System.Guid)arguments[0]);
                         case 848658137:
                             await ((global::StreamProcessing.Grain.Interface.IJobManagerGrain)grain).RegisterSubscribe((global::System.Guid)arguments[0], (global::System.Guid)arguments[1]);
+                            return null;
+                        case -1907146830:
+                            await ((global::StreamProcessing.Grain.Interface.IJobManagerGrain)grain).RegisterTwoSourceSubscribe((global::System.Guid)arguments[0], (global::System.Guid)arguments[1], (global::System.Guid)arguments[2]);
                             return null;
                         case 1728598256:
                             await ((global::StreamProcessing.Grain.Interface.IJobManagerGrain)grain).RegisterPublish((global::System.Guid)arguments[0], (global::System.Guid)arguments[1]);
@@ -449,6 +476,8 @@ namespace StreamProcessing.Grain.Interface
                             return await ((global::StreamProcessing.Grain.Interface.IJobManagerGrain)grain).GetPublish((global::System.Guid)arguments[0]);
                         case -1768904416:
                             return await ((global::StreamProcessing.Grain.Interface.IJobManagerGrain)grain).GetSubscribe((global::System.Guid)arguments[0]);
+                        case -1876552588:
+                            return await ((global::StreamProcessing.Grain.Interface.IJobManagerGrain)grain).GetTwoSourceSubscribe((global::System.Guid)arguments[0]);
                         case 679831141:
                             await ((global::StreamProcessing.Grain.Interface.IJobManagerGrain)grain).RegisterWindow((global::System.Guid)arguments[0], (global::System.Int64)arguments[1], (global::System.Int64)arguments[2]);
                             return null;
@@ -820,9 +849,121 @@ namespace StreamProcessing.Grain.Interface
             }
         }
     }
+
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute(@"Orleans-CodeGenerator", @"2.0.0.0"), global::System.SerializableAttribute, global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute, global::Orleans.CodeGeneration.GrainReferenceAttribute(typeof(global::StreamProcessing.Grain.Interface.IWindowAggregateGrain))]
+    internal class OrleansCodeGenWindowAggregateGrainReference : global::Orleans.Runtime.GrainReference, global::StreamProcessing.Grain.Interface.IWindowAggregateGrain
+    {
+        protected OrleansCodeGenWindowAggregateGrainReference(global::Orleans.Runtime.GrainReference other): base(other)
+        {
+        }
+
+        OrleansCodeGenWindowAggregateGrainReference(global::Orleans.Runtime.GrainReference other, global::Orleans.CodeGeneration.InvokeMethodOptions invokeMethodOptions): base(other, invokeMethodOptions)
+        {
+        }
+
+        protected OrleansCodeGenWindowAggregateGrainReference(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context): base(info, context)
+        {
+        }
+
+        public override global::System.Int32 InterfaceId
+        {
+            get
+            {
+                return 637034389;
+            }
+        }
+
+        public override global::System.UInt16 InterfaceVersion
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
+        public override global::System.String InterfaceName
+        {
+            get
+            {
+                return @"global::StreamProcessing.Grain.Interface.IWindowAggregateGrain";
+            }
+        }
+
+        public override global::System.Boolean IsCompatible(global::System.Int32 interfaceId)
+        {
+            return interfaceId == 637034389;
+        }
+
+        public override global::System.String GetMethodName(global::System.Int32 interfaceId, global::System.Int32 methodId)
+        {
+            switch (interfaceId)
+            {
+                case 637034389:
+                    switch (methodId)
+                    {
+                        case -1925673939:
+                            return @"Init";
+                        default:
+                            throw new global::System.NotImplementedException(@"interfaceId=" + 637034389 + @",methodId=" + methodId);
+                    }
+
+                default:
+                    throw new global::System.NotImplementedException(@"interfaceId=" + interfaceId);
+            }
+        }
+
+        public global::System.Threading.Tasks.Task Init()
+        {
+            return base.InvokeMethodAsync<global::System.Object>(-1925673939, null);
+        }
+    }
+
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute(@"Orleans-CodeGenerator", @"2.0.0.0"), global::Orleans.CodeGeneration.MethodInvokerAttribute(typeof(global::StreamProcessing.Grain.Interface.IWindowAggregateGrain), 637034389), global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute]
+    internal class OrleansCodeGenWindowAggregateGrainMethodInvoker : global::Orleans.CodeGeneration.IGrainMethodInvoker
+    {
+        public async global::System.Threading.Tasks.Task<global::System.Object> Invoke(global::Orleans.Runtime.IAddressable grain, global::Orleans.CodeGeneration.InvokeMethodRequest request)
+        {
+            global::System.Int32 interfaceId = request.InterfaceId;
+            global::System.Int32 methodId = request.MethodId;
+            global::System.Object[] arguments = request.Arguments;
+            if (grain == null)
+                throw new global::System.ArgumentNullException(@"grain");
+            switch (interfaceId)
+            {
+                case 637034389:
+                    switch (methodId)
+                    {
+                        case -1925673939:
+                            await ((global::StreamProcessing.Grain.Interface.IWindowAggregateGrain)grain).Init();
+                            return null;
+                        default:
+                            throw new global::System.NotImplementedException(@"interfaceId=" + 637034389 + @",methodId=" + methodId);
+                    }
+
+                default:
+                    throw new global::System.NotImplementedException(@"interfaceId=" + interfaceId);
+            }
+        }
+
+        public global::System.Int32 InterfaceId
+        {
+            get
+            {
+                return 637034389;
+            }
+        }
+
+        public global::System.UInt16 InterfaceVersion
+        {
+            get
+            {
+                return 1;
+            }
+        }
+    }
 }
 
-namespace OrleansGeneratedCodeDB6C9162
+namespace OrleansGeneratedCode1FDAF02A
 {
     using global::Orleans;
     using global::System.Reflection;
@@ -831,7 +972,7 @@ namespace OrleansGeneratedCodeDB6C9162
 namespace OrleansGeneratedCode
 {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute(@"Orleans-CodeGenerator", @"2.0.0.0")]
-    internal sealed class OrleansCodeGen536cd55058FeaturePopulator : global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainInterfaceFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainClassFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Serialization.SerializerFeature>
+    internal sealed class OrleansCodeGen133425821eFeaturePopulator : global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainInterfaceFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainClassFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Serialization.SerializerFeature>
     {
         public void Populate(global::Orleans.Metadata.GrainInterfaceFeature feature)
         {
@@ -841,6 +982,7 @@ namespace OrleansGeneratedCode
             feature.Interfaces.Add(new global::Orleans.Metadata.GrainInterfaceMetadata(typeof(global::StreamProcessing.Grain.Interface.IJoinGrain), typeof(StreamProcessing.Grain.Interface.OrleansCodeGenJoinGrainReference), typeof(StreamProcessing.Grain.Interface.OrleansCodeGenJoinGrainMethodInvoker), 2097125161));
             feature.Interfaces.Add(new global::Orleans.Metadata.GrainInterfaceMetadata(typeof(global::StreamProcessing.Grain.Interface.ISinkGrain), typeof(StreamProcessing.Grain.Interface.OrleansCodeGenSinkGrainReference), typeof(StreamProcessing.Grain.Interface.OrleansCodeGenSinkGrainMethodInvoker), 2146891248));
             feature.Interfaces.Add(new global::Orleans.Metadata.GrainInterfaceMetadata(typeof(global::StreamProcessing.Grain.Interface.ISourceGrain), typeof(StreamProcessing.Grain.Interface.OrleansCodeGenSourceGrainReference), typeof(StreamProcessing.Grain.Interface.OrleansCodeGenSourceGrainMethodInvoker), -657936214));
+            feature.Interfaces.Add(new global::Orleans.Metadata.GrainInterfaceMetadata(typeof(global::StreamProcessing.Grain.Interface.IWindowAggregateGrain), typeof(StreamProcessing.Grain.Interface.OrleansCodeGenWindowAggregateGrainReference), typeof(StreamProcessing.Grain.Interface.OrleansCodeGenWindowAggregateGrainMethodInvoker), 637034389));
         }
 
         public void Populate(global::Orleans.Metadata.GrainClassFeature feature)
@@ -921,6 +1063,7 @@ namespace OrleansGeneratedCode
             feature.AddKnownType(@"StreamProcessing.Grain.Interface.IJoinGrain,Grain.Interface", @"StreamProcessing.Grain.Interface.IJoinGrain");
             feature.AddKnownType(@"StreamProcessing.Grain.Interface.ISinkGrain,Grain.Interface", @"StreamProcessing.Grain.Interface.ISinkGrain");
             feature.AddKnownType(@"StreamProcessing.Grain.Interface.ISourceGrain,Grain.Interface", @"StreamProcessing.Grain.Interface.ISourceGrain");
+            feature.AddKnownType(@"StreamProcessing.Grain.Interface.IWindowAggregateGrain,Grain.Interface", @"StreamProcessing.Grain.Interface.IWindowAggregateGrain");
         }
     }
 }

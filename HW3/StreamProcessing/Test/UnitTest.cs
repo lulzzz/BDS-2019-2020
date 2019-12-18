@@ -9,7 +9,6 @@ namespace StreamProcessing.Test
         public void Test1()
         {
             Program test = new Program();
-
         }
     }
 }

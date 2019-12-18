@@ -9,7 +9,6 @@ using Orleans.Concurrency;
 
 namespace StreamProcessing.Grain.Implementation
 {
-    [Reentrant]
     public class SourceGrain : Orleans.Grain, ISourceGrain
     {
         long delay;
@@ -71,7 +70,7 @@ namespace StreamProcessing.Grain.Implementation
             if (time > currentMaxTimestamp)
             {
                 currentMaxTimestamp = time;
-                watermark.timestamp.SetTimestamp(currentMaxTimestamp - delay);
+                watermark.timestamp.SetTimestamp(currentMaxTimestamp - delay - 1);  // important !!!!!!
                 emit_watermark = true;
             }
 

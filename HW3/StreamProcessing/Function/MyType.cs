@@ -3,7 +3,7 @@
 namespace StreamProcessing.Function
 {
     [Serializable]
-    public struct MyType
+    public struct MyType : IComparable<MyType>
     {
         public string key;
         public string value;
@@ -14,6 +14,12 @@ namespace StreamProcessing.Function
             key = k;
             value = v;
             timestamp = t;
+        }
+
+        public int CompareTo(MyType x)
+        {
+            if (x.key == key && x.value == value && x.timestamp.GetTimestamp() == timestamp.GetTimestamp()) return 0;
+            return 1;
         }
     }
 }

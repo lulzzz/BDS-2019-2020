@@ -9,7 +9,6 @@ using Orleans.Concurrency;
 
 namespace StreamProcessing.Grain.Implementation
 {
-    [Reentrant]
     public abstract class FilterGrain : Orleans.Grain, IFilterGrain, IFilterFunction
     {
         private IJobManagerGrain jobManager;
@@ -100,6 +99,45 @@ namespace StreamProcessing.Grain.Implementation
             int value = Convert.ToInt32(e.key);
             if (value % 2 == 1) return true;
             return false;
+        }
+    }
+
+    public class DistanceFilter : FilterGrain
+    {
+        public override bool Apply(MyType e)
+        {
+            string[] parts = e.value.Split(" ");
+            double lat1 = Convert.ToDouble(parts[0]);
+            double lon1 = Convert.ToDouble(parts[1]);
+            double lat2 = Convert.ToDouble(parts[2]);
+            double lon2 = Convert.ToDouble(parts[3]);
+            double dist = DistanceCalculator(lat1, lat2, lon1, lon2);
+            if (dist <= 5) return true;
+            return false;
+        }
+
+        private double DistanceCalculator(double lat1, double lat2, double lon1, double lon2)
+        {
+            lon1 = (Math.PI / 180) * lon1;
+            lon2 = (Math.PI / 180) * lon2;
+            lat1 = (Math.PI / 180) * lat1;
+            lat2 = (Math.PI / 180) * lat2;
+
+            // Haversine formula
+            double dlon = lon2 - lon1;
+            double dlat = lat2 - lat1;
+            double a = Math.Pow(Math.Sin(dlat / 2), 2)
+                     + Math.Cos(lat1) * Math.Cos(lat2)
+                     * Math.Pow(Math.Sin(dlon / 2), 2);
+
+            double c = 2 * Math.Asin(Math.Sqrt(a));
+
+            // Radius of earth in kilometers. Use 3956
+            // for miles
+            double r = 6371;
+
+            // calculate the result
+            return (c * r);
         }
     }
 }

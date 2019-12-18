@@ -9,7 +9,6 @@ using StreamProcessing.Grain.Interface;
 
 namespace StreamProcessing.Grain.Implementation
 {
-    [Reentrant]
     public class SinkGrain : Orleans.Grain, ISinkGrain
     {
         private IJobManagerGrain jobManager;

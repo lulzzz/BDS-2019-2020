@@ -8,9 +8,9 @@
 #pragma warning disable 693
 #pragma warning disable 1591
 #pragma warning disable 1998
-[assembly: global::Orleans.Metadata.FeaturePopulatorAttribute(typeof(OrleansGeneratedCode.OrleansCodeGen7c76d56ef6FeaturePopulator))]
+[assembly: global::Orleans.Metadata.FeaturePopulatorAttribute(typeof(OrleansGeneratedCode.OrleansCodeGena33f2cda0cFeaturePopulator))]
 [assembly: global::Orleans.CodeGeneration.OrleansCodeGenerationTargetAttribute(@"Grain.Implementation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
-namespace OrleansGeneratedCode5060AE56
+namespace OrleansGeneratedCodeF793E041
 {
     using global::Orleans;
     using global::System.Reflection;
@@ -19,7 +19,7 @@ namespace OrleansGeneratedCode5060AE56
 namespace OrleansGeneratedCode
 {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute(@"Orleans-CodeGenerator", @"2.0.0.0")]
-    internal sealed class OrleansCodeGen7c76d56ef6FeaturePopulator : global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainInterfaceFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainClassFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Serialization.SerializerFeature>
+    internal sealed class OrleansCodeGena33f2cda0cFeaturePopulator : global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainInterfaceFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Metadata.GrainClassFeature>, global::Orleans.Metadata.IFeaturePopulator<global::Orleans.Serialization.SerializerFeature>
     {
         public void Populate(global::Orleans.Metadata.GrainInterfaceFeature feature)
         {
@@ -30,9 +30,12 @@ namespace OrleansGeneratedCode
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::GrainStreamProcessing.GrainImpl.SplitValue)));
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.LargerThanTenFilter)));
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.OddNumberFilter)));
+            feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.DistanceFilter)));
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.JobManagerGrain)));
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.SinkGrain)));
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.SourceGrain)));
+            feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.WindowDuplicateRemover)));
+            feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.WindowCountByKey)));
             feature.Classes.Add(new global::Orleans.Metadata.GrainClassMetadata(typeof(global::StreamProcessing.Grain.Implementation.WindowJoinGrain)));
         }
 
@@ -123,6 +126,48 @@ namespace OrleansGeneratedCode
             feature.AddKnownType(@"System.IO.Error,System.Console", @"Error");
             feature.AddKnownType(@"System.IO.StdInReader,System.Console", @"StdInReader");
             feature.AddKnownType(@"System.IO.PersistedFiles,System.Console", @"PersistedFiles");
+            feature.AddKnownType(@"FxResources.System.Linq.SR,System.Linq", @"FxResources.System.Linq.SR");
+            feature.AddKnownType(@"System.SR,System.Linq", @"SR");
+            feature.AddKnownType(@"System.Collections.Generic.LargeArrayBuilder`1,System.Linq", @"LargeArrayBuilder`1'1");
+            feature.AddKnownType(@"System.Collections.Generic.ArrayBuilder`1,System.Linq", @"ArrayBuilder`1'1");
+            feature.AddKnownType(@"System.Collections.Generic.EnumerableHelpers,System.Linq", @"EnumerableHelpers");
+            feature.AddKnownType(@"System.Collections.Generic.CopyPosition,System.Linq", @"CopyPosition");
+            feature.AddKnownType(@"System.Collections.Generic.Marker,System.Linq", @"Marker");
+            feature.AddKnownType(@"System.Collections.Generic.SparseArrayBuilder`1,System.Linq", @"SparseArrayBuilder`1'1");
+            feature.AddKnownType(@"System.Linq.Enumerable,System.Linq", @"Enumerable");
+            feature.AddKnownType(@"System.Linq.Enumerable+Iterator`1,System.Linq", @"Iterator`1'1");
+            feature.AddKnownType(@"System.Linq.IIListProvider`1,System.Linq", @"IIListProvider`1'1");
+            feature.AddKnownType(@"System.Linq.IPartition`1,System.Linq", @"IPartition`1'1");
+            feature.AddKnownType(@"System.Linq.Enumerable+WhereArrayIterator`1,System.Linq", @"WhereArrayIterator`1'1");
+            feature.AddKnownType(@"System.Linq.GroupedResultEnumerable`4,System.Linq", @"GroupedResultEnumerable`4'4");
+            feature.AddKnownType(@"System.Linq.GroupedResultEnumerable`3,System.Linq", @"GroupedResultEnumerable`3'3");
+            feature.AddKnownType(@"System.Linq.GroupedEnumerable`3,System.Linq", @"GroupedEnumerable`3'3");
+            feature.AddKnownType(@"System.Linq.IGrouping`2,System.Linq", @"IGrouping`2'2");
+            feature.AddKnownType(@"System.Linq.GroupedEnumerable`2,System.Linq", @"GroupedEnumerable`2'2");
+            feature.AddKnownType(@"System.Linq.Lookup`2,System.Linq", @"Lookup`2'2");
+            feature.AddKnownType(@"System.Linq.ILookup`2,System.Linq", @"ILookup`2'2");
+            feature.AddKnownType(@"System.Linq.OrderedEnumerable`1,System.Linq", @"OrderedEnumerable`1'1");
+            feature.AddKnownType(@"System.Linq.IOrderedEnumerable`1,System.Linq", @"IOrderedEnumerable`1'1");
+            feature.AddKnownType(@"System.Linq.EmptyPartition`1,System.Linq", @"EmptyPartition`1'1");
+            feature.AddKnownType(@"System.Linq.OrderedPartition`1,System.Linq", @"OrderedPartition`1'1");
+            feature.AddKnownType(@"System.Linq.Buffer`1,System.Linq", @"Buffer`1'1");
+            feature.AddKnownType(@"System.Linq.SystemCore_EnumerableDebugView`1,System.Linq", @"SystemCore_EnumerableDebugView`1'1");
+            feature.AddKnownType(@"System.Linq.SystemCore_EnumerableDebugViewEmptyException,System.Linq", @"SystemCore_EnumerableDebugViewEmptyException");
+            feature.AddKnownType(@"System.Linq.SystemCore_EnumerableDebugView,System.Linq", @"SystemCore_EnumerableDebugView");
+            feature.AddKnownType(@"System.Linq.SystemLinq_GroupingDebugView`2,System.Linq", @"SystemLinq_GroupingDebugView`2'2");
+            feature.AddKnownType(@"System.Linq.SystemLinq_LookupDebugView`2,System.Linq", @"SystemLinq_LookupDebugView`2'2");
+            feature.AddKnownType(@"System.Linq.Grouping`2,System.Linq", @"Grouping`2'2");
+            feature.AddKnownType(@"System.Linq.OrderedEnumerable`2,System.Linq", @"OrderedEnumerable`2'2");
+            feature.AddKnownType(@"System.Linq.CachingComparer`1,System.Linq", @"CachingComparer`1'1");
+            feature.AddKnownType(@"System.Linq.CachingComparer`2,System.Linq", @"CachingComparer`2'2");
+            feature.AddKnownType(@"System.Linq.CachingComparerWithChild`2,System.Linq", @"CachingComparerWithChild`2'2");
+            feature.AddKnownType(@"System.Linq.EnumerableSorter`1,System.Linq", @"EnumerableSorter`1'1");
+            feature.AddKnownType(@"System.Linq.EnumerableSorter`2,System.Linq", @"EnumerableSorter`2'2");
+            feature.AddKnownType(@"System.Linq.Set`1,System.Linq", @"Set`1'1");
+            feature.AddKnownType(@"System.Linq.SingleLinkedNode`1,System.Linq", @"SingleLinkedNode`1'1");
+            feature.AddKnownType(@"System.Linq.ThrowHelper,System.Linq", @"ThrowHelper");
+            feature.AddKnownType(@"System.Linq.ExceptionArgument,System.Linq", @"ExceptionArgument");
+            feature.AddKnownType(@"System.Linq.Utilities,System.Linq", @"Utilities");
             feature.AddKnownType(@"GrainStreamProcessing.GrainImpl.FlatMapGrain,Grain.Implementation", @"GrainStreamProcessing.GrainImpl.FlatMapGrain");
             feature.AddKnownType(@"StreamProcessing.Function.IFlatMapFunction,Function", @"StreamProcessing.Function.IFlatMapFunction");
             feature.AddKnownType(@"GrainStreamProcessing.GrainImpl.SplitValue,Grain.Implementation", @"GrainStreamProcessing.GrainImpl.SplitValue");
@@ -130,9 +175,13 @@ namespace OrleansGeneratedCode
             feature.AddKnownType(@"StreamProcessing.Function.IFilterFunction,Function", @"StreamProcessing.Function.IFilterFunction");
             feature.AddKnownType(@"StreamProcessing.Grain.Implementation.LargerThanTenFilter,Grain.Implementation", @"StreamProcessing.Grain.Implementation.LargerThanTenFilter");
             feature.AddKnownType(@"StreamProcessing.Grain.Implementation.OddNumberFilter,Grain.Implementation", @"StreamProcessing.Grain.Implementation.OddNumberFilter");
+            feature.AddKnownType(@"StreamProcessing.Grain.Implementation.DistanceFilter,Grain.Implementation", @"StreamProcessing.Grain.Implementation.DistanceFilter");
             feature.AddKnownType(@"StreamProcessing.Grain.Implementation.JobManagerGrain,Grain.Implementation", @"StreamProcessing.Grain.Implementation.JobManagerGrain");
             feature.AddKnownType(@"StreamProcessing.Grain.Implementation.SinkGrain,Grain.Implementation", @"StreamProcessing.Grain.Implementation.SinkGrain");
             feature.AddKnownType(@"StreamProcessing.Grain.Implementation.SourceGrain,Grain.Implementation", @"StreamProcessing.Grain.Implementation.SourceGrain");
+            feature.AddKnownType(@"StreamProcessing.Grain.Implementation.WindowAggregateGrain,Grain.Implementation", @"StreamProcessing.Grain.Implementation.WindowAggregateGrain");
+            feature.AddKnownType(@"StreamProcessing.Grain.Implementation.WindowDuplicateRemover,Grain.Implementation", @"StreamProcessing.Grain.Implementation.WindowDuplicateRemover");
+            feature.AddKnownType(@"StreamProcessing.Grain.Implementation.WindowCountByKey,Grain.Implementation", @"StreamProcessing.Grain.Implementation.WindowCountByKey");
             feature.AddKnownType(@"StreamProcessing.Grain.Implementation.WindowJoinGrain,Grain.Implementation", @"StreamProcessing.Grain.Implementation.WindowJoinGrain");
             feature.AddKnownType(@"StreamProcessing.Function.MyType,Function", @"StreamProcessing.Function.MyType");
             feature.AddKnownType(@"StreamProcessing.Function.NewEvent,Function", @"StreamProcessing.Function.NewEvent");

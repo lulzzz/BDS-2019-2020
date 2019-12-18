@@ -5,19 +5,17 @@ using System.Collections.Generic;
 using Orleans.Streams;
 using Orleans;
 using System;
-using Orleans.Concurrency;
 
 namespace StreamProcessing.Grain.Implementation
 {
-    [Reentrant]
     public class WindowJoinGrain : Orleans.Grain, IJoinGrain
     {
         private long window_length;
         private long window_slide;
         private IJobManagerGrain jobManager;
         private IStreamProvider streamProvider;
-        public Dictionary<long, List<MyType>> data1;
-        public Dictionary<long, List<MyType>> data2;
+        public SortedList<long, List<MyType>> data1;
+        public SortedList<long, List<MyType>> data2;
         private WindowFunction func1;
         private WindowFunction func2;
 
@@ -29,14 +27,14 @@ namespace StreamProcessing.Grain.Implementation
         public override async Task OnActivateAsync()
         {
             List<Task> t = new List<Task>();
-            
+
             streamProvider = GetStreamProvider("SMSProvider");
             jobManager = GrainFactory.GetGrain<IJobManagerGrain>(0, "JobManager");
             var window = await jobManager.GetWindow(this.GetPrimaryKey());
             window_length = window.Item1;
             window_slide = window.Item2;
-            data1 = new Dictionary<long, List<MyType>>();
-            data2 = new Dictionary<long, List<MyType>>();
+            data1 = new SortedList<long, List<MyType>>();
+            data2 = new SortedList<long, List<MyType>>();
             func1 = new WindowFunction(window_length, window_slide);
             func2 = new WindowFunction(window_length, window_slide);
 
@@ -45,10 +43,10 @@ namespace StreamProcessing.Grain.Implementation
 
             /********** Handle the first source stream*************************/
             var stream1 = streamProvider.GetStream<MyType>(subscribe.Item1, null);
-            var subscriptionHandles = await stream1.GetAllSubscriptionHandles();
-            if (subscriptionHandles.Count > 0)
+            var subscriptionHandles1 = await stream1.GetAllSubscriptionHandles();
+            if (subscriptionHandles1.Count > 0)
             {
-                foreach (var subscriptionHandle in subscriptionHandles)
+                foreach (var subscriptionHandle in subscriptionHandles1)
                     await subscriptionHandle.ResumeAsync(Process1);
             }
             t.Add(stream1.SubscribeAsync(Process1));
@@ -56,12 +54,12 @@ namespace StreamProcessing.Grain.Implementation
             /********** Handle the second source stream************************/
             var stream2 = streamProvider.GetStream<MyType>(subscribe.Item2, null);
             var subscriptionHandles2 = await stream2.GetAllSubscriptionHandles();
-            if (subscriptionHandles.Count > 0)
+            if (subscriptionHandles2.Count > 0)
             {
-                foreach (var subscriptionHandle in subscriptionHandles)
+                foreach (var subscriptionHandle in subscriptionHandles2)
                     await subscriptionHandle.ResumeAsync(Process2);
             }
-            t.Add(stream1.SubscribeAsync(Process2));
+            t.Add(stream2.SubscribeAsync(Process2));
 
             await Task.WhenAll(t);
         }
@@ -81,8 +79,7 @@ namespace StreamProcessing.Grain.Implementation
                 new_e = NewEvent.CreateNewEvent(e, Key, Value);
             }
 
-            var r = func1.FeedData(new_e);   // r could be null
-
+            var r = func1.FeedData(new_e);   // r could be an empty list
             if (r.Count > 0)
             {
                 foreach (KeyValuePair<long, List<MyType>> ee in r) data1.Add(ee.Key, ee.Value);
@@ -107,7 +104,6 @@ namespace StreamProcessing.Grain.Implementation
             }
 
             var r = func2.FeedData(new_e);   // r could be null
-
             if (r.Count > 0)
             {
                 foreach (KeyValuePair<long, List<MyType>> ee in r) data2.Add(ee.Key, ee.Value);
@@ -118,20 +114,29 @@ namespace StreamProcessing.Grain.Implementation
 
         private async Task CheckIfCanJoin()
         {
+            var removed_key = new List<long>();
             foreach (KeyValuePair<long, List<MyType>> ee in data1)
             {
                 if (data2.ContainsKey(ee.Key))
                 {
                     await Join(ee.Value, data2[ee.Key]);
-                    data1.Remove(ee.Key);
-                    data2.Remove(ee.Key);
+                    removed_key.Add(ee.Key);
                 }
+            }
+            // delete the data that already finish join
+            foreach (var key in removed_key)
+            {
+                data1.Remove(key);
+                data2.Remove(key);
             }
         }
 
         private async Task Join(List<MyType> input1, List<MyType> input2)
         {
+            Timestamp time = new Timestamp(0);
             List<Task> t = new List<Task>();
+            List<Guid> streams = await jobManager.GetPublish(this.GetPrimaryKey());
+
             foreach (MyType r1 in input1)
             {
                 foreach (MyType r2 in input2)
@@ -139,8 +144,6 @@ namespace StreamProcessing.Grain.Implementation
                     if (r1.key == r2.key)
                     {
                         MyType r = new MyType(r1.key, r1.value + " " + r2.value, r1.timestamp);
-                        List<Guid> streams = await jobManager.GetPublish(this.GetPrimaryKey());
-                        //Console.WriteLine($"WindowJoinGrain output: {r.key}, {r.value}");
                         foreach (var item in streams)
                         {
                             var stream = streamProvider.GetStream<MyType>(item, null);
@@ -148,6 +151,15 @@ namespace StreamProcessing.Grain.Implementation
                         }
                     }
                 }
+                time = r1.timestamp;
+            }
+
+            // send a watermark after sending all result events for a window
+            MyType watermark = new MyType("", "watermark", time);
+            foreach (var item in streams)
+            {
+                var stream = streamProvider.GetStream<MyType>(item, null);
+                t.Add(stream.OnNextAsync(watermark));
             }
             await Task.WhenAll(t);
         }
