@@ -70,7 +70,7 @@ namespace StreamProcessing.Grain.Implementation
             if (time > currentMaxTimestamp)
             {
                 currentMaxTimestamp = time;
-                watermark.timestamp.SetTimestamp(currentMaxTimestamp - delay - 1);  // important !!!!!!
+                watermark.timestamp.SetTimestamp(currentMaxTimestamp - delay);  // important !!!!!!
                 emit_watermark = true;
             }
 

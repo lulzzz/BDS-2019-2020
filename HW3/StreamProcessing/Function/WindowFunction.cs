@@ -52,12 +52,10 @@ namespace StreamProcessing.Function
             foreach (KeyValuePair<long, List<MyType>> e in window_data)
             {
                 long end = e.Key;
-                if (watermark >= end)
-                {
-                    fired_window.Add(end, e.Value);
-                    window_data.Remove(end);
-                }
+                if (watermark >= end) fired_window.Add(end, e.Value);
             }
+
+            foreach (var item in fired_window) window_data.Remove(item.Key);
             return fired_window;
         }
     }

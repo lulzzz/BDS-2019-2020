@@ -82,7 +82,11 @@ namespace StreamProcessing.Grain.Implementation
             var r = func1.FeedData(new_e);   // r could be an empty list
             if (r.Count > 0)
             {
-                foreach (KeyValuePair<long, List<MyType>> ee in r) data1.Add(ee.Key, ee.Value);
+                foreach (KeyValuePair<long, List<MyType>> ee in r)
+                {
+                    if (!data1.ContainsKey(ee.Key)) data1.Add(ee.Key, ee.Value);
+                    else throw new Exception($"Exception: data1 already has the key {ee.Key}");
+                }
                 await CheckIfCanJoin();
             }
             else await Task.CompletedTask;
@@ -106,8 +110,13 @@ namespace StreamProcessing.Grain.Implementation
             var r = func2.FeedData(new_e);   // r could be null
             if (r.Count > 0)
             {
-                foreach (KeyValuePair<long, List<MyType>> ee in r) data2.Add(ee.Key, ee.Value);
+                foreach (KeyValuePair<long, List<MyType>> ee in r)
+                {
+                    if (!data2.ContainsKey(ee.Key)) data2.Add(ee.Key, ee.Value);
+                    else throw new Exception($"Exception: data2 already has the key {ee.Key}");
+                }
                 await CheckIfCanJoin();
+
             }
             else await Task.CompletedTask;
         }
