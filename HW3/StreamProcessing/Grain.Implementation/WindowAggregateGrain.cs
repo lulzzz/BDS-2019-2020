@@ -75,17 +75,21 @@ namespace StreamProcessing.Grain.Implementation
             {
                 foreach (KeyValuePair<long, List<MyType>> records in r)
                 {
-                    MyType watermark = new MyType("", "watermark", new Timestamp(records.Key - 1)); // important!!!!!
+                    MyType watermark = new MyType("", "watermark", new Timestamp(records.Key));
                     List<MyType> result = Apply(records.Value);
                     foreach (var item in streams)
                     {
                         var stream = streamProvider.GetStream<MyType>(item, null);
-                        foreach (var record in result)
-                        {
-                            t.Add(stream.OnNextAsync(record));
-                        }
+                        foreach (var record in result) t.Add(stream.OnNextAsync(record));
+                    }
+                    await Task.WhenAll(t);
+                    t = new List<Task>();
+                    foreach (var item in streams)
+                    {
+                        var stream = streamProvider.GetStream<MyType>(item, null);
                         t.Add(stream.OnNextAsync(watermark));
                     }
+                    await Task.WhenAll(t);
                 }
                 await Task.WhenAll(t);
             }

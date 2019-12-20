@@ -43,3 +43,4 @@
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Client/obj/Debug/netcoreapp3.0/Client.csproj.CopyComplete
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Client/obj/Debug/netcoreapp3.0/Client.dll
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Client/obj/Debug/netcoreapp3.0/Client.pdb
+/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Client/obj/Debug/netcoreapp3.0/Client.csprojAssemblyReference.cache

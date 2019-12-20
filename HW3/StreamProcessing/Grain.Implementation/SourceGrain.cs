@@ -70,7 +70,7 @@ namespace StreamProcessing.Grain.Implementation
             if (time > currentMaxTimestamp)
             {
                 currentMaxTimestamp = time;
-                watermark.timestamp.SetTimestamp(currentMaxTimestamp - delay);  // important !!!!!!
+                watermark.timestamp.SetTimestamp(currentMaxTimestamp - delay - 1);  // important !!!!!!
                 emit_watermark = true;
             }
 
@@ -81,7 +81,17 @@ namespace StreamProcessing.Grain.Implementation
             {
                 var stream = streamProvider.GetStream<MyType>(item, null);
                 t.Add(stream.OnNextAsync(record));
-                if (emit_watermark) t.Add(stream.OnNextAsync(watermark));
+            }
+            await Task.WhenAll(t);
+
+            t = new List<Task>();
+            if (emit_watermark)
+            {
+                foreach (var item in streams)
+                {
+                    var stream = streamProvider.GetStream<MyType>(item, null);
+                    t.Add(stream.OnNextAsync(watermark));
+                }
             }
             await Task.WhenAll(t);
         }

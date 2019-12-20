@@ -66,10 +66,13 @@ namespace StreamProcessing.Grain.Implementation
 
         public async Task Process1(MyType e, StreamSequenceToken sequenceToken)   // Implement the Process method from IJoinGrain
         {
-            //Console.WriteLine($"Source data 1 receives: {e.key}, {e.value}, {e.timestamp.GetTimestamp()}");
-
+            //Console.WriteLine($"Process 1 receives message: {e.key}, {e.value}, {e.timestamp.GetTimestamp()}");
             MyType new_e;
-            if (e.value == "watermark") new_e = e;
+            if (e.value == "watermark")
+            {
+                new_e = e;
+                //Console.WriteLine($"Source data 1 receives watermark: {e.timestamp.GetTimestamp()}");
+            }
             else
             {
                 var key = await jobManager.GetKey(this.GetPrimaryKey());
@@ -77,9 +80,11 @@ namespace StreamProcessing.Grain.Implementation
                 string Key = key.Split(",")[0];
                 string Value = value.Split(",")[0];
                 new_e = NewEvent.CreateNewEvent(e, Key, Value);
+                //Console.WriteLine($"Source data 1 receives event: {new_e.key}, {new_e.value}, {new_e.timestamp.GetTimestamp()}");
             }
 
             var r = func1.FeedData(new_e);   // r could be an empty list
+            //Console.WriteLine("finish feeding data to func1");
             if (r.Count > 0)
             {
                 foreach (KeyValuePair<long, List<MyType>> ee in r)
@@ -87,17 +92,25 @@ namespace StreamProcessing.Grain.Implementation
                     if (!data1.ContainsKey(ee.Key)) data1.Add(ee.Key, ee.Value);
                     else throw new Exception($"Exception: data1 already has the key {ee.Key}");
                 }
-                await CheckIfCanJoin();
+                var removed_key = await CheckIfCanJoin();
+                foreach (var item in removed_key)
+                {
+                    data1.Remove(item);
+                    data2.Remove(item);
+                }
             }
             else await Task.CompletedTask;
         }
 
         public async Task Process2(MyType e, StreamSequenceToken sequenceToken)   // Implement the Process method from IJoinGrain
         {
-            //Console.WriteLine($"Source data 2 receives: {e.key}, {e.value}, {e.timestamp.GetTimestamp()}");
-
+            //Console.WriteLine($"Process 2 receives message: {e.key}, {e.value}, {e.timestamp.GetTimestamp()}");
             MyType new_e;
-            if (e.value == "watermark") new_e = e;
+            if (e.value == "watermark")
+            {
+                new_e = e;
+                //Console.WriteLine($"Source data 2 receives watermark: {e.timestamp.GetTimestamp()}");
+            }
             else
             {
                 var key = await jobManager.GetKey(this.GetPrimaryKey());
@@ -105,9 +118,11 @@ namespace StreamProcessing.Grain.Implementation
                 string Key = key.Split(",")[1];
                 string Value = value.Split(",")[1];
                 new_e = NewEvent.CreateNewEvent(e, Key, Value);
+                //Console.WriteLine($"Source data 2 receives event: {new_e.key}, {new_e.value}, {new_e.timestamp.GetTimestamp()}");
             }
 
             var r = func2.FeedData(new_e);   // r could be null
+            //Console.WriteLine("finish feeding data to func2");
             if (r.Count > 0)
             {
                 foreach (KeyValuePair<long, List<MyType>> ee in r)
@@ -115,34 +130,33 @@ namespace StreamProcessing.Grain.Implementation
                     if (!data2.ContainsKey(ee.Key)) data2.Add(ee.Key, ee.Value);
                     else throw new Exception($"Exception: data2 already has the key {ee.Key}");
                 }
-                await CheckIfCanJoin();
-
+                var removed_key = await CheckIfCanJoin();
+                foreach (var item in removed_key)
+                {
+                    data1.Remove(item);
+                    data2.Remove(item);
+                }
             }
             else await Task.CompletedTask;
         }
 
-        private async Task CheckIfCanJoin()
+        private async Task<List<long>> CheckIfCanJoin()
         {
             var removed_key = new List<long>();
             foreach (KeyValuePair<long, List<MyType>> ee in data1)
             {
                 if (data2.ContainsKey(ee.Key))
                 {
-                    await Join(ee.Value, data2[ee.Key]);
+                    await Join(ee.Key, ee.Value, data2[ee.Key]);
                     removed_key.Add(ee.Key);
                 }
             }
-            // delete the data that already finish join
-            foreach (var key in removed_key)
-            {
-                data1.Remove(key);
-                data2.Remove(key);
-            }
+
+            return removed_key;
         }
 
-        private async Task Join(List<MyType> input1, List<MyType> input2)
+        private async Task Join(long end, List<MyType> input1, List<MyType> input2)
         {
-            Timestamp time = new Timestamp(0);
             List<Task> t = new List<Task>();
             List<Guid> streams = await jobManager.GetPublish(this.GetPrimaryKey());
 
@@ -153,6 +167,7 @@ namespace StreamProcessing.Grain.Implementation
                     if (r1.key == r2.key)
                     {
                         MyType r = new MyType(r1.key, r1.value + " " + r2.value, r1.timestamp);
+                        //Console.WriteLine($"joinGrain emit join result: {r.key}, {r.value}, {r.timestamp.GetTimestamp()}");
                         foreach (var item in streams)
                         {
                             var stream = streamProvider.GetStream<MyType>(item, null);
@@ -160,17 +175,16 @@ namespace StreamProcessing.Grain.Implementation
                         }
                     }
                 }
-                time = r1.timestamp;
             }
+            await Task.WhenAll(t);
 
             // send a watermark after sending all result events for a window
-            MyType watermark = new MyType("", "watermark", time);
+            MyType watermark = new MyType("", "watermark", new Timestamp(end));
             foreach (var item in streams)
             {
                 var stream = streamProvider.GetStream<MyType>(item, null);
-                t.Add(stream.OnNextAsync(watermark));
+                await stream.OnNextAsync(watermark);
             }
-            await Task.WhenAll(t);
         }
     }
 }

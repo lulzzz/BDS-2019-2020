@@ -5,3 +5,4 @@
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netcoreapp3.0/Function.AssemblyInfo.cs
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netcoreapp3.0/Function.dll
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netcoreapp3.0/Function.pdb
+/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netcoreapp3.0/Function.csprojAssemblyReference.cache

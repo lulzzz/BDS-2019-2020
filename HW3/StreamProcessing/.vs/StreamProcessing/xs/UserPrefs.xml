@@ -1,24 +1,30 @@
 ﻿<Properties StartupConfiguration="{A1FACEAC-A329-4769-8981-C2D98E2CA10E}|Default">
   <MonoDevelop.Ide.ItemProperties.Client PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Grain.Implementation/JobManagerGrain.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Client/DataDriver.cs">
     <Files>
-      <File FileName="Grain.Implementation/WindowJoinGrain.cs" Line="88" Column="1" />
-      <File FileName="Client/Program.cs" Line="154" Column="83" />
-      <File FileName="Grain.Interface/IJobManagerGrain.cs" Line="1" Column="1" />
-      <File FileName="Grain.Implementation/SourceGrain.cs" Line="73" Column="72" />
-      <File FileName="Grain.Implementation/SinkGrain.cs" Line="51" Column="13" />
-      <File FileName="Function/WindowFunction.cs" Line="55" Column="21" />
-      <File FileName="Grain.Implementation/JobManagerGrain.cs" Line="1" Column="1" />
+      <File FileName="Client/Program.cs" Line="143" Column="1" />
+      <File FileName="Grain.Implementation/WindowJoinGrain.cs" Line="174" Column="58" />
+      <File FileName="Function/WindowFunction.cs" Line="41" Column="92" />
+      <File FileName="Function/NewEvent.cs" Line="28" Column="33" />
+      <File FileName="Grain.Implementation/SourceGrain.cs" Line="56" Column="15" />
+      <File FileName="Function/Timestamp.cs" />
+      <File FileName="Grain.Interface/obj/Debug/netcoreapp3.0/Grain.Interface.orleans.g.cs" />
+      <File FileName="Function/MyType.cs" />
+      <File FileName="Silo/Program.cs" Line="16" Column="1" />
+      <File FileName="Silo/Program.cs" Line="16" Column="1" />
+      <File FileName="Grain.Implementation/SinkGrain.cs" Line="51" Column="146" />
+      <File FileName="Grain.Implementation/FilterGrain.cs" Line="53" Column="13" />
+      <File FileName="Client/DataDriver.cs" Line="43" Column="38" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="StreamProcessing" expanded="True">
-            <Node name="Client" expanded="True" />
-            <Node name="Function" expanded="True" />
-            <Node name="Grain.Implementation" expanded="True">
-              <Node name="JobManagerGrain.cs" selected="True" />
+            <Node name="Client" expanded="True">
+              <Node name="DataDriver.cs" selected="True" />
             </Node>
+            <Node name="Function" expanded="True" />
+            <Node name="Grain.Implementation" expanded="True" />
             <Node name="Grain.Interface" expanded="True" />
             <Node name="Silo" expanded="True" />
             <Node name="Test" expanded="True" />
@@ -32,8 +38,7 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/WindowJoinGrain.cs" relfile="Grain.Implementation/WindowJoinGrain.cs" line="116" column="1" />
-      <Breakpoint file="/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/WindowJoinGrain.cs" relfile="Grain.Implementation/WindowJoinGrain.cs" line="88" column="1" />
+      <Breakpoint file="/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/WindowFunction.cs" relfile="Function/WindowFunction.cs" line="41" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
