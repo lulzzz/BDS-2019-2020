@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/Grain.Implementation.csproj": {}
+    "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/Grain.Implementation.csproj": {}
   },
   "projects": {
-    "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj": {
+    "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj",
+        "projectUniqueName": "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj",
         "projectName": "Function",
-        "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj",
-        "packagesPath": "/Users/krimmity/.nuget/packages/",
-        "outputPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/obj/",
+        "projectPath": "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj",
+        "packagesPath": "/Users/lfc746/.nuget/packages/",
+        "outputPath": "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Function/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/krimmity/.config/NuGet/NuGet.Config"
+          "/Users/lfc746/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.0"
@@ -50,21 +50,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.101/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.100/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/Grain.Implementation.csproj": {
+    "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/Grain.Implementation.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/Grain.Implementation.csproj",
+        "projectUniqueName": "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/Grain.Implementation.csproj",
         "projectName": "Grain.Implementation",
-        "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/Grain.Implementation.csproj",
-        "packagesPath": "/Users/krimmity/.nuget/packages/",
-        "outputPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/obj/",
+        "projectPath": "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/Grain.Implementation.csproj",
+        "packagesPath": "/Users/lfc746/.nuget/packages/",
+        "outputPath": "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Grain.Implementation/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/krimmity/.config/NuGet/NuGet.Config"
+          "/Users/lfc746/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.0"
@@ -75,11 +75,11 @@
         "frameworks": {
           "netcoreapp3.0": {
             "projectReferences": {
-              "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj": {
-                "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj"
+              "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj": {
+                "projectPath": "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Function/Function.csproj"
               },
-              "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj": {
-                "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj"
+              "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj": {
+                "projectPath": "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj"
               }
             }
           }
@@ -123,21 +123,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.101/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.100/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj": {
+    "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj",
+        "projectUniqueName": "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj",
         "projectName": "Grain.Interface",
-        "projectPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj",
-        "packagesPath": "/Users/krimmity/.nuget/packages/",
-        "outputPath": "/Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/obj/",
+        "projectPath": "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/Grain.Interface.csproj",
+        "packagesPath": "/Users/lfc746/.nuget/packages/",
+        "outputPath": "/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Grain.Interface/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/krimmity/.config/NuGet/NuGet.Config"
+          "/Users/lfc746/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.0"
@@ -189,7 +189,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.101/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.0.100/RuntimeIdentifierGraph.json"
         }
       }
     }

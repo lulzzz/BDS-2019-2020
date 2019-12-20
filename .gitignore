@@ -36,8 +36,14 @@
 ehthumbs.db
 Thumbs.db
 
+#data#
 GPS
 Photo
 Tag
 /.metadata/
+
+#Orleans#
 .vs/
+obj/
+Debug/
+bin/
