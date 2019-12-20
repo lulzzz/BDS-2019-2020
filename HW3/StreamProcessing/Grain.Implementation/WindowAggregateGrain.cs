@@ -59,7 +59,8 @@ namespace StreamProcessing.Grain.Implementation
         {
             List<Guid> streams = await jobManager.GetPublish(this.GetPrimaryKey());
             List<Task> t = new List<Task>();
-            
+            Console.WriteLine($"AggregateGrain receives:{e.key}, {e.value}, {e.timestamp.GetTimestamp()}");
+
             MyType ee;
             if (e.value == "watermark") ee = e;
             else

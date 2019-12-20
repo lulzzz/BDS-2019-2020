@@ -50,7 +50,7 @@ namespace StreamProcessing.Grain.Implementation
 
         private async Task Process(MyType e, StreamSequenceToken sequenceToken)
         {
-            Console.WriteLine($"Filter Grain receives: {e.key}, {e.value}, {e.timestamp.GetTimestamp()}");
+           // Console.WriteLine($"Filter Grain receives: {e.key}, {e.value}, {e.timestamp.GetTimestamp()}");
             bool emit_e;
             MyType ee;
             if (e.value == "watermark")
@@ -112,7 +112,7 @@ namespace StreamProcessing.Grain.Implementation
             double lat2 = Convert.ToDouble(parts[2]);
             double lon2 = Convert.ToDouble(parts[3]);
             double dist = DistanceCalculator(lat1, lat2, lon1, lon2);
-            if (dist <= 5) return true;
+            if (dist <= 5000) return true;
             return false;
         }
 

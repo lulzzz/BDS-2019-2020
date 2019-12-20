@@ -6,3 +6,11 @@
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netcoreapp3.0/Function.dll
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netcoreapp3.0/Function.pdb
 /Users/krimmity/Documents/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netcoreapp3.0/Function.csprojAssemblyReference.cache
+/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Function/bin/Debug/netcoreapp3.0/Function.deps.json
+/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Function/bin/Debug/netcoreapp3.0/Function.dll
+/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Function/bin/Debug/netcoreapp3.0/Function.pdb
+/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netcoreapp3.0/Function.csprojAssemblyReference.cache
+/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netcoreapp3.0/Function.AssemblyInfoInputs.cache
+/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netcoreapp3.0/Function.AssemblyInfo.cs
+/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netcoreapp3.0/Function.dll
+/Users/lfc746/Desktop/BDS-2019-2020/HW3/StreamProcessing/Function/obj/Debug/netcoreapp3.0/Function.pdb

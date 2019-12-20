@@ -7,7 +7,7 @@ using Orleans.Streams;
 
 namespace StreamProcessing.Client
 {
-    public static class DataDriver
+    public class DataDriver
     {
         static string rootPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         static string photoFilename = Path.Combine(rootPath, @"Photo");
@@ -15,6 +15,28 @@ namespace StreamProcessing.Client
         static string gpsFilename = Path.Combine(rootPath, @"GPS");
         static int cPhoto = 191737;
         static int cGPS = 3485450;
+
+        public static async Task RunSample(IAsyncStream<string> photoStream, IAsyncStream<string> tagStream, IAsyncStream<string> gpsStream)
+        {
+            StreamReader photoFile = new StreamReader(photoFilename);
+            StreamReader tagFile = new StreamReader(tagFilename);
+            StreamReader gpsFile = new StreamReader(gpsFilename);
+            List<Task> t = new List<Task>();
+            t.Add(PublishData(photoStream, photoFile));
+            t.Add(PublishData(tagStream, tagFile));
+            t.Add(PublishData(gpsStream, gpsFile));
+            await Task.WhenAll(t);
+        }
+
+        private static async Task PublishData(IAsyncStream<string> Stream, StreamReader File)
+        {
+            string line = File.ReadLine();
+            while (line != null)
+            {
+                await Stream.OnNextAsync(line);
+                line = File.ReadLine();
+            }
+        }
 
         /***
          * int rate: generating rate of photo stream, rates of tag and gps streams are correspondingly decided.
@@ -40,7 +62,6 @@ namespace StreamProcessing.Client
     }
     public class PhotoStreamProducer
     {
-        static bool with_timestamp = false;
         StreamReader photoFile, tagFile;
         IAsyncStream<string> photoStream, tagStream;
         int rate, randSpan;
@@ -82,18 +103,14 @@ namespace StreamProcessing.Client
         public async Task Run()
         {
             string line;
-            long ts = 0;
             Random random = new Random();
             int count = rate / 2 + random.Next(rate + 1);
             for (int i = 0; i < count; ++i)
             {
                 line = photoFile.ReadLine();
                 if (line == null) break;
-                if (!with_timestamp)
-                {
-                    ts = DataDriver.getCurrentTimestamp() + random.Next(2 * randSpan + 1) - randSpan;
-                    line = line + " " + ts;
-                }
+                long ts = DataDriver.getCurrentTimestamp() + random.Next(2 * randSpan + 1) - randSpan;
+                line = line + " " + ts;
                 await photoStream.OnNextAsync(line);
                 int pid;
                 if (!Int32.TryParse(line.Split(" ")[0], out pid)) continue;
@@ -101,9 +118,7 @@ namespace StreamProcessing.Client
                 {
                     foreach (int uid in tags[pid])
                     {
-                        string tagLine = "";
-                        if (!with_timestamp) tagLine = pid + " " + uid + " " + ts;
-                        else tagLine = pid + " " + uid;
+                        string tagLine = pid + " " + uid + " " + ts;
                         await tagStream.OnNextAsync(tagLine);
                     }
                 }
@@ -113,7 +128,6 @@ namespace StreamProcessing.Client
     }
     public class GPSStreamProducer
     {
-        static bool with_timestamp = false;
         StreamReader gpsFile;
         IAsyncStream<string> gpsStream;
         int rate, randSpan;
@@ -145,11 +159,8 @@ namespace StreamProcessing.Client
             {
                 line = gpsFile.ReadLine();
                 if (line == null) break;
-                if (!with_timestamp)
-                {
-                    long ts = DataDriver.getCurrentTimestamp() + random.Next(2 * randSpan + 1) - randSpan;
-                    line = line + " " + ts;
-                }
+                long ts = DataDriver.getCurrentTimestamp() + random.Next(2 * randSpan + 1) - randSpan;
+                line = line + " " + ts;
                 await gpsStream.OnNextAsync(line);
             }
         }

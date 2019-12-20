@@ -7,11 +7,11 @@ namespace StreamProcessing.Function
         public static MyType CreateNewEvent(MyType e, string Key, string Value)
         {
             //Console.WriteLine($"e.key = {e.key}, e.value = {e.value}, Key = {Key}, Value = {Value}");
-            string[] key_parts = Key.Split(" ");
-            string[] value_parts = Value.Split(" ");
+            string[] key_parts = Key.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            string[] value_parts = Value.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
-            string[] e_Keys = e.key.Split(" ");
-            string[] e_Values = e.value.Split(" ");
+            string[] e_Keys = e.key.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            string[] e_Values = e.value.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             int len_key = 0;
             int len_value = 0;
             if (e.key.Length > 0) len_key = e_Keys.Length;

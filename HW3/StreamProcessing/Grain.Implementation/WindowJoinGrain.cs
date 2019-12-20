@@ -66,7 +66,6 @@ namespace StreamProcessing.Grain.Implementation
 
         public async Task Process1(MyType e, StreamSequenceToken sequenceToken)   // Implement the Process method from IJoinGrain
         {
-            //Console.WriteLine($"Process 1 receives message: {e.key}, {e.value}, {e.timestamp.GetTimestamp()}");
             MyType new_e;
             if (e.value == "watermark")
             {
@@ -75,12 +74,12 @@ namespace StreamProcessing.Grain.Implementation
             }
             else
             {
+                //TODO: to many calls to jobManager
                 var key = await jobManager.GetKey(this.GetPrimaryKey());
                 var value = await jobManager.GetValue(this.GetPrimaryKey());
                 string Key = key.Split(",")[0];
                 string Value = value.Split(",")[0];
                 new_e = NewEvent.CreateNewEvent(e, Key, Value);
-                //Console.WriteLine($"Source data 1 receives event: {new_e.key}, {new_e.value}, {new_e.timestamp.GetTimestamp()}");
             }
 
             var r = func1.FeedData(new_e);   // r could be an empty list
@@ -104,7 +103,6 @@ namespace StreamProcessing.Grain.Implementation
 
         public async Task Process2(MyType e, StreamSequenceToken sequenceToken)   // Implement the Process method from IJoinGrain
         {
-            //Console.WriteLine($"Process 2 receives message: {e.key}, {e.value}, {e.timestamp.GetTimestamp()}");
             MyType new_e;
             if (e.value == "watermark")
             {
@@ -164,6 +162,8 @@ namespace StreamProcessing.Grain.Implementation
             {
                 foreach (MyType r2 in input2)
                 {
+
+                //    Console.WriteLine($"Grain: {this.GetPrimaryKey()} r1.key:{r1.key} r1.value:{r1.value}  r2.key:{r2.key} r2.value{r2.value}");
                     if (r1.key == r2.key)
                     {
                         MyType r = new MyType(r1.key, r1.value + " " + r2.value, r1.timestamp);

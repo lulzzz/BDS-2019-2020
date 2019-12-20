@@ -77,6 +77,7 @@ namespace StreamProcessing.Client
             return client;
         }
 
+
         private static async Task TestClient(IClusterClient client)
         {
             // STEP 1: create IDs for all grains and streams
@@ -86,6 +87,12 @@ namespace StreamProcessing.Client
             var joinTagPhotoGrain = Guid.NewGuid();
             var joinGPSGPSGrain = Guid.NewGuid();
             var joinBothGrain = Guid.NewGuid();
+
+            Console.WriteLine("joinTagPhotoGrain: " + joinTagPhotoGrain);
+            Console.WriteLine("joinGPSGPSGrain: " + joinGPSGPSGrain);
+            Console.WriteLine("joinBothGrain: " + joinBothGrain);
+
+
             var filterGrain = Guid.NewGuid();
             var windowDuplicateRemoveGrain = Guid.NewGuid();
             var windowAggregateGrain = Guid.NewGuid();
@@ -125,6 +132,9 @@ namespace StreamProcessing.Client
             await jobManager.RegisterTwoSourceSubscribe(joinTagPhotoGrain, TagStream, PhotoStream);
             await jobManager.RegisterTwoSourceSubscribe(joinGPSGPSGrain, GPS1Stream, GPS2Stream);
             await jobManager.RegisterTwoSourceSubscribe(joinBothGrain, JoinedTagPhotoStream, JoinedGPSGPSStream);
+
+            //await jobManager.RegisterSubscribe(sinkGrain, JoinedBothStream);
+
             await jobManager.RegisterSubscribe(filterGrain, JoinedBothStream);
             await jobManager.RegisterSubscribe(windowDuplicateRemoveGrain, FilteredStream);
             await jobManager.RegisterSubscribe(windowAggregateGrain, DistinctStream);
@@ -149,11 +159,11 @@ namespace StreamProcessing.Client
             await jobManager.RegisterIJoinGrain(joinTagPhotoGrain, "WindowJoinGrain", "0, 0", "1, 2 3");                          // JoinedTagPhotoStream = <photo_id, user_id, lat1, lon1>
             await jobManager.RegisterIJoinGrain(joinGPSGPSGrain, "WindowJoinGrain", "0 1 2, 0 1 2", ",");                          // JoinedGPSGPSStream = <user_id, lat2, lon2>
             // For this join operation, JoinedTagPhotoStream will be the 1st source, JoinedGPSGPSStream will be the 2nd source
-            await jobManager.RegisterIJoinGrain(joinBothGrain, "WindowJoinGrain", "1, 0", "0 2 3, 1 2");                          // JoinedBothStream = <user_id, photo_id, lat1, lon1, lat2, lon2>
+            await jobManager.RegisterIJoinGrain(joinBothGrain, "WindowJoinGrain", "1, 0", "0 2 3, 1 2");
             await jobManager.RegisterIFilterGrain(filterGrain, "DistanceFilter", "0 1", "2 3 4 5");                               // FilteredStream = <user_id, photo_id, lat1, lon1, lat2, lon2>
-     /*       await jobManager.RegisterIWindowAggregateGrain(windowDuplicateRemoveGrain, "WindowDuplicateRemover", "0 1", "");      // DistinctStream = <user_id, photo_id>
+            await jobManager.RegisterIWindowAggregateGrain(windowDuplicateRemoveGrain, "WindowDuplicateRemover", "0 1", "");      // DistinctStream = <user_id, photo_id>
             await jobManager.RegisterIWindowAggregateGrain(windowAggregateGrain, "WindowCountByKey", "0", "1");                   // AggregatedStream = <user_id, count>
-            await jobManager.RegisterISinkGrain(sinkGrain, "SinkGrain", "", "");*/
+            await jobManager.RegisterISinkGrain(sinkGrain, "SinkGrain", "", "");
 
             // STEP 5: activate the streams
             var streamProvider = client.GetStreamProvider("SMSProvider");
@@ -163,6 +173,7 @@ namespace StreamProcessing.Client
 
             // STEP 6: let DataDriver feeds data to streams
             await DataDriver.Run(photo, tag, gps, 1600, 0);
+           // await DataDriver.RunSample(photo, tag, gps);
         }
 
         private static async Task Client3(IClusterClient client)
